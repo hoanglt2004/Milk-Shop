@@ -122,13 +122,18 @@ input[type="radio"]:checked + .sort-label {
               <section class="mb-4">
 
                 <!-- Lấy từ khóa tìm kiếm từ request parameter -->
-                <%
-                String searchKeyword = request.getParameter("search");
+                <% 
+                String searchKeyword = "";
+                if (request.getAttribute("txtS") != null) {
+                    searchKeyword = (String) request.getAttribute("txtS");
+                } else if (request.getParameter("search") != null) {
+                    searchKeyword = request.getParameter("search");
+                }
                 %>
 
                 <!-- Hiển thị từ khóa trong ô search -->
                 <div class="form-group">
-                  <input type="text" class="form-control" id="searchInput" name="search" placeholder="Enter keyword..." value="<%= searchKeyword != null ? searchKeyword : "" %>" onkeyup="searchByName(this)">
+                  <input type="text" class="form-control" id="searchInput" name="txt" placeholder="Enter keyword..." value="<%= searchKeyword %>" onkeyup="searchByName(this)">
                   <div id="searchSuggestions" class="dropdown-menu" style="width: 100%; max-height: 200px; overflow-y: auto;"></div>
                 </div>
 

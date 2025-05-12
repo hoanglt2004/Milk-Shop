@@ -1,5 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%
+    String currentPage = request.getRequestURI();
+    boolean isHomePage = currentPage.endsWith("Home.jsp") || currentPage.endsWith("home");
+%>
 <!--begin of menu-->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark" style="position: fixed; top: 0; width:100%;  z-index: 100000;">
     <div class="container">
@@ -16,6 +20,13 @@
             <li class="nav-item">
                         <a class="nav-link" href="shop">Shop</a>
                     </li> 
+            <% if (isHomePage) { %>
+            <li class="nav-item">
+                        <a class="nav-link" href="#" data-toggle="modal" data-target="#searchModal">
+                            <i class="fa fa-search"></i> Search
+                        </a>
+                    </li>
+            <% } %>
                 
                <%--  <c:if test="${sessionScope.acc.isSell == 1}">
                     <li class="nav-item">
@@ -69,6 +80,29 @@
     </div>
 </nav>
 
-
+<!-- Search Modal -->
+<div class="modal fade" id="searchModal" tabindex="-1" role="dialog" aria-labelledby="searchModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="searchModalLabel">Tìm kiếm sản phẩm</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form action="search" method="post" id="searchForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="txt" placeholder="Nhập từ khóa tìm kiếm..." required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="submit" form="searchForm" class="btn btn-primary">Tìm kiếm</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!--end of menu-->
