@@ -1716,4 +1716,17 @@ public class DAO {
 		 */
    }
 
+    public void updatePassword(int accountId, String newPassword) {
+        String query = "update Account set [pass]=? where [uID]=?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, newPassword);
+            ps.setInt(2, accountId);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

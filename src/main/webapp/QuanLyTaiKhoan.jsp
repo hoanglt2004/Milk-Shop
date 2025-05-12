@@ -173,7 +173,6 @@
                 <tr>
                   <th scope="col">ID</th>
                   <th scope="col">Username</th>
-                  <th scope="col">Là khách hàng</th>
                   <th scope="col">Là Admin</th>
                   <th scope="col">Email</th>
                 </tr>
@@ -181,10 +180,8 @@
               <tbody>
                 <c:forEach items="${listA}" var="o">
                 <tr>
-
                    <td>${o.id}</td>
                		<td>${o.user}</td>
-                   <td>${o.isSell}</td>
                    <td>${o.isAdmin}</td>
                    <td>${o.email}</td>
                    <td>
@@ -223,15 +220,16 @@
                                 <label>Password</label>
                                 <input name="pass" type="password" class="form-control" required>
                             </div>
-                            <div class="form-group form-check">
-			                    <input name="isSell" value="1" type="checkbox" class="form-check-input" id="isSell">
-			                    <label class="form-check-label" for="isSell">Là khách hàng</label>
-                			</div>
+                            <!-- Ẩn trường Là khách hàng -->
+                            <!--<div class="form-group form-check">
+								<input name="isSell" value="1" type="checkbox" class="form-check-input" id="isSell">
+								<label class="form-check-label" for="isSell">Là khách hàng</label>
+                 			</div>-->
                 			 
-                			 <div class="form-group form-check">
-			                    <input name="isAdmin" value="1" type="checkbox" class="form-check-input" id="isAdmin">
-			                    <label class="form-check-label" for="isAdmin">Là Admin</label>
-                			</div>
+                			<div class="form-group form-check">
+								<input name="isAdmin" value="1" type="checkbox" class="form-check-input" id="isAdmin">
+								<label class="form-check-label" for="isAdmin">Là Admin</label>
+                 			</div>
                 			 <div class="form-group">
                                 <label>Email</label>
                                 <input name="email" type="text" class="form-control" required>

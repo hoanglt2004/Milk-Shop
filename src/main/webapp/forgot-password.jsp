@@ -1,92 +1,149 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
-<link
-	href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-	rel="stylesheet" id="bootstrap-css">
-<script
-	src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-<script
-	src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<!------ Include the above in your HEAD tag ---------->
-
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-	integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-	crossorigin="anonymous">
-<link rel="stylesheet"
-	href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
-	integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
-	crossorigin="anonymous">
-<link href="css/login.css" rel="stylesheet" type="text/css" />
-<title>Forgot Password Form</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Khôi phục mật khẩu - Shoes Family</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css">
+    <link href="css/login.css" rel="stylesheet" type="text/css" />
+    <style>
+        .form-container {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-top: 50px;
+        }
+        .form-title {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        .form-group label {
+            font-weight: 500;
+            color: #555;
+        }
+        .form-control {
+            border-radius: 5px;
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+        .form-control:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.2rem rgba(0,123,255,.25);
+        }
+        .btn-retrieve {
+            background-color: #28a745;
+            border: none;
+            padding: 12px;
+            font-weight: 500;
+            margin-top: 20px;
+        }
+        .btn-retrieve:hover {
+            background-color: #218838;
+        }
+        .alert {
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .back-to-login {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-to-login a {
+            color: #007bff;
+            text-decoration: none;
+        }
+        .back-to-login a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
-<jsp:include page="Menu.jsp"></jsp:include>
-<div id="logreg-forms">
-            <form class="form-signin" action="forgotPassword" method="post">
-                <h1 class="h3 mb-3 font-weight-normal" style="text-align: center"> Forgot Password</h1>
-                <p class="text-success">${mess}</p>
-                <p class="text-danger">${error}</p>
-                <label for="username">Username</label>
-                <input name="username" type="text" id="username" class="form-control" placeholder="Username" required="" autofocus="">
-                <label for="email">Email</label>
-                <input name="email" type="text" id="email" class="form-control" placeholder="Email" required="" autofocus="">
-                <button class="btn btn-success btn-block" type="submit"><i class="fas fa-sign-in-alt"></i> Retrieve</button> 
-            </form>
-             
-</div>
-	
+    <jsp:include page="Menu.jsp"></jsp:include>
+    
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="form-container">
+                    <h2 class="form-title">Khôi phục mật khẩu</h2>
+                    
+                    <c:if test="${error != null}">
+                        <div class="alert alert-danger" role="alert">
+                            <i class="fas fa-exclamation-circle"></i> ${error}
+                        </div>
+                    </c:if>
+                    
+                    <c:if test="${mess != null}">
+                        <div class="alert alert-success" role="alert">
+                            <i class="fas fa-check-circle"></i> ${mess}
+                        </div>
+                    </c:if>
+                    
+                    <form action="forgotPassword" method="post" id="forgotPasswordForm">
+                        <div class="form-group">
+                            <label for="username">
+                                <i class="fas fa-user"></i> Tên đăng nhập
+                            </label>
+                            <input type="text" class="form-control" id="username" name="username" 
+                                   placeholder="Nhập tên đăng nhập của bạn" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">
+                                <i class="fas fa-envelope"></i> Email
+                            </label>
+                            <input type="email" class="form-control" id="email" name="email" 
+                                   placeholder="Nhập email đã đăng ký" required>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-success btn-block btn-retrieve">
+                            <i class="fas fa-key"></i> Khôi phục mật khẩu
+                        </button>
+                    </form>
+                    
+                    <div class="back-to-login">
+                        <a href="login">
+                            <i class="fas fa-arrow-left"></i> Quay lại trang đăng nhập
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-	<script
-		src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-		integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-		crossorigin="anonymous"></script>
-	<script>
-            function toggleResetPswd(e) {
-                e.preventDefault();
-                $('#logreg-forms .form-signin').toggle() // display:block or none
-                $('#logreg-forms .form-reset').toggle() // display:block or none
-            }
-
-            function toggleSignUp(e) {
-                e.preventDefault();
-                $('#logreg-forms .form-signin').toggle(); // display:block or none
-                $('#logreg-forms .form-signup').toggle(); // display:block or none
-            }
-
-            $(() => {
-                // Login Register Form
-                $('#logreg-forms #forgot_pswd').click(toggleResetPswd);
-                $('#logreg-forms #cancel_reset').click(toggleResetPswd);
-                $('#logreg-forms #btn-signup').click(toggleSignUp);
-                $('#logreg-forms #cancel_signup').click(toggleSignUp);
-            })
-            
-            window.addEventListener("load",function loadAmountCart(){
-                        	 $.ajax({
-                                 url: "/WebsiteBanGiay/loadAllAmountCart",
-                                 type: "get", //send it through get method
-                                 data: {
-                                     
-                                 },
-                                 success: function (responseData) {
-                                     document.getElementById("amountCart").innerHTML = responseData;
-                                 }
-                             });
-                        },false);       
-        </script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Form validation
+            $('#forgotPasswordForm').on('submit', function(e) {
+                var email = $('#email').val();
+                var username = $('#username').val();
+                
+                if (!email || !username) {
+                    e.preventDefault();
+                    alert('Vui lòng điền đầy đủ thông tin!');
+                    return false;
+                }
+                
+                // Basic email validation
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    e.preventDefault();
+                    alert('Vui lòng nhập địa chỉ email hợp lệ!');
+                    return false;
+                }
+            });
+        });
+    </script>
 </body>
 </html>

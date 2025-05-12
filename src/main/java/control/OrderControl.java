@@ -128,8 +128,6 @@ public class OrderControl extends HttpServlet {
 		        
 		        //old code
 				Email email =new Email();
-				email.setFrom("buisyduc2710@gmail.com"); //chinh lai email quan tri tai day [chu y dung email con hoat dong]
-				email.setFromPassword("demdblquwwtzlfsh"); //mat khau email tren
 				email.setTo(emailAddress);
 				email.setSubject("Dat hang thanh cong tu Fashion Family");
 				StringBuilder sb = new StringBuilder();

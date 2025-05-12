@@ -41,13 +41,7 @@
                                                         <div class="py-2 text-uppercase">Đơn Giá</div>
                                                     </th>
                                                      <th scope="col" class="border-0 bg-light">
-                                                        <div class="py-2 text-uppercase">Màu Sắc</div>
-                                                    </th>
-                                                     <th scope="col" class="border-0 bg-light">
                                                         <div class="py-2 text-uppercase">Delivery</div>
-                                                    </th>
-                                                     <th scope="col" class="border-0 bg-light">
-                                                        <div class="py-2 text-uppercase">Kích Thước</div>
                                                     </th>
                                                     <th scope="col" class="border-0 bg-light">
                                                         <div class="py-2 text-uppercase">Số Lượng</div>
@@ -73,13 +67,7 @@
                                                         </div>
                                                     </th>
                                                     <td class="align-middle"><strong>${p.price}$</strong></td>
-                                                    <td class="align-middle"><strong>${p.color}</strong></td>
                                                     <td class="align-middle"><strong>${p.delivery}</strong></td>
-                                                    
-                     <td class="align-middle">
-                     	<strong>${o.size}</strong>
-                    </td>
-                    
                                                     <td class="align-middle">
                                                         <a href="subAmountCart?productID=${o.productID}&amount=${o.amount}"><button class="btnSub">-</button></a> 
                                                         <strong>${o.amount}</strong>
