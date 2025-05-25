@@ -267,7 +267,7 @@
                 <label for="form76">Your review</label>
               </div>
               <div class="text-right pb-2">
-                <button type="button" class="btn btn-primary" onclick="addReview(${detail.id})">Add a review</button>
+                <button type="button" class="btn btn-primary" onclick="addReview('${detail.id}')">Add a review</button>
               </div>
             </div>
             
@@ -370,7 +370,7 @@
        <script>
         window.addEventListener("load",function loadAmountCart(){
                         	 $.ajax({
-                                 url: "/WebsiteBanGiay/loadAllAmountCart",
+                                 url: "/WebsiteBanSua/loadAllAmountCart",
                                  type: "get", //send it through get method
                                  data: {
                                      
@@ -384,7 +384,7 @@
         function addReview(pID){
            var cntReview = document.getElementById("form76").value;
             $.ajax({
-                url: "/WebsiteBanGiay/addReview",
+                url: "/WebsiteBanSua/addReview",
                 type: "get", //send it through get method
                 data: {
                 	productID: pID,

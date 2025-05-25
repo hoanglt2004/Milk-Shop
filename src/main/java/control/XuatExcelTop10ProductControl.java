@@ -13,6 +13,7 @@ import entity.Invoice;
 import entity.Product;
 import entity.SoLuongDaBan;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -65,7 +66,13 @@ public class XuatExcelTop10ProductControl extends HttpServlet {
         int randomNum =  rn.nextInt(range) + minimum;
 
         
-        FileOutputStream file=new FileOutputStream("C:\\ExcelWebBanGiay\\"+"top-10-san-pham-ban-chay-"+Integer.toString(randomNum)+".xlsx");
+        // Tạo thư mục nếu chưa tồn tại
+File directory = new File("C:\\Users\\ADMIN\\Documents\\ExcelWebBanSua");
+if (!directory.exists()) {
+    directory.mkdirs();
+}
+
+FileOutputStream file=new FileOutputStream("C:\\Users\\ADMIN\\Documents\\ExcelWebBanSua\\"+"top-10-san-pham-ban-chay-"+Integer.toString(randomNum)+".xlsx");
         XSSFWorkbook workbook=new XSSFWorkbook();
         XSSFSheet workSheet=workbook.createSheet("1");
         XSSFRow row;

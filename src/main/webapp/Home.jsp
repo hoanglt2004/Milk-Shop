@@ -255,7 +255,7 @@
         	 function loadMore() {
                  var amount = document.getElementsByClassName("product").length;
                  $.ajax({
-                     url: "/WebsiteBanGiay/load",
+                     url: "/WebsiteBanSua/load",
                      type: "get", //send it through get method
                      data: {
                          exits: amount
@@ -272,7 +272,7 @@
         	 function loadMoreNike() {
                  var amountNike = document.getElementsByClassName("productNike").length;
                  $.ajax({
-                     url: "/WebsiteBanGiay/loadNike",
+                     url: "/WebsiteBanSua/loadNike",
                      type: "get", //send it through get method
                      data: {
                          exitsNike: amountNike
@@ -289,7 +289,7 @@
         	 function loadMoreAdidas() {
                  var amountAdidas = document.getElementsByClassName("productAdidas").length;
                  $.ajax({
-                     url: "/WebsiteBanGiay/loadAdidas",
+                     url: "/WebsiteBanSua/loadAdidas",
                      type: "get", //send it through get method
                      data: {
                          exitsAdidas: amountAdidas
@@ -306,7 +306,7 @@
              function searchByName(param){
                  var txtSearch = param.value;
                  $.ajax({
-                     url: "/WebsiteBanGiay/searchAjax",
+                     url: "/WebsiteBanSua/searchAjax",
                      type: "get", //send it through get method
                      data: {
                          txt: txtSearch
@@ -322,7 +322,7 @@
              }
              function load(cateid){
              	 $.ajax({
-                      url: "/WebsiteBanGiay/category",
+                      url: "/WebsiteBanSua/category",
                       type: "get", //send it through get method
                       data: {
                           cid: cateid
@@ -334,7 +334,7 @@
              }    
              function loadAmountCart(){
              	 $.ajax({
-                      url: "/WebsiteBanGiay/loadAllAmountCart",
+                      url: "/WebsiteBanSua/loadAllAmountCart",
                       type: "get", //send it through get method
                       data: {
                           
@@ -365,4 +365,3 @@
   <script type="text/javascript" src="https://mdbootstrap.com/previews/ecommerce-demo/js/mdb.ecommerce.min.js"></script>
     </body>
 </html>
-
