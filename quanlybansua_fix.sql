@@ -65,13 +65,13 @@ CREATE TABLE [dbo].[Cart](
 GO
 
 CREATE TABLE [dbo].[Invoice](
-    [invoiceID] [int] IDENTITY(1,1) NOT NULL,
-    [customerID] [int] NOT NULL,
-    [date] [datetime] NOT NULL,
-    [totalMoney] [float] NOT NULL,
+    [maHD] [int] IDENTITY(1,1) NOT NULL,
+    [accountID] [int] NULL,
+    [tongGia] [float] NULL,
+    [ngayXuat] [datetime] NULL,
     [status] [nvarchar](50) DEFAULT N'Chờ xác nhận',
     [deliveryDate] [datetime] NULL,
-    CONSTRAINT [PK_Invoice] PRIMARY KEY CLUSTERED ([invoiceID] ASC)
+    CONSTRAINT [PK_Invoice] PRIMARY KEY CLUSTERED ([maHD] ASC)
 )
 GO
 
@@ -183,74 +183,6 @@ INSERT [dbo].[Category] ([cid], [cname]) VALUES (3, N'Sữa chua')
 GO
 
 SET IDENTITY_INSERT [dbo].[Invoice] ON
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (1, 1, CAST(N'2021-11-20T00:00:00.000' AS DateTime), 999, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (2, 1, CAST(N'2021-11-20T00:00:00.000' AS DateTime), 800, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (3, 1, CAST(N'2021-11-20T00:00:00.000' AS DateTime), 400, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (4, 1, CAST(N'2021-11-20T00:00:00.000' AS DateTime), 511.2, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (5, 1, CAST(N'2021-11-20T00:00:00.000' AS DateTime), 241.20000000000002, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (6, 1, CAST(N'2021-11-20T00:00:00.000' AS DateTime), 392.40000000000003, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (7, 1, CAST(N'2021-11-20T00:00:00.000' AS DateTime), 482.40000000000003, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (8, 2, CAST(N'2021-11-18T00:00:00.000' AS DateTime), 300, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (9, 2, CAST(N'2021-11-17T00:00:00.000' AS DateTime), 400, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (10, 1, CAST(N'2021-11-20T00:00:00.000' AS DateTime), 180, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (11, 1, CAST(N'2021-11-20T00:00:00.000' AS DateTime), 1079.1000000000001, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (12, 1, CAST(N'2021-11-20T00:00:00.000' AS DateTime), 122.4, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (13, 1, CAST(N'2021-11-20T00:00:00.000' AS DateTime), 1394.1000000000001, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (14, 2, CAST(N'2021-10-01T00:00:00.000' AS DateTime), 256, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (15, 3, CAST(N'2021-10-03T00:00:00.000' AS DateTime), 450, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (16, 2, CAST(N'2021-09-05T00:00:00.000' AS DateTime), 200, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (17, 2, CAST(N'2021-08-06T00:00:00.000' AS DateTime), 100, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (18, 3, CAST(N'2021-07-07T00:00:00.000' AS DateTime), 156, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (19, 3, CAST(N'2021-06-06T00:00:00.000' AS DateTime), 256, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (20, 3, CAST(N'2021-05-05T00:00:00.000' AS DateTime), 158, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (21, 2, CAST(N'2021-04-04T00:00:00.000' AS DateTime), 800, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (22, 3, CAST(N'2021-03-03T00:00:00.000' AS DateTime), 750, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (23, 2, CAST(N'2021-02-02T00:00:00.000' AS DateTime), 657, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (24, 1, CAST(N'2021-01-01T00:00:00.000' AS DateTime), 800, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (25, 1, CAST(N'2021-11-25T00:00:00.000' AS DateTime), 1491.6, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (26, 1, CAST(N'2021-11-26T00:00:00.000' AS DateTime), 396, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (27, 1, CAST(N'2021-11-29T00:00:00.000' AS DateTime), 761.2, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (28, 1, CAST(N'2021-11-29T00:00:00.000' AS DateTime), 1687.4, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (29, 1, CAST(N'2021-11-29T00:00:00.000' AS DateTime), 1760, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (30, 1, CAST(N'2021-12-01T00:00:00.000' AS DateTime), 2175.8, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (31, 1, CAST(N'2021-12-01T00:00:00.000' AS DateTime), 396, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (32, 1, CAST(N'2021-12-02T00:00:00.000' AS DateTime), 739.2, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (33, 1, CAST(N'2021-12-03T00:00:00.000' AS DateTime), 567.6, N'Chờ xác nhận', NULL)
-INSERT [dbo].[Invoice] ([invoiceID], [customerID], [date], [totalMoney], [status], [deliveryDate]) 
-VALUES (34, 1, CAST(N'2021-12-14T00:00:00.000' AS DateTime), 803, N'Chờ xác nhận', NULL)
 INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (1, 1, 999, CAST(N'2021-11-20T00:00:00.000' AS DateTime))
 INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (2, 1, 800, CAST(N'2021-11-20T00:00:00.000' AS DateTime))
 INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (3, 1, 400, CAST(N'2021-11-20T00:00:00.000' AS DateTime))
