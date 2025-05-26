@@ -1,4 +1,6 @@
 {
     "java.configuration.updateBuildConfiguration": "automatic",
-    "editor.linkedEditing": true
+    "editor.linkedEditing": true,
+    "IDX.aI.enableInlineCompletion": true,
+    "IDX.aI.enableCodebaseIndexing": true
 }

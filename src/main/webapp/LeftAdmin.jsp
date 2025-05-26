@@ -42,6 +42,12 @@
          <a href="managerSupplier" class="list-group-item list-group-item-action py-2 ripple">
           <i class="fas fa-parachute-box fa-fw me-3"></i><span>Quản lý nhà cung cấp</span>
         </a>
+        <a href="quanLyKhuyenMai" class="list-group-item list-group-item-action py-2 ripple">
+          <i class="fas fa-tags fa-fw me-3"></i><span>Quản lý khuyến mãi</span>
+        </a>
+        <a href="quanLyKho" class="list-group-item list-group-item-action py-2 ripple">
+          <i class="fas fa-warehouse fa-fw me-3"></i><span>Quản lý kho</span>
+        </a>
       </div>
     </div>
   </nav>
