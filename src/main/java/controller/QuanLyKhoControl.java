@@ -24,7 +24,7 @@ public class QuanLyKhoControl extends HttpServlet {
         WarehouseDAO warehouseDAO = new WarehouseDAO();
         List<Warehouse> listEntries = warehouseDAO.getAllWarehouseEntries();
         List<Product> listProducts = warehouseDAO.getAllProducts();
-        List<ProductStock> listProductStock = warehouseDAO.getTotalStockPerProduct();
+        List<dao.WarehouseDAO.ProductStock> listProductStock = warehouseDAO.getTotalStockPerProduct();
 
         request.setAttribute("listE", listEntries);
         request.setAttribute("listP", listProducts); // Pass product list for dropdown
