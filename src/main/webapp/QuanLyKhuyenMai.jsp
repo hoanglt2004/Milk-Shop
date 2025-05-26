@@ -17,77 +17,79 @@
 </head>
 <body>
     <c:set var="currentPage" value="quanLyKhuyenMai" />
-    <jsp:include page="LeftAdmin.jsp" />
-
-    <div class="container-xl">
-        <div class="table-responsive">
-            <div class="table-wrapper">
-                <div class="table-title">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <h2>Quản Lý <b>Khuyến Mãi</b></h2>
+    <div class="container-fluid">
+        <div class="row">
+            <jsp:include page="LeftAdmin.jsp"/>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="container pt-4">
+                    <section class="mb-4">
+                        <div class="card">
+                            <div class="card-header py-3 row">
+                                <div class="col-sm-6">
+                                    <h5 class="mb-0 text-left"><strong>Quản Lý Khuyến Mãi</strong></h5>
+                                </div>
+                                <div class="col-sm-6 text-right">
+                                    <a href="#addDiscountModal" class="btn btn-success" data-toggle="modal"><i class="fa fa-plus"></i></a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <c:if test="${requestScope.errorMessage != null}">
+                                    <div class="alert alert-danger" role="alert">
+                                        ${requestScope.errorMessage}
+                                    </div>
+                                </c:if>
+                                 <c:if test="${requestScope.successMessage != null}">
+                                    <div class="alert alert-success" role="alert">
+                                        ${requestScope.successMessage}
+                                    </div>
+                                </c:if>
+                                <table class="table table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Sản phẩm</th>
+                                            <th>Phần trăm giảm</th>
+                                            <th>Ngày bắt đầu</th>
+                                            <th>Ngày kết thúc</th>
+                                            <th>Trạng thái</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="${listD}" var="d">
+                                            <tr>
+                                                <td>${d.discountID}</td>
+                                                <td>${d.product.name}</td>
+                                                <td>${d.percentOff}%</td>
+                                                <td><fmt:formatDate value="${d.startDate}" pattern="yyyy-MM-dd" /></td>
+                                                <td><fmt:formatDate value="${d.endDate}" pattern="yyyy-MM-dd" /></td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${d.isActive}">Active</c:when>
+                                                        <c:otherwise>Inactive</c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <a href="#editDiscountModal" class="btn btn-warning btn-action edit" data-toggle="modal"
+                                                       data-id="${d.discountID}"
+                                                       data-productid="${d.productID}"
+                                                       data-percentoff="${d.percentOff}"
+                                                       data-startdate="<fmt:formatDate value='${d.startDate}' pattern='yyyy-MM-dd' />"
+                                                       data-enddate="<fmt:formatDate value='${d.endDate}' pattern='yyyy-MM-dd' />"
+                                                       data-isactive="${d.isActive}">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                    <a href="#deleteDiscountModal" class="btn btn-danger btn-action delete" data-toggle="modal" data-id="${d.discountID}"><i class="fa fa-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="col-sm-6">
-                            <a href="#addDiscountModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Thêm mới khuyến mãi</span></a>
-                        </div>
-                    </div>
+                    </section>
                 </div>
-                
-                <c:if test="${requestScope.errorMessage != null}">
-                    <div class="alert alert-danger" role="alert">
-                        ${requestScope.errorMessage}
-                    </div>
-                </c:if>
-                 <c:if test="${requestScope.successMessage != null}">
-                    <div class="alert alert-success" role="alert">
-                        ${requestScope.successMessage}
-                    </div>
-                </c:if>
-
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Sản phẩm</th>
-                            <th>Phần trăm giảm</th>
-                            <th>Ngày bắt đầu</th>
-                            <th>Ngày kết thúc</th>
-                            <th>Trạng thái</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${listD}" var="d">
-                            <tr>
-                                <td>${d.discountID}</td>
-                                <td>${d.product.name}</td>
-                                <td>${d.percentOff}%</td>
-                                <td><fmt:formatDate value="${d.startDate}" pattern="yyyy-MM-dd" /></td>
-                                <td><fmt:formatDate value="${d.endDate}" pattern="yyyy-MM-dd" /></td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${d.isActive}">Active</c:when>
-                                        <c:otherwise>Inactive</c:otherwise>
-                                    </c:choose>
-                                </td>
-                                <td>
-                                    <a href="#editDiscountModal" class="edit" data-toggle="modal"
-                                       data-id="${d.discountID}"
-                                       data-productid="${d.productID}"
-                                       data-percentoff="${d.percentOff}"
-                                       data-startdate="<fmt:formatDate value="${d.startDate}" pattern="yyyy-MM-dd" />"
-                                       data-enddate="<fmt:formatDate value="${d.endDate}" pattern="yyyy-MM-dd" />"
-                                       data-isactive="${d.isActive}">
-                                        <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
-                                    </a>
-                                    <a href="#deleteDiscountModal" class="delete" data-toggle="modal" data-id="${d.discountID}"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-                <%-- Pagination can be added here later if needed --%>
-            </div>
+            </main>
         </div>
     </div>
 
@@ -104,11 +106,9 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label>Sản phẩm</label>
-                            <select name="productID" class="form-control" required>
-                                <c:forEach items="${listP}" var="p">
-                                    <option value="${p.id}">${p.name}</option>
-                                </c:forEach>
-                            </select>
+                            <input type="text" id="productSearch" class="form-control" placeholder="Nhập tên sản phẩm..." autocomplete="off" required>
+                            <input type="hidden" name="productID" id="productID">
+                            <div id="productSuggestions" class="list-group"></div>
                         </div>
                         <div class="form-group">
                             <label>Phần trăm giảm</label>
@@ -241,6 +241,40 @@
             $('.delete').on('click', function() {
                 var id = $(this).data('id');
                 $('#deleteDiscountID').val(id);
+            });
+
+            $('#productSearch').on('input', function() {
+                var query = $(this).val();
+                if (query.length < 1) {
+                    $('#productSuggestions').empty();
+                    return;
+                }
+                $.ajax({
+                    url: 'searchProduct',
+                    type: 'GET',
+                    data: { name: query },
+                    success: function(data) {
+                        var suggestions = JSON.parse(data);
+                        var html = '';
+                        suggestions.forEach(function(product) {
+                            html += '<a href="#" class="list-group-item list-group-item-action" data-id="' + product.id + '" data-name="' + product.name + '">' + product.name + '</a>';
+                        });
+                        $('#productSuggestions').html(html).show();
+                    }
+                });
+            });
+            $('#productSuggestions').on('click', 'a', function(e) {
+                e.preventDefault();
+                var id = $(this).data('id');
+                var name = $(this).data('name');
+                $('#productSearch').val(name);
+                $('#productID').val(id);
+                $('#productSuggestions').empty();
+            });
+            $(document).click(function(e) {
+                if (!$(e.target).closest('#productSearch, #productSuggestions').length) {
+                    $('#productSuggestions').empty();
+                }
             });
         });
     </script>

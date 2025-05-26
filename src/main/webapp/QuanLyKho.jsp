@@ -23,104 +23,96 @@
 </head>
 <body>
     <c:set var="currentPage" value="quanLyKho" />
-    <jsp:include page="LeftAdmin.jsp" />
-
-    <div class="container-xl">
-        <div class="table-responsive">
-            <div class="table-wrapper">
-                <div class="table-title">
-                    <div class="row">
-                        <div class="col-sm-6">
-                            <h2>Quản Lý <b>Kho</b></h2>
+    <div class="container-fluid">
+        <div class="row">
+            <jsp:include page="LeftAdmin.jsp"/>
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="container pt-4">
+                    <section class="mb-4">
+                        <div class="card">
+                            <div class="card-header py-3 row">
+                                <div class="col-sm-6">
+                                    <h5 class="mb-0 text-left"><strong>Quản Lý Kho</strong></h5>
+                                </div>
+                                <div class="col-sm-6 text-right">
+                                    <a href="#addWarehouseModal" class="btn btn-success" data-toggle="modal"><i class="fa fa-plus"></i></a>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <table class="table table-hover text-nowrap">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Sản phẩm</th>
+                                            <th>Số lượng nhập</th>
+                                            <th>Ngày nhập</th>
+                                            <th>Số lượng còn</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach items="${listE}" var="e">
+                                            <tr>
+                                                <td>${e.warehouseID}</td>
+                                                <td>${e.product.name}</td>
+                                                <td>${e.quantity}</td>
+                                                <td><fmt:formatDate value="${e.importDate}" pattern="yyyy-MM-dd HH:mm" /></td>
+                                                <td>${e.remainingQuantity}</td>
+                                                <td>
+                                                    <a href="#editWarehouseModal" class="btn btn-warning btn-action edit" data-toggle="modal"
+                                                       data-id="${e.warehouseID}"
+                                                       data-productid="${e.productID}"
+                                                       data-quantity="${e.quantity}"
+                                                       data-importdate="<fmt:formatDate value='${e.importDate}' pattern='yyyy-MM-dd\'T\'HH:mm' />"
+                                                       data-remainingquantity="${e.remainingQuantity}">
+                                                        <i class="fa fa-edit"></i>
+                                                    </a>
+                                                    <a href="#deleteWarehouseModal" class="btn btn-danger btn-action delete" data-toggle="modal" data-id="${e.warehouseID}"><i class="fa fa-trash"></i></a>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
-                        <div class="col-sm-6">
-                            <a href="#addWarehouseModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Nhập kho mới</span></a>
-                        </div>
-                    </div>
+                    </section>
                 </div>
-
-                 <c:if test="${requestScope.errorMessage != null}">
-                    <div class="alert alert-danger" role="alert">
-                        ${requestScope.errorMessage}
-                    </div>
-                </c:if>
-                 <c:if test="${requestScope.successMessage != null}">
-                    <div class="alert alert-success" role="alert">
-                        ${requestScope.successMessage}
-                    </div>
-                </c:if>
-
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Sản phẩm</th>
-                            <th>Số lượng nhập</th>
-                            <th>Ngày nhập</th>
-                            <th>Số lượng tồn</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${listE}" var="e">
-                            <tr>
-                                <td>${e.warehouseID}</td>
-                                <td>${e.product.name}</td>
-                                <td>${e.quantity}</td>
-                                <td><fmt:formatDate value="${e.importDate}" pattern="yyyy-MM-dd HH:mm" /></td>
-                                <td>${e.remainingQuantity}</td>
-                                <td>
-                                     <a href="#editWarehouseModal" class="edit" data-toggle="modal"
-                                       data-id="${e.warehouseID}"
-                                       data-productid="${e.productID}"
-                                       data-quantity="${e.quantity}"
-                                       data-importdate="<fmt:formatDate value="${e.importDate}" pattern="yyyy-MM-dd'T'HH:mm" />"
-                                       data-remainingquantity="${e.remainingQuantity}">
-                                        <i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i>
-                                    </a>
-                                    <a href="#deleteWarehouseModal" class="delete" data-toggle="modal" data-id="${e.warehouseID}"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
-                                </td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-                <%-- Pagination can be added here later if needed --%>
-            </div>
-        </div>
-
-        <%-- Product Stock Overview --%>
-        <div class="table-responsive product-stock-table">
-             <div class="table-wrapper">
-                  <div class="table-title">
-                    <div class="row">
-                        <div class="col-sm-12">
-                            <h3>Tổng Tồn Kho Theo Sản Phẩm</b></h3>
-                        </div>
-                    </div>
-                </div>
-                <table class="table table-striped table-hover">
-                    <thead>
-                        <tr>
-                            <th>Sản phẩm ID</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Tổng số lượng tồn</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <c:forEach items="${listPS}" var="ps">
-                            <tr>
-                                <td>${ps.productID}</td>
-                                <td>${ps.productName}</td>
-                                <td>${ps.totalRemaining}</td>
-                            </tr>
-                        </c:forEach>
-                    </tbody>
-                </table>
-             </div>
+            </main>
         </div>
     </div>
 
-    <!-- Add Warehouse Modal HTML -->
+    <!-- Tổng tồn kho theo sản phẩm - Đặt trong card Bootstrap -->
+    <section class="mb-4">
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0"><strong>Tổng tồn kho theo sản phẩm</strong></h5>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover text-nowrap mb-0">
+                        <thead>
+                            <tr>
+                                <th>Sản phẩm ID</th>
+                                <th>Tên sản phẩm</th>
+                                <th>Tổng số lượng tồn</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <c:forEach items="${listPS}" var="ps">
+                                <tr>
+                                    <td>${ps.productID}</td>
+                                    <td>${ps.productName}</td>
+                                    <td>${ps.totalRemaining}</td>
+                                </tr>
+                            </c:forEach>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal thêm kho mới -->
     <div id="addWarehouseModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -131,12 +123,12 @@
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     </div>
                     <div class="modal-body">
-                         <div class="form-group">
+                        <div class="form-group">
                             <label>Sản phẩm</label>
                             <select name="productID" class="form-control" required>
                                 <c:forEach items="${listP}" var="p">
                                     <option value="${p.id}">${p.name}</option>
-                                ></c:forEach>
+                                </c:forEach>
                             </select>
                         </div>
                         <div class="form-group">
@@ -157,7 +149,7 @@
         </div>
     </div>
 
-    <!-- Edit Warehouse Modal HTML -->
+    <!-- Modal sửa kho (có thể bổ sung tương tự modal thêm) -->
     <div id="editWarehouseModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -199,7 +191,7 @@
         </div>
     </div>
 
-    <!-- Delete Warehouse Modal HTML -->
+    <!-- Modal xóa kho (có thể bổ sung tương tự modal thêm) -->
     <div id="deleteWarehouseModal" class="modal fade">
         <div class="modal-dialog">
             <div class="modal-content">

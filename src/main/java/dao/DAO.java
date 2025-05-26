@@ -1729,4 +1729,24 @@ public class DAO {
         }
     }
 
+    public List<Product> searchProductByName(String name) {
+        List<Product> list = new ArrayList<>();
+        String query = "SELECT id, name FROM Product WHERE name LIKE ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, "%" + name + "%");
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                Product p = new Product();
+                p.setId(rs.getInt("id"));
+                p.setName(rs.getString("name"));
+                list.add(p);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
 }

@@ -126,14 +126,17 @@ public class DiscountDAO extends DBContext {
              PreparedStatement ps = conn.prepareStatement(query);
              ResultSet rs = ps.executeQuery()) {
 
+            System.out.println("Executing query: " + query);
             while (rs.next()) {
                 Product product = new Product();
                 product.setId(rs.getInt("id"));
                 product.setName(rs.getString("name"));
-                // You can set other product properties if needed
+                System.out.println("Found product: " + product.getId() + " - " + product.getName());
                 list.add(product);
             }
+            System.out.println("Total products found: " + list.size());
         } catch (SQLException e) {
+            System.err.println("Error in getAllProducts: " + e.getMessage());
             e.printStackTrace();
         }
         return list;
