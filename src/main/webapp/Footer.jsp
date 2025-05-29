@@ -7,8 +7,8 @@
                 <h5>Giày</h5>
                 <hr class="bg-white mb-2 mt-0 d-inline-block mx-auto w-25">
                 <ul class="list-unstyled">
-                    <li><a href="#nike">Nike</a></li>
-                    <li><a href="#adidas">Adidas</a></li>
+                    <li><a href="#nike">Sữa tươi</a></li>
+                    <li><a href="#adidas">Sữa bột</a></li>
                     <li><a href="#moiNhat">Mới nhất</a></li>
                     <li><a href="#tatCa">Tất cả</a></li>
                 </ul>
@@ -34,10 +34,9 @@
                 <h5>THÔNG TIN SHOP</h5>
                 <hr class="bg-white mb-2 mt-0 d-inline-block mx-auto w-25">
                 <ul class="list-unstyled">
-                    <li><i class="fa fa-home mr-2"></i>số 1 Võ Văn Ngân Thủ Đức</li>
-                    <li><i class="fa fa-envelope mr-2"></i>shoesfamily@gmail.com</li>
-                    <li><i class="fa fa-phone mr-2"></i>0911217589</li>
-                    <li><i class="fa fa-print mr-2"></i>0911217589</li>
+                    <li><i class="fa fa-home mr-2"></i>Học viện Công nghệ Bưu chính Viễn thông</li>
+                    <li><i class="fa fa-envelope mr-2"></i>milkvn@gmail.com</li>
+                    <li><i class="fa fa-phone mr-2"></i>0999999969</li>
                 </ul>
             </div>
             <div class="col-12 copyright mt-3">
@@ -46,7 +45,7 @@
                 </p>
             </div>
              <div class="col text-center border-top">
-                <strong>Nhom &copy;2021. All rights reserved.</strong>
+                <strong>Nhom 12&copy;2025. All rights reserved.</strong>
              </div>
         </div>
     </div>
