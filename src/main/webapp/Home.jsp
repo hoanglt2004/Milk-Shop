@@ -17,6 +17,7 @@
                 integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
                 crossorigin="anonymous">
             <link href="css/style.css" rel="stylesheet" type="text/css" />
+            <link href="css/categories.css" rel="stylesheet" type="text/css" />
 
             <!-- Font Awesome -->
             <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
@@ -169,6 +170,61 @@
                 </div>
             </div>
 
+            <!-- Categories Section -->
+            <div class="container" style="margin-top: 40px;">
+                <div class="row">
+                    <div class="col-12 text-center mb-4">
+                        <h2 class="categories-title">DANH MỤC SẢN PHẨM</h2>
+                        <p class="categories-subtitle">Chọn danh mục để khám phá các sản phẩm tuyệt vời</p>
+                    </div>
+                </div>
+                <div class="row justify-content-center">
+                    <c:forEach items="${listCC}" var="category">
+                        <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
+                            <div class="category-card card h-100" onclick="goToShopCategory(${category.cid})">
+                                <div class="card-body text-center p-4">
+                                    <div class="category-icon mb-3">
+                                        <c:choose>
+                                            <c:when test="${category.cname == 'Sữa bột'}">
+                                                <i class="fas fa-baby fa-3x category-milk-powder"></i>
+                                            </c:when>
+                                            <c:when test="${category.cname == 'Sữa tươi'}">
+                                                <i class="fas fa-glass-whiskey fa-3x category-fresh-milk"></i>
+                                            </c:when>
+                                            <c:when test="${category.cname == 'Sữa chua'}">
+                                                <i class="fas fa-ice-cream fa-3x category-yogurt"></i>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <i class="fas fa-shopping-basket fa-3x category-default"></i>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
+                                    <h4 class="card-title font-weight-bold mb-2">${category.cname}</h4>
+                                    <p class="card-text text-muted">
+                                        <c:choose>
+                                            <c:when test="${category.cname == 'Sữa bột'}">
+                                                Dinh dưỡng hoàn hảo cho bé yêu
+                                            </c:when>
+                                            <c:when test="${category.cname == 'Sữa tươi'}">
+                                                Tươi ngon, giàu vitamin và khoáng chất
+                                            </c:when>
+                                            <c:when test="${category.cname == 'Sữa chua'}">
+                                                Probiotics tốt cho hệ tiêu hóa
+                                            </c:when>
+                                            <c:otherwise>
+                                                Sản phẩm chất lượng cao
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </p>
+                                    <div class="category-arrow">
+                                        <i class="fas fa-arrow-right text-primary"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
 
             <div class="container">
 
@@ -371,6 +427,11 @@
                             document.getElementById("amountCart").innerHTML = responseData;
                         }
                     });
+                }
+
+                function goToShopCategory(categoryId) {
+                    // Redirect to shop page with category filter
+                    window.location.href = "shop?cid=" + categoryId;
                 }         
             </script>
 

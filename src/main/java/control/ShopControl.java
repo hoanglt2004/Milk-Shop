@@ -37,24 +37,38 @@ public class ShopControl extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         //b1: get data from dao
         DAO dao = new DAO();
-//        List<Product> list = dao.getAllProduct();
         List<Category> listC = dao.getAllCategory();
-
-       
         
+        // Check if category ID is provided
+        String cid = request.getParameter("cid");
         String index = request.getParameter("index");
         if(index == null) {
         	index="1";
         }
         int indexPage = Integer.parseInt(index);
         
-      
-        List<Product> list = dao.getProductByIndex(indexPage);
-//        List<Category> listC = dao.getAllCategory();
-        int allProduct = dao.countAllProduct();
-        int endPage = allProduct/9;
-        if(allProduct % 9 != 0) {
-        	endPage++;
+        List<Product> list;
+        int allProduct;
+        int endPage;
+        
+        if(cid != null && !cid.isEmpty()) {
+            // Get products by category
+            list = dao.getProductByCID(cid);
+            allProduct = list.size();
+            endPage = allProduct/9;
+            if(allProduct % 9 != 0) {
+                endPage++;
+            }
+            // Set selected category for JSP
+            request.setAttribute("selectedCid", cid);
+        } else {
+            // Get all products with pagination
+            list = dao.getProductByIndex(indexPage);
+            allProduct = dao.countAllProduct();
+            endPage = allProduct/9;
+            if(allProduct % 9 != 0) {
+                endPage++;
+            }
         }
         
         
