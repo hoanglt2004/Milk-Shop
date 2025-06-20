@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -134,7 +136,7 @@
                   <th scope="col"></th>
                   <th scope="col">Mã Hóa Đơn</th>
                   <th scope="col">Account</th>
-                  <th scope="col">Tổng Giá($)</th>
+                  <th scope="col">Tổng Giá (VNĐ)</th>
                   <th scope="col">Ngày Xuất</th>
                 </tr>
               </thead>
@@ -149,7 +151,10 @@
                   <td>${a.user }</td>
                   </c:if>
                   </c:forEach>
-                  <td>${String.format("%.02f",i.tongGia) }</td>
+                  <td>
+                    <fmt:formatNumber value="${i.tongGia}" pattern="#,###" var="invoiceTotal"/>
+                    ${fn:replace(invoiceTotal, ',', '.')} VNĐ
+                  </td>
                   <td>${i.ngayXuat }</td> 
                 </tr>
                  </c:forEach>

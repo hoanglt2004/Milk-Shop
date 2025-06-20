@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -66,7 +68,12 @@
                                                             </div>
                                                         </div>
                                                     </th>
-                                                    <td class="align-middle"><strong>${p.price}$</strong></td>
+                                                    <td class="align-middle">
+                                                        <strong>
+                                                            <fmt:formatNumber value="${p.price}" pattern="#,###" var="cartPrice"/>
+                                                            ${fn:replace(cartPrice, ',', '.')} VNĐ
+                                                        </strong>
+                                                    </td>
                                                     <td class="align-middle"><strong>${p.delivery}</strong></td>
                                                     <td class="align-middle">
                                                         <a href="subAmountCart?productID=${o.productID}&amount=${o.amount}"><button class="btnSub">-</button></a> 

@@ -167,8 +167,8 @@ public class OrderControl extends HttpServlet {
 						sb.append("<tr>");
 						sb.append("<td style='padding: 10px; border-bottom: 1px solid #ddd;'>").append(p.getName()).append("</td>");
 						sb.append("<td style='padding: 10px; text-align: right; border-bottom: 1px solid #ddd;'>").append(c.getAmount()).append("</td>");
-						sb.append("<td style='padding: 10px; text-align: right; border-bottom: 1px solid #ddd;'>").append(String.format("%.2f", p.getPrice())).append(" $</td>");
-						sb.append("<td style='padding: 10px; text-align: right; border-bottom: 1px solid #ddd;'>").append(String.format("%.2f", p.getPrice() * c.getAmount())).append(" $</td>");
+						sb.append("<td style='padding: 10px; text-align: right; border-bottom: 1px solid #ddd;'>").append(String.format("%,.0f", p.getPrice()).replace(",", ".")).append(" VNĐ</td>");
+						sb.append("<td style='padding: 10px; text-align: right; border-bottom: 1px solid #ddd;'>").append(String.format("%,.0f", p.getPrice() * c.getAmount()).replace(",", ".")).append(" VNĐ</td>");
 						sb.append("</tr>");
 					}
 				}
@@ -178,9 +178,9 @@ public class OrderControl extends HttpServlet {
 			
 			sb.append("<div style='background-color: #f8f9fa; padding: 20px; border-radius: 5px;'>");
 			sb.append("<h3 style='color: #333; margin-bottom: 15px;'>Tổng thanh toán</h3>");
-			sb.append("<p style='text-align: right; font-size: 18px;'><strong>Tổng tiền hàng:</strong> ").append(String.format("%.2f", totalMoney)).append(" $</p>");
-			sb.append("<p style='text-align: right; font-size: 18px;'><strong>VAT (10%):</strong> ").append(String.format("%.2f", totalMoney * 0.1)).append(" $</p>");
-			sb.append("<p style='text-align: right; font-size: 20px; color: #28a745;'><strong>Tổng thanh toán:</strong> ").append(String.format("%.2f", totalMoneyVAT)).append(" $</p>");
+			sb.append("<p style='text-align: right; font-size: 18px;'><strong>Tổng tiền hàng:</strong> ").append(String.format("%,.0f", totalMoney).replace(",", ".")).append(" VNĐ</p>");
+			sb.append("<p style='text-align: right; font-size: 18px;'><strong>VAT (10%):</strong> ").append(String.format("%,.0f", totalMoney * 0.1).replace(",", ".")).append(" VNĐ</p>");
+			sb.append("<p style='text-align: right; font-size: 20px; color: #28a745;'><strong>Tổng thanh toán:</strong> ").append(String.format("%,.0f", totalMoneyVAT).replace(",", ".")).append(" VNĐ</p>");
 			sb.append("</div>");
 			
 			sb.append("<div style='margin-top: 30px; text-align: center; color: #666;'>");

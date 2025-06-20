@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -153,7 +155,10 @@
               <div class="d-flex justify-content-between p-md-1">
                 <div class="d-flex flex-row">
                   <div class="align-self-center">
-                    <h2 class="h1 mb-0 me-4">$${sumAllInvoice }</h2>
+                    <h2 class="h1 mb-0 me-4">
+                        <fmt:formatNumber value="${sumAllInvoice}" pattern="#,###" var="totalSales"/>
+                        ${fn:replace(totalSales, ',', '.')} VNĐ
+                    </h2>
                   </div>
                   <div>
                     <h4>Total Sales</h4>

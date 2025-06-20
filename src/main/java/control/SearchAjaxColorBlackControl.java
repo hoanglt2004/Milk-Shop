@@ -60,7 +60,7 @@ public class SearchAjaxColorBlackControl extends HttpServlet {
         			+ "                  <div class=\"text-center pt-4\">\r\n"
         			+ "\r\n"
         			+ "                    <h5>"+o.getName()+"</h5>\r\n"
-        			+ "                    <p><span class=\"mr-1\"><strong>"+o.getPrice()+"$</strong></span></p>\r\n"
+        			+ "                    <p><span class=\"mr-1\"><strong>"+String.format("%,.0f", o.getPrice()).replace(",", ".") + " VNĐ</strong></span></p>\r\n"
         			+ "\r\n"
         			+ "                  </div>\r\n"
         			+ "\r\n"

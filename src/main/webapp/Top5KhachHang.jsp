@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -124,7 +126,7 @@
                   <th scope="col">ID</th>
                   <th scope="col">Username</th> 
                   <th scope="col">Email</th>
-                   <th scope="col">Tổng chi tiêu</th>
+                   <th scope="col">Tổng chi tiêu (VNĐ)</th>
                 </tr>
               </thead>
               <tbody>
@@ -136,7 +138,10 @@
 			                   <td>${o.id}</td>
 			               		<td>${o.user}</td>
 			                   <td>${o.email}</td>
-			                   <td>${t.tongChiTieu}</td>    
+			                   <td>
+			                       <fmt:formatNumber value="${t.tongChiTieu}" pattern="#,###" var="customerTotal"/>
+			                       ${fn:replace(customerTotal, ',', '.')} VNĐ
+			                   </td>    
 			                </tr>
 			                    </c:if>
 			                </c:if>

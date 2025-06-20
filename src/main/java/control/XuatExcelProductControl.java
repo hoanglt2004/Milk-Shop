@@ -100,7 +100,7 @@ FileOutputStream file=new FileOutputStream("C:\\Users\\ADMIN\\Documents\\ExcelWe
         cell2=row.createCell(2);
         cell2.setCellValue("Image");
         cell3=row.createCell(3);
-        cell3.setCellValue("Price");
+                        cell3.setCellValue("Giá (VNĐ)");
         cell4=row.createCell(4);
         cell4.setCellValue("Title");
         cell5=row.createCell(5);

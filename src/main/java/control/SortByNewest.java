@@ -46,7 +46,7 @@ public class SortByNewest extends HttpServlet {
                     + "                  </div>\n"
                     + "                  <div class=\"text-center pt-4\">\n"
                     + "                    <h5 class=\"product-name\">" + o.getName() + "</h5>\n"
-                    + "                    <p><span class=\"mr-1\"><strong>" + o.getPrice() + "$</strong></span></p>\n"
+                    + "                    <p><span class=\"mr-1\"><strong>" + String.format("%,.0f", o.getPrice()).replace(",", ".") + " VNĐ</strong></span></p>\n"
                     + "                  </div>\n"
                     + "                </div>\n"
                     + "              </div>");

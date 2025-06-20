@@ -1,6 +1,8 @@
 
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -160,8 +162,16 @@
 
             <h5>${detail.name}</h5>
         
-            <p><span class="mr-1"><strong>$${String.format("%.02f",detail.price*0.9) }</strong></span><span
-                    class="text-grey"><strong><s>$${detail.price }</s></strong></span></p>
+            <p>
+                <span class="mr-1"><strong>
+                    <fmt:formatNumber value="${detail.price * 0.9}" pattern="#,###" var="discountPrice"/>
+                    ${fn:replace(discountPrice, ',', '.')} VNĐ
+                </strong></span>
+                <span class="text-grey"><strong><s>
+                    <fmt:formatNumber value="${detail.price}" pattern="#,###" var="originalPrice"/>
+                    ${fn:replace(originalPrice, ',', '.')} VNĐ
+                </s></strong></span>
+            </p>
             
                     
             <p class="pt-1">${detail.description}</p>
@@ -234,7 +244,10 @@
           <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
             <h5>Product Description</h5>
             
-            <h6>$${String.format("%.02f",detail.price*0.9) }</h6>
+            <h6>
+                <fmt:formatNumber value="${detail.price * 0.9}" pattern="#,###" var="descPrice"/>
+                ${fn:replace(descPrice, ',', '.')} VNĐ
+            </h6>
             <p class="pt-1">${detail.description}</p>
           </div>
           <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
@@ -339,8 +352,16 @@
               <div class="pt-4">
 
                 <h5>${o.title }</h5>
-                <p><span class="text-danger mr-1"><strong>${String.format("%.02f",o.price*0.9) }$</strong></span><span
-                    class="text-grey"><strong><s>${o.price }$</s></strong></span></p>
+                <p>
+                    <span class="text-danger mr-1"><strong>
+                        <fmt:formatNumber value="${o.price * 0.9}" pattern="#,###" var="relatedDiscountPrice"/>
+                        ${fn:replace(relatedDiscountPrice, ',', '.')} VNĐ
+                    </strong></span>
+                    <span class="text-grey"><strong><s>
+                        <fmt:formatNumber value="${o.price}" pattern="#,###" var="relatedOriginalPrice"/>
+                        ${fn:replace(relatedOriginalPrice, ',', '.')} VNĐ
+                    </s></strong></span>
+                </p>
                     
                
 

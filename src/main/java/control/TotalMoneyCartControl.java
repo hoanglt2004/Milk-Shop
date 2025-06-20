@@ -74,17 +74,17 @@ public class TotalMoneyCartControl extends HttpServlet {
         // Tổng thanh toán = Tổng tiền hàng + VAT
         double totalMoneyVAT = totalMoney + vatAmount;
         
-        // Format số tiền để hiển thị
-        String formattedTotalMoney = String.format("%.2f", totalMoney);
-        String formattedVAT = String.format("%.2f", vatAmount);
-        String formattedTotalMoneyVAT = String.format("%.2f", totalMoneyVAT);
+        // Format số tiền để hiển thị với VNĐ
+        String formattedTotalMoney = String.format("%,.0f", totalMoney).replace(",", ".");
+        String formattedVAT = String.format("%,.0f", vatAmount).replace(",", ".");
+        String formattedTotalMoneyVAT = String.format("%,.0f", totalMoneyVAT).replace(",", ".");
         
         PrintWriter out = response.getWriter();
-        out.println("<li class=\"d-flex justify-content-between py-3 border-bottom\"><strong class=\"text-muted\">Tổng tiền hàng</strong><strong>" + formattedTotalMoney + " $</strong></li>"
+        out.println("<li class=\"d-flex justify-content-between py-3 border-bottom\"><strong class=\"text-muted\">Tổng tiền hàng</strong><strong>" + formattedTotalMoney + " VNĐ</strong></li>"
                 + "<li class=\"d-flex justify-content-between py-3 border-bottom\"><strong class=\"text-muted\">Phí vận chuyển</strong><strong>Free ship</strong></li>"
-                + "<li class=\"d-flex justify-content-between py-3 border-bottom\"><strong class=\"text-muted\">VAT (10%)</strong><strong>" + formattedVAT + " $</strong></li>"
+                + "<li class=\"d-flex justify-content-between py-3 border-bottom\"><strong class=\"text-muted\">VAT (10%)</strong><strong>" + formattedVAT + " VNĐ</strong></li>"
                 + "<li class=\"d-flex justify-content-between py-3 border-bottom\"><strong class=\"text-muted\">Tổng thanh toán</strong>"
-                + "<h5 class=\"font-weight-bold\">" + formattedTotalMoneyVAT + " $</h5></li>");
+                + "<h5 class=\"font-weight-bold\">" + formattedTotalMoneyVAT + " VNĐ</h5></li>");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

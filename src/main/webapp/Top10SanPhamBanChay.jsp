@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -139,7 +141,7 @@
                   <th scope="col">ID</th>
                   <th scope="col">Name</th>
                   <th scope="col">Image</th>
-                  <th scope="col">Price</th>
+                                              <th scope="col">Giá (VNĐ)</th>
                   <th scope="col">SoLuongDaBan</th>
                 </tr>
               </thead>
@@ -153,7 +155,10 @@
 						                     <td>
 						                          <img src="${o.image}">
 						                    </td>
-						                     <td>${o.price} $</td>
+						                                                     <td>
+                                    <fmt:formatNumber value="${o.price}" pattern="#,###" var="top10Price"/>
+                                    ${fn:replace(top10Price, ',', '.')} VNĐ
+                                </td>
 						                      <td>${t.soLuongDaBan }</td>
 						                </tr>
 			                	</c:if>

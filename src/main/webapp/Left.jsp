@@ -1,6 +1,8 @@
 
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <div class="col-sm-3">
     <div class="card bg-light mb-3">
@@ -18,7 +20,10 @@
             <img class="img-fluid" src="${p.image}" />
             <h5 class="card-title">${p.name}</h5>
             <p class="card-text">${p.title}</p>
-            <p class="bloc_left_price">${p.price} $</p>
+                            <p class="bloc_left_price">
+                    <fmt:formatNumber value="${p.price}" pattern="#,###" var="leftPrice"/>
+                    ${fn:replace(leftPrice, ',', '.')} VNĐ
+                </p>
         </div>
     </div>
 </div>

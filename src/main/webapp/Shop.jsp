@@ -1,4 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="en">
@@ -234,26 +236,26 @@ input[type="radio"]:checked + .sort-label {
               <!-- Section: Price -->
               <section class="mb-4">
 
-                <h6 class="font-weight-bold mb-3">Price</h6>
+                <h6 class="font-weight-bold mb-3">Giá</h6>
 
                 <div class="form-check pl-0 mb-3">
                   <input onchange="searchByPriceAsc()" type="radio" class="form-check-input" id="priceAsc" name="materialExampleRadios">
-                  <label class="form-check-label small text-uppercase card-link-secondary" for="priceAsc">Price: Low to High</label>
+                  <label class="form-check-label small text-uppercase card-link-secondary" for="priceAsc">Giá: Thấp đến Cao</label>
                 </div>
                 <div class="form-check pl-0 mb-3">
                   <input onchange="searchByPriceDesc()" type="radio" class="form-check-input" id="priceDesc" name="materialExampleRadios">
-                  <label class="form-check-label small text-uppercase card-link-secondary" for="priceDesc">Price: High to Low</label>
+                  <label class="form-check-label small text-uppercase card-link-secondary" for="priceDesc">Giá: Cao đến Thấp</label>
                 </div>
                 <form>
                   <div class="d-flex align-items-center mt-4 pb-1">
                     <div class="md-form md-outline my-0">
                       <input oninput="searchByPriceMinToMax()" id="priceMin" type="text" class="form-control mb-0">
-                      <label for="priceMin">$ Min</label>
+                      <label for="priceMin">VNĐ Thấp nhất</label>
                     </div>
                     <p class="px-2 mb-0 text-muted"> - </p>
                     <div class="md-form md-outline my-0">
                       <input oninput="searchByPriceMinToMax()" id="priceMax" type="text" class="form-control mb-0">
-                      <label for="priceMax">$ Max</label>
+                      <label for="priceMax">VNĐ Cao nhất</label>
                     </div>
                   </div>
                 </form>
@@ -351,7 +353,12 @@ input[type="radio"]:checked + .sort-label {
                   <div class="text-center pt-4">
 
                     <h5>${o.name }</h5>
-                    <p><span class="mr-1"><strong>${o.price }$</strong></span></p>
+                    <p>
+                        <span class="mr-1"><strong>
+                            <fmt:formatNumber value="${o.price}" pattern="#,###" var="shopPrice"/>
+                            ${fn:replace(shopPrice, ',', '.')} VNĐ
+                        </strong></span>
+                    </p>
 
                   </div>
 

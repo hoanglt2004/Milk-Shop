@@ -70,8 +70,8 @@
                                     <input value="${detail.image4}" name="image4" type="text" class="form-control" >
                                 </div>
                                 <div class="form-group">
-                                    <label>Price</label>
-                                    <input value="${detail.price}" name="price" type="text" class="form-control" >
+                                                            <label>Giá (VNĐ)</label>
+                        <input value="${detail.price}" name="price" type="text" class="form-control" placeholder="Nhập giá bằng VNĐ">
                                 </div>
                                 <div class="form-group">
                                     <label>Title</label>
