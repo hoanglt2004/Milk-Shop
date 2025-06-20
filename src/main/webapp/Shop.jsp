@@ -97,7 +97,7 @@ input[type="radio"]:checked + .sort-label {
       <c:if test="${selectedCid != null}">
         <div class="row mb-4">
           <div class="col-12">
-            <div class="alert alert-info d-flex align-items-center" style="border-radius: 10px; border: none; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                            <div class="alert alert-info d-flex align-items-center" style="border-radius: 10px; border: none; background: linear-gradient(135deg, #da1919 0%, #c41e3a 100%); color: white;">
               <i class="fas fa-filter fa-lg mr-3"></i>
               <div class="flex-grow-1">
                 <h5 class="mb-1">Đang xem sản phẩm theo danh mục</h5>

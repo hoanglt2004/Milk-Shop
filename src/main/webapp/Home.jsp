@@ -18,6 +18,7 @@
                 crossorigin="anonymous">
             <link href="css/style.css" rel="stylesheet" type="text/css" />
             <link href="css/categories.css" rel="stylesheet" type="text/css" />
+            <link href="css/product-cards.css" rel="stylesheet" type="text/css" />
 
             <!-- Font Awesome -->
             <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
@@ -228,102 +229,162 @@
 
             <div class="container">
 
-                <div class="row" style="margin-top:25px">
-                    <h1 style="text-align:center; width:100%" id="moiNhat">SẢN PHẨM MỚI NHẤT</h1>
-                    <div class="col-sm-12">
+                <!-- Latest Products Section -->
+                <div class="row" style="margin-top: 50px;">
+                    <div class="col-12">
+                        <div class="section-header">
+                            <h1 class="section-title" id="moiNhat">SẢN PHẨM MỚI NHẤT</h1>
+                            <p class="section-subtitle">Khám phá những sản phẩm sữa mới nhất và chất lượng nhất</p>
+                        </div>
                         <div id="contentMoiNhat" class="row">
                             <c:forEach items="${list8Last}" var="o">
-                                <div class=" col-12 col-md-6 col-lg-3">
-                                    <div class="card">
-                                        <div class="view zoom z-depth-2 rounded">
-                                            <img class="img-fluid w-100" src="${o.image}" alt="Card image cap">
-
+                                <div class="col-12 col-md-6 col-lg-3 product-card-container">
+                                    <div class="product-card">
+                                        <div class="product-image-container">
+                                            <img class="product-image" src="${o.image}" alt="${o.name}">
+                                            <div class="product-badge">Mới</div>
+                                            <div class="quick-view-overlay">
+                                                <button class="quick-view-btn" onclick="window.location.href='detail?pid=${o.id}'">
+                                                    <i class="fas fa-eye mr-2"></i>Xem chi tiết
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="card-body">
-                                            <h4 class="card-title show_txt"><a href="detail?pid=${o.id}"
-                                                    title="View Product">${o.name}</a></h4>
-                                            <p class="card-text show_txt">${o.title}</p>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <p class="btn btn-success btn-block">
-                                                        <fmt:formatNumber value="${o.price}" pattern="#,###" var="vndPrice"/>
-                                                        ${fn:replace(vndPrice, ',', '.')} VNĐ
-                                                    </p>
+                                        <div class="product-card-body">
+                                            <h4 class="product-title">
+                                                <a href="detail?pid=${o.id}" title="View Product">${o.name}</a>
+                                            </h4>
+                                            <p class="product-description">${o.title}</p>
+                                            <div class="product-rating">
+                                                <div class="stars">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
                                                 </div>
+                                                <span class="rating-text">(5.0)</span>
+                                            </div>
+                                            <div class="product-price-section">
+                                                <a href="detail?pid=${o.id}" class="product-price">
+                                                    <fmt:formatNumber value="${o.price}" pattern="#,###" var="vndPrice"/>
+                                                    ${fn:replace(vndPrice, ',', '.')} VNĐ
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </c:forEach>
                         </div>
-
                     </div>
-
                 </div>
 
 
-                <div class="row" style="margin-top:25px">
-                    <h1 style="text-align:center; width:100%" id="nike">SỮA BỘT MỚI NHẤT</h1>
-                    <div class="col-sm-12">
+                <!-- Milk Powder Section -->
+                <div class="row" style="margin-top: 50px;">
+                    <div class="col-12">
+                        <div class="section-header">
+                            <h1 class="section-title" id="nike">SỮA BỘT MỚI NHẤT</h1>
+                            <p class="section-subtitle">Dinh dưỡng hoàn hảo cho sự phát triển của bé yêu</p>
+                        </div>
                         <div id="contentNike" class="row">
                             <c:forEach items="${list4NikeLast}" var="o">
-                                <div class="productNike col-12 col-md-6 col-lg-3">
-                                    <div class="card">
-                                        <div class="view zoom z-depth-2 rounded">
-                                            <img class="img-fluid w-100" src="${o.image}" alt="Card image cap">
+                                <div class="productNike col-12 col-md-6 col-lg-3 product-card-container">
+                                    <div class="product-card">
+                                        <div class="product-image-container">
+                                            <img class="product-image" src="${o.image}" alt="${o.name}">
+                                            <div class="product-badge">Hot</div>
+                                            <div class="quick-view-overlay">
+                                                <button class="quick-view-btn" onclick="window.location.href='detail?pid=${o.id}'">
+                                                    <i class="fas fa-eye mr-2"></i>Xem chi tiết
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="card-body">
-                                            <h4 class="card-title show_txt"><a href="detail?pid=${o.id}"
-                                                    title="View Product">${o.name}</a></h4>
-                                            <p class="card-text show_txt">${o.title}</p>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <p class="btn btn-success btn-block">
-                                                        <fmt:formatNumber value="${o.price}" pattern="#,###" var="vndPrice"/>
-                                                        ${fn:replace(vndPrice, ',', '.')} VNĐ
-                                                    </p>
+                                        <div class="product-card-body">
+                                            <h4 class="product-title">
+                                                <a href="detail?pid=${o.id}" title="View Product">${o.name}</a>
+                                            </h4>
+                                            <p class="product-description">${o.title}</p>
+                                            <div class="product-rating">
+                                                <div class="stars">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
                                                 </div>
-
+                                                <span class="rating-text">(5.0)</span>
+                                            </div>
+                                            <div class="product-price-section">
+                                                <a href="detail?pid=${o.id}" class="product-price">
+                                                    <fmt:formatNumber value="${o.price}" pattern="#,###" var="vndPrice"/>
+                                                    ${fn:replace(vndPrice, ',', '.')} VNĐ
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </c:forEach>
                         </div>
-                        <button onclick="loadMoreNike()" class="btn btn-primary">Load more</button>
+                        <div class="load-more-container">
+                            <button onclick="loadMoreNike()" class="load-more-btn">
+                                <i class="fas fa-plus-circle mr-2"></i>Xem thêm sản phẩm
+                            </button>
+                        </div>
                     </div>
                 </div>
 
 
-                <div class="row" style="margin-top:25px">
-                    <h1 style="text-align:center; width:100%" id="adidas">SỮA TƯƠI MỚI NHẤT</h1>
-                    <div class="col-sm-12">
+                <!-- Fresh Milk Section -->
+                <div class="row" style="margin-top: 50px; margin-bottom: 50px;">
+                    <div class="col-12">
+                        <div class="section-header">
+                            <h1 class="section-title" id="adidas">SỮA TƯƠI MỚI NHẤT</h1>
+                            <p class="section-subtitle">Tươi ngon tự nhiên, giàu vitamin và khoáng chất thiết yếu</p>
+                        </div>
                         <div id="contentAdidas" class="row">
                             <c:forEach items="${list4AdidasLast}" var="o">
-                                <div class="productAdidas col-12 col-md-6 col-lg-3">
-                                    <div class="card">
-                                        <div class="view zoom z-depth-2 rounded">
-                                            <img class="img-fluid w-100" src="${o.image}" alt="Card image cap">
+                                <div class="productAdidas col-12 col-md-6 col-lg-3 product-card-container">
+                                    <div class="product-card">
+                                        <div class="product-image-container">
+                                            <img class="product-image" src="${o.image}" alt="${o.name}">
+                                            <div class="product-badge">Sale</div>
+                                            <div class="quick-view-overlay">
+                                                <button class="quick-view-btn" onclick="window.location.href='detail?pid=${o.id}'">
+                                                    <i class="fas fa-eye mr-2"></i>Xem chi tiết
+                                                </button>
+                                            </div>
                                         </div>
-                                        <div class="card-body">
-                                            <h4 class="card-title show_txt"><a href="detail?pid=${o.id}"
-                                                    title="View Product">${o.name}</a></h4>
-                                            <p class="card-text show_txt">${o.title}</p>
-                                            <div class="row">
-                                                <div class="col">
-                                                    <p class="btn btn-success btn-block">
-                                                        <fmt:formatNumber value="${o.price}" pattern="#,###" var="vndPrice"/>
-                                                        ${fn:replace(vndPrice, ',', '.')} VNĐ
-                                                    </p>
+                                        <div class="product-card-body">
+                                            <h4 class="product-title">
+                                                <a href="detail?pid=${o.id}" title="View Product">${o.name}</a>
+                                            </h4>
+                                            <p class="product-description">${o.title}</p>
+                                            <div class="product-rating">
+                                                <div class="stars">
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
+                                                    <i class="fas fa-star"></i>
                                                 </div>
-
+                                                <span class="rating-text">(5.0)</span>
+                                            </div>
+                                            <div class="product-price-section">
+                                                <a href="detail?pid=${o.id}" class="product-price">
+                                                    <fmt:formatNumber value="${o.price}" pattern="#,###" var="vndPrice"/>
+                                                    ${fn:replace(vndPrice, ',', '.')} VNĐ
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </c:forEach>
                         </div>
-                        <button onclick="loadMoreAdidas()" class="btn btn-primary">Load more</button>
+                        <div class="load-more-container">
+                            <button onclick="loadMoreAdidas()" class="load-more-btn">
+                                <i class="fas fa-plus-circle mr-2"></i>Xem thêm sản phẩm
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -361,7 +422,11 @@
                         },
                         success: function (dataNike) {
                             document.getElementById("contentNike").innerHTML += dataNike;
-
+                            
+                            // Re-initialize product cards for newly loaded content
+                            if (typeof initializeProductCards === 'function') {
+                                initializeProductCards();
+                            }
                         },
                         error: function (xhr) {
                             //Do Something to handle error
@@ -378,7 +443,11 @@
                         },
                         success: function (dataAdidas) {
                             document.getElementById("contentAdidas").innerHTML += dataAdidas;
-
+                            
+                            // Re-initialize product cards for newly loaded content
+                            if (typeof initializeProductCards === 'function') {
+                                initializeProductCards();
+                            }
                         },
                         error: function (xhr) {
                             //Do Something to handle error
@@ -440,6 +509,8 @@
             <script type="text/javascript" src="js/mdb.min.js"></script>
             <!-- Custom scripts -->
             <script type="text/javascript" src="js/script.js"></script>
+            <!-- Product Cards Enhancement -->
+            <script type="text/javascript" src="js/product-cards.js"></script>
 
             <!-- SCRIPTS -->
             <!-- JQuery -->
