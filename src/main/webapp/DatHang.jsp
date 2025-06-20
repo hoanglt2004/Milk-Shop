@@ -88,6 +88,35 @@
                 font-weight: 600;
                 color: #28a745;
             }
+            .form-text {
+                font-size: 0.875em;
+                margin-top: 5px;
+            }
+            .auto-filled-section {
+                border-left: 4px solid #28a745;
+                padding-left: 15px;
+                background: #f8fff8;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+            .auto-filled-header {
+                color: #28a745;
+                font-weight: 600;
+                margin-bottom: 15px;
+            }
+            .pre-filled-indicator {
+                background: #d4edda;
+                border: 1px solid #c3e6cb;
+                border-radius: 5px;
+                padding: 10px;
+                margin-bottom: 20px;
+                font-size: 0.9em;
+            }
+            .edit-hint {
+                color: #6c757d;
+                font-style: italic;
+                font-size: 0.85em;
+            }
         </style>
     </head>
     <body>
@@ -108,29 +137,63 @@
                     </div>
                 </c:if>
 
+                <!-- Thông báo auto-fill -->
+                <c:if test="${userAccount != null}">
+                    <div class="pre-filled-indicator">
+                        <div class="d-flex align-items-center">
+                            <i class="fas fa-magic text-success mr-2"></i>
+                            <div>
+                                <strong>Thông tin đã được tự động điền!</strong><br>
+                                <span class="edit-hint">Chúng tôi đã điền sẵn thông tin từ tài khoản của bạn. Bạn có thể chỉnh sửa nếu cần thiết.</span>
+                            </div>
+                        </div>
+                    </div>
+                </c:if>
+
                 <form action="order" method="post" accept-charset="UTF-8">
+                    <div class="auto-filled-section">
+                        <div class="auto-filled-header">
+                            <i class="fas fa-user-circle"></i> Thông tin người nhận
+                        </div>
+                        
                     <div class="form-group">
                         <label for="name" class="form-label required-field">Họ và tên</label>
                         <input name="name" type="text" id="name" class="form-control" 
-                               placeholder="Nhập họ và tên của bạn" required>
+                               placeholder="Nhập họ và tên của bạn" 
+                               value="${userAccount.fullName != null ? userAccount.fullName : ''}" required>
+                        <small class="form-text text-muted">
+                            <i class="fas fa-info-circle"></i> Thông tin đã được tự động điền từ tài khoản của bạn
+                        </small>
                     </div>
 
                     <div class="form-group">
                         <label for="phoneNumber" class="form-label required-field">Số điện thoại</label>
                         <input name="phoneNumber" type="tel" id="phoneNumber" class="form-control" 
-                               placeholder="Nhập số điện thoại của bạn" required>
+                               placeholder="Nhập số điện thoại của bạn" 
+                               value="${userAccount.phone != null ? userAccount.phone : ''}" required>
+                        <small class="form-text text-muted">
+                            <i class="fas fa-phone"></i> Số điện thoại để liên hệ giao hàng
+                        </small>
                     </div>
 
                     <div class="form-group">
                         <label for="email" class="form-label required-field">Email</label>
                         <input name="email" type="email" id="email" class="form-control" 
-                               placeholder="Nhập địa chỉ email của bạn" required>
+                               placeholder="Nhập địa chỉ email của bạn" 
+                               value="${userAccount.email != null ? userAccount.email : ''}" required>
+                        <small class="form-text text-muted">
+                            <i class="fas fa-envelope"></i> Email để nhận thông tin đơn hàng
+                        </small>
                     </div>
 
                     <div class="form-group">
                         <label for="deliveryAddress" class="form-label required-field">Địa chỉ giao hàng</label>
                         <textarea name="deliveryAddress" id="deliveryAddress" class="form-control" 
-                                  rows="3" placeholder="Nhập địa chỉ giao hàng chi tiết" required></textarea>
+                                  rows="3" placeholder="Nhập địa chỉ giao hàng chi tiết" required>${userAccount.address != null ? userAccount.address.concat(', ').concat(userAccount.province != null ? userAccount.province : '') : ''}</textarea>
+                        <small class="form-text text-muted">
+                            <i class="fas fa-map-marker-alt"></i> Địa chỉ chi tiết để giao hàng (có thể chỉnh sửa nếu cần)
+                        </small>
+                    </div>
                     </div>
 
                     <div class="order-summary">
@@ -160,6 +223,56 @@
                     }
                 });
             }, false);
+
+            // Auto-fill animation and form enhancement
+            document.addEventListener('DOMContentLoaded', function() {
+                // Highlight pre-filled fields
+                const preFilled = document.querySelectorAll('input[value]:not([value=""]), textarea');
+                preFilled.forEach(field => {
+                    if (field.value && field.value.trim() !== '') {
+                        field.style.backgroundColor = '#f8fff8';
+                        field.style.borderColor = '#28a745';
+                    }
+                });
+
+                // Form validation enhancement
+                const form = document.querySelector('form');
+                const submitBtn = document.querySelector('.btn-order');
+                
+                form.addEventListener('submit', function(e) {
+                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Đang xử lý đơn hàng...';
+                    submitBtn.disabled = true;
+                });
+
+                // Auto-hide pre-filled indicator after 5 seconds
+                const preFilledIndicator = document.querySelector('.pre-filled-indicator');
+                if (preFilledIndicator) {
+                    setTimeout(() => {
+                        preFilledIndicator.style.opacity = '0.7';
+                        preFilledIndicator.style.transform = 'scale(0.98)';
+                    }, 5000);
+                }
+
+                // Field change detection
+                const autoFilledFields = document.querySelectorAll('.auto-filled-section input, .auto-filled-section textarea');
+                autoFilledFields.forEach(field => {
+                    field.addEventListener('input', function() {
+                        if (this.style.backgroundColor === 'rgb(248, 255, 248)') {
+                            this.style.backgroundColor = '#fff';
+                            this.style.borderColor = '#007bff';
+                            
+                            // Add edited indicator
+                            let editedIndicator = this.parentNode.querySelector('.edited-indicator');
+                            if (!editedIndicator) {
+                                editedIndicator = document.createElement('small');
+                                editedIndicator.className = 'form-text text-primary edited-indicator';
+                                editedIndicator.innerHTML = '<i class="fas fa-edit"></i> Đã chỉnh sửa';
+                                this.parentNode.appendChild(editedIndicator);
+                            }
+                        }
+                    });
+                });
+            });
         </script>
     </body>
 </html>

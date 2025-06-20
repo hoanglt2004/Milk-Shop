@@ -358,7 +358,7 @@
             </form>
 
             <div class="login-link">
-                <p>Đã có tài khoản? <a href="Login.jsp"><i class="fas fa-sign-in-alt"></i> Đăng nhập ngay</a></p>
+                <p>Đã có tài khoản? <a href="login"><i class="fas fa-sign-in-alt"></i> Đăng nhập ngay</a></p>
             </div>
         </div>
     </div>

@@ -91,6 +91,9 @@ public class OrderControl extends HttpServlet {
 		request.setAttribute("totalMoney", totalMoney);
 		request.setAttribute("totalMoneyVAT", totalMoneyVAT);
 		
+		// Set user account info for auto-fill form
+		request.setAttribute("userAccount", a);
+		
 		// Forward to order form - NO order processing happens here
 		request.getRequestDispatcher("DatHang.jsp").forward(request, response);
 	}

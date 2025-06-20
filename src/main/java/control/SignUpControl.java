@@ -75,7 +75,7 @@ public class SignUpControl extends HttpServlet {
             // Chuyển hướng đến trang đăng nhập với thông báo thành công
             request.getSession().setAttribute("successMessage", 
                 "Đăng ký tài khoản thành công! Chào mừng " + fullName + " đến với hệ thống. Vui lòng đăng nhập để tiếp tục.");
-            response.sendRedirect("Login.jsp");
+            response.sendRedirect("login");
             return;
             
         } catch (Exception e) {
