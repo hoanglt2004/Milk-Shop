@@ -67,13 +67,13 @@
                                         <c:forEach items="${listD}" var="d">
                                             <tr>
                                                 <td>${d.discountID}</td>
-                                                <td>${d.product.name}</td>
+                                                <td>${d.product != null ? d.product.name : 'No Product'}</td>
                                                 <td>${d.percentOff}%</td>
-                                                <td><fmt:formatDate value="${d.startDate}" pattern="yyyy-MM-dd" /></td>
-                                                <td><fmt:formatDate value="${d.endDate}" pattern="yyyy-MM-dd" /></td>
+                                                <td>${d.startDate}</td>
+                                                <td>${d.endDate}</td>
                                                 <td>
                                                     <c:choose>
-                                                        <c:when test="${d.isActive}">Active</c:when>
+                                                        <c:when test="${d.active == true}">Active</c:when>
                                                         <c:otherwise>Inactive</c:otherwise>
                                                     </c:choose>
                                                 </td>
@@ -82,9 +82,9 @@
                                                        data-id="${d.discountID}"
                                                        data-productid="${d.productID}"
                                                        data-percentoff="${d.percentOff}"
-                                                       data-startdate="<fmt:formatDate value='${d.startDate}' pattern='yyyy-MM-dd' />"
-                                                       data-enddate="<fmt:formatDate value='${d.endDate}' pattern='yyyy-MM-dd' />"
-                                                       data-isactive="${d.isActive}">
+                                                       data-startdate="${d.startDate}"
+                                                       data-enddate="${d.endDate}"
+                                                       data-isactive="${d.active}">
                                                         <i class="fa fa-edit"></i>
                                                     </a>
                                                     <a href="#deleteDiscountModal" class="btn btn-danger btn-action delete" data-toggle="modal" data-id="${d.discountID}"><i class="fa fa-trash"></i></a>

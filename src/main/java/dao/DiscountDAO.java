@@ -21,6 +21,7 @@ public class DiscountDAO extends DBContext {
              PreparedStatement ps = conn.prepareStatement(query);
              ResultSet rs = ps.executeQuery()) {
 
+            System.out.println("Executing query: " + query);
             while (rs.next()) {
                 Discount discount = new Discount();
                 discount.setDiscountID(rs.getInt("discountID"));
@@ -36,8 +37,17 @@ public class DiscountDAO extends DBContext {
 
                 discount.setProduct(product);
                 list.add(discount);
+                
+                // Debug logging
+                System.out.println("Found discount: " + discount.getDiscountID() + 
+                                 " - Product: " + product.getName() + 
+                                 " - Percent: " + discount.getPercentOff() + "%" +
+                                 " - Active: " + discount.isActive() + 
+                                 " - getActive(): " + discount.getActive());
             }
+            System.out.println("Total discounts found: " + list.size());
         } catch (Exception e) {
+            System.err.println("Error in getAllDiscounts: " + e.getMessage());
             e.printStackTrace();
         }
         return list;
@@ -143,12 +153,82 @@ public class DiscountDAO extends DBContext {
         return list;
     }
 
-    public static void main(String[] args) {
-        // Example Usage (for testing)
-        DiscountDAO dao = new DiscountDAO();
-        List<Discount> discounts = dao.getAllDiscounts();
-        for (Discount discount : discounts) {
-            System.out.println(discount.getDiscountID() + " - " + discount.getProduct().getName() + " - " + discount.getPercentOff() + "%");
+    // Test connection method
+    public boolean testConnection() {
+        try (Connection conn = getConnection()) {
+            if (conn != null) {
+                System.out.println("Database connection successful!");
+                
+                // Test if Discount table exists
+                String checkTableQuery = "SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'Discount'";
+                try (PreparedStatement ps = conn.prepareStatement(checkTableQuery);
+                     ResultSet rs = ps.executeQuery()) {
+                    if (rs.next() && rs.getInt(1) > 0) {
+                        System.out.println("Discount table exists!");
+                        
+                        // Check how many records in Discount table
+                        String countQuery = "SELECT COUNT(*) FROM Discount";
+                        try (PreparedStatement ps2 = conn.prepareStatement(countQuery);
+                             ResultSet rs2 = ps2.executeQuery()) {
+                            if (rs2.next()) {
+                                int count = rs2.getInt(1);
+                                System.out.println("Discount table has " + count + " records");
+                            }
+                        }
+                    } else {
+                        System.out.println("Discount table does not exist!");
+                        return false;
+                    }
+                }
+                return true;
+            } else {
+                System.out.println("Failed to get database connection!");
+                return false;
+            }
+        } catch (Exception e) {
+            System.err.println("Error testing connection: " + e.getMessage());
+            e.printStackTrace();
+            return false;
         }
+    }
+
+    public static void main(String[] args) {
+        // Test the connection and data
+        DiscountDAO dao = new DiscountDAO();
+        
+        System.out.println("=== Testing Database Connection ===");
+        dao.testConnection();
+        
+        System.out.println("\n=== Testing getAllProducts ===");
+        List<Product> products = dao.getAllProducts();
+        
+        System.out.println("\n=== Testing getAllDiscounts ===");
+        List<Discount> discounts = dao.getAllDiscounts();
+        
+        // Add test discount if no discounts exist
+        if (discounts.isEmpty() && !products.isEmpty()) {
+            System.out.println("\n=== Adding Test Discount ===");
+            try {
+                Discount testDiscount = new Discount();
+                testDiscount.setProductID(products.get(0).getId()); // First product
+                testDiscount.setPercentOff(10);
+                testDiscount.setStartDate(new java.util.Date());
+                testDiscount.setEndDate(new java.util.Date(System.currentTimeMillis() + 86400000L * 30)); // 30 days later
+                testDiscount.setActive(true);
+                
+                dao.addDiscount(testDiscount);
+                System.out.println("Test discount added successfully!");
+                
+                // Test again
+                discounts = dao.getAllDiscounts();
+            } catch (Exception e) {
+                System.err.println("Error adding test discount: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        
+        System.out.println("\n=== Summary ===");
+        System.out.println("Products found: " + products.size());
+        System.out.println("Discounts found: " + discounts.size());
     }
 }

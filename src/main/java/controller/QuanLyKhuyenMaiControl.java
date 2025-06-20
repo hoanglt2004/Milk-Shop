@@ -19,12 +19,28 @@ public class QuanLyKhuyenMaiControl extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("=== QuanLyKhuyenMaiControl.doGet() called ===");
+        
         DiscountDAO discountDAO = new DiscountDAO();
         List<Discount> listDiscounts = discountDAO.getAllDiscounts();
         List<Product> listProducts = discountDAO.getAllProducts();
 
+        System.out.println("Found " + listDiscounts.size() + " discounts");
+        System.out.println("Found " + listProducts.size() + " products");
+        
+        // Debug discount details
+        for (Discount d : listDiscounts) {
+            System.out.println("Discount: ID=" + d.getDiscountID() + 
+                             ", Product=" + (d.getProduct() != null ? d.getProduct().getName() : "null") +
+                             ", Percent=" + d.getPercentOff() + 
+                             ", Active=" + d.isActive() + 
+                             ", getActive()=" + d.getActive());
+        }
+
         request.setAttribute("listD", listDiscounts);
         request.setAttribute("listP", listProducts);
+        
+        System.out.println("Forwarding to QuanLyKhuyenMai.jsp");
         request.getRequestDispatcher("QuanLyKhuyenMai.jsp").forward(request, response);
     }
 
@@ -79,11 +95,9 @@ public class QuanLyKhuyenMaiControl extends HttpServlet {
                 }
             } catch (ParseException | NumberFormatException e) {
                 e.printStackTrace();
-                // Set error in session for redirect
                 request.getSession().setAttribute("errorMessage", "Lỗi: Dữ liệu nhập vào không hợp lệ. Vui lòng kiểm tra lại ngày tháng và số liệu.");
             } catch (Exception e) {
                 e.printStackTrace();
-                // Set error in session for redirect
                 request.getSession().setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
             }
         }

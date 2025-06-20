@@ -72,6 +72,15 @@ public class Discount {
         isActive = active;
     }
 
+    // Thêm getter method chuẩn cho JSP EL
+    public boolean getActive() {
+        return isActive;
+    }
+    
+    public boolean getIsActive() {
+        return isActive;
+    }
+
     public Product getProduct() {
         return product;
     }
