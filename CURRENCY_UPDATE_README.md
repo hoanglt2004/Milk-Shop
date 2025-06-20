@@ -49,6 +49,9 @@ This update converts all currency displays from USD ($) to Vietnamese Dong (VNĐ
 18. **LoadMoreControl.java** - Load more products on homepage
 19. **LoadMoreNikeControl.java** - Load more Nike products
 20. **LoadMoreAdidasControl.java** - Load more Adidas products
+21. **CategoryControl.java** - Category product display on homepage
+22. **CategoryShopControl.java** - Category product display in shop
+23. **LoadAllProducts.java** - Load all products (shop default sort)
 
 #### Excel Export Functions (Admin)
 1. **XuatExcelProductControl.java** - Export all products to Excel

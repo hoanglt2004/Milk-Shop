@@ -48,7 +48,7 @@ public class CategoryControl extends HttpServlet {
         			+ "                                        <p class=\"card-text show_txt\">"+o.getTitle()+"</p>\r\n"
         			+ "                                        <div class=\"row\">\r\n"
         			+ "                                            <div class=\"col\">\r\n"
-        			+ "                                                <p class=\"btn btn-danger btn-block\">"+o.getPrice()+" $</p>\r\n"
+        			+ "                                                <p class=\"btn btn-danger btn-block\">"+String.format("%,.0f", o.getPrice()).replace(",", ".") + " VNĐ</p>\r\n"
         			+ "                                            </div>\r\n"
         			+ "                                            <div class=\"col\">\r\n"
         			+ "                                                <a href=\"#\" class=\"btn btn-success btn-block\">Add to cart</a>\r\n"
