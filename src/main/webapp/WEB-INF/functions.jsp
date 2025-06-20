@@ -14,12 +14,6 @@
         
         return formattedPrice + " VNĐ";
     }
-    
-    // Function for discounted price
-    public static String formatDiscountPrice(double price, double discountPercent) {
-        double discountedPrice = price * (1 - discountPercent);
-        return formatPrice(discountedPrice);
-    }
 %>
 
 <%
@@ -27,9 +21,6 @@
     request.setAttribute("formatPrice", new Object() {
         public String format(double price) {
             return formatPrice(price);
-        }
-        public String formatDiscount(double price, double discount) {
-            return formatDiscountPrice(price, discount);
         }
     });
 %> 

@@ -168,13 +168,9 @@
         
             <p>
                 <span class="mr-1"><strong>
-                    <fmt:formatNumber value="${detail.price * 0.9}" pattern="#,###" var="discountPrice"/>
-                    ${fn:replace(discountPrice, ',', '.')} VNĐ
+                    <fmt:formatNumber value="${detail.price}" pattern="#,###" var="currentPrice"/>
+                    ${fn:replace(currentPrice, ',', '.')} VNĐ
                 </strong></span>
-                <span class="text-grey"><strong><s>
-                    <fmt:formatNumber value="${detail.price}" pattern="#,###" var="originalPrice"/>
-                    ${fn:replace(originalPrice, ',', '.')} VNĐ
-                </s></strong></span>
             </p>
             
                     
@@ -249,8 +245,8 @@
             <h5>Product Description</h5>
             
             <h6>
-                <fmt:formatNumber value="${detail.price * 0.9}" pattern="#,###" var="descPrice"/>
-                ${fn:replace(descPrice, ',', '.')} VNĐ
+                <fmt:formatNumber value="${detail.price}" pattern="#,###" var="currentPrice"/>
+                ${fn:replace(currentPrice, ',', '.')} VNĐ
             </h6>
             <p class="pt-1">${detail.description}</p>
           </div>
@@ -343,7 +339,7 @@
               <div class="view zoom overlay z-depth-2 rounded">
                 <img class="img-fluid w-100"
                   src="${o.image }" alt="Sample">
-                  <h4 class="mb-0"><span class="badge badge-primary badge-pill badge-news">Sale 10%</span></h4>
+  
                 <a href="detail?pid=${o.id}">
                   <div class="mask">
                     <img class="img-fluid w-100"
@@ -358,13 +354,9 @@
                 <h5>${o.title }</h5>
                 <p>
                     <span class="text-danger mr-1"><strong>
-                        <fmt:formatNumber value="${o.price * 0.9}" pattern="#,###" var="relatedDiscountPrice"/>
-                        ${fn:replace(relatedDiscountPrice, ',', '.')} VNĐ
+                        <fmt:formatNumber value="${o.price}" pattern="#,###" var="relatedCurrentPrice"/>
+                        ${fn:replace(relatedCurrentPrice, ',', '.')} VNĐ
                     </strong></span>
-                    <span class="text-grey"><strong><s>
-                        <fmt:formatNumber value="${o.price}" pattern="#,###" var="relatedOriginalPrice"/>
-                        ${fn:replace(relatedOriginalPrice, ',', '.')} VNĐ
-                    </s></strong></span>
                 </p>
                     
                

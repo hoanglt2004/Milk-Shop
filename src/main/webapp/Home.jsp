@@ -347,7 +347,6 @@
                                     <div class="product-card">
                                         <div class="product-image-container">
                                             <img class="product-image" src="${o.image}" alt="${o.name}">
-                                            <div class="product-badge">Sale</div>
                                             <div class="quick-view-overlay">
                                                 <button class="quick-view-btn" onclick="window.location.href='detail?pid=${o.id}'">
                                                     <i class="fas fa-eye mr-2"></i>Xem chi tiết

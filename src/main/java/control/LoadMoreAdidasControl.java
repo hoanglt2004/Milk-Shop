@@ -44,7 +44,6 @@ public class LoadMoreAdidasControl extends HttpServlet {
                     + "    <div class=\"product-card\">\r\n"
                     + "        <div class=\"product-image-container\">\r\n"
                     + "            <img class=\"product-image\" src=\"" + o.getImage() + "\" alt=\"" + o.getName() + "\">\r\n"
-                    + "            <div class=\"product-badge\">Sale</div>\r\n"
                     + "            <div class=\"quick-view-overlay\">\r\n"
                     + "                <button class=\"quick-view-btn\" onclick=\"window.location.href='detail?pid=" + o.getId() + "'\">\r\n"
                     + "                    <i class=\"fas fa-eye mr-2\"></i>Xem chi tiết\r\n"

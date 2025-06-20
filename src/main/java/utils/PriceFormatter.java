@@ -3,7 +3,7 @@ package utils;
 import java.text.DecimalFormat;
 
 /**
- * Utility class for formatting prices from USD to Vietnamese Dong
+ * Utility class for formatting prices to Vietnamese Dong
  */
 public class PriceFormatter {
     
@@ -20,16 +20,5 @@ public class PriceFormatter {
         // Replace commas with dots for Vietnamese format
         formatted = formatted.replace(",", ".");
         return formatted + " VNĐ";
-    }
-    
-    /**
-     * Format discounted price in VND
-     * @param price Original price
-     * @param discountPercent Discount percentage (0.1 for 10% discount)
-     * @return Formatted discounted price in VND
-     */
-    public static String formatDiscountPriceVND(double price, double discountPercent) {
-        double discountedPrice = price * (1 - discountPercent);
-        return formatPriceVND(discountedPrice);
     }
 } 
