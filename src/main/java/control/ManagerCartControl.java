@@ -6,13 +6,14 @@
 package control;
 
 import dao.DAO;
+import dao.WarehouseDAO;
 import entity.Account;
 import entity.Cart;
 import entity.Category;
 import entity.Product;
+import entity.ProductStock;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -21,7 +22,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
+/**
+ *
+ * @author trinh
+ */
 @WebServlet(name = "ManagerCartControl", urlPatterns = {"/managerCart"})
 public class ManagerCartControl extends HttpServlet {
 
@@ -37,46 +41,27 @@ public class ManagerCartControl extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        request.setCharacterEncoding("UTF-8");
+        
         HttpSession session = request.getSession();
         Account a = (Account) session.getAttribute("acc");
-        
-        List<Cart> cartList;
-        if (a != null) {
-            // Nếu đã đăng nhập, lấy giỏ hàng từ database
-            DAO dao = new DAO();
-            cartList = dao.getCartByAccountID(a.getId());
-        } else {
-            // Nếu chưa đăng nhập, lấy giỏ hàng từ session
-            cartList = (List<Cart>) session.getAttribute("cartList");
-            if (cartList == null) {
-                cartList = new ArrayList<>();
-            }
+        if(a == null) {
+        	response.sendRedirect("login");
+        	return;
         }
+        int accountID = a.getId();
         
-        // Lấy thông tin sản phẩm
         DAO dao = new DAO();
+        WarehouseDAO warehouseDAO = new WarehouseDAO();
+        
+        List<Category> listC = dao.getAllCategory();
+        List<Cart> listCart = dao.getCartByAccountID(accountID);
         List<Product> listProduct = dao.getAllProduct();
+        List<ProductStock> listProductStock = warehouseDAO.getTotalStockPerProduct();
         
-        // Tính tổng tiền
-        double totalMoney = 0;
-        for (Cart cart : cartList) {
-            for (Product product : listProduct) {
-                if (cart.getProductID() == product.getId()) {
-                    totalMoney += product.getPrice() * cart.getAmount();
-                }
-            }
-        }
-        
-        // Tính VAT và tổng thanh toán
-        double vatAmount = totalMoney * 0.1;
-        double totalMoneyVAT = totalMoney + vatAmount;
-        
-        request.setAttribute("listCart", cartList);
+        request.setAttribute("listCategory", listC);
+        request.setAttribute("listCart", listCart);
         request.setAttribute("listProduct", listProduct);
-        request.setAttribute("totalMoney", totalMoney);
-        request.setAttribute("vatAmount", vatAmount);
-        request.setAttribute("totalMoneyVAT", totalMoneyVAT);
+        request.setAttribute("listProductStock", listProductStock);
         request.getRequestDispatcher("Cart.jsp").forward(request, response);
     }
 

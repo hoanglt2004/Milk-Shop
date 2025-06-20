@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import dao.DAO;
+import dao.WarehouseDAO;
 
 import entity.Account;
 import entity.Email;
@@ -39,8 +40,41 @@ public class OrderControl extends HttpServlet {
 		}
 		int accountID = a.getId();
 		DAO dao = new DAO();
+		WarehouseDAO warehouseDAO = new WarehouseDAO();
 		List<Cart> list = dao.getCartByAccountID(accountID);
 		List<Product> list2 = dao.getAllProduct();
+		
+		// Check if cart is empty
+		if(list == null || list.isEmpty()) {
+			request.setAttribute("error", "Giỏ hàng của bạn trống!");
+			request.getRequestDispatcher("DatHang.jsp").forward(request, response);
+			return;
+		}
+		
+		// Only validate stock availability - DO NOT reduce stock yet
+		StringBuilder stockErrorMessage = new StringBuilder();
+		boolean hasStockError = false;
+		for(Cart c : list) {
+			for(Product p : list2) {
+				if(c.getProductID() == p.getId()) {
+					int availableStock = warehouseDAO.getTotalRemainingStock(c.getProductID());
+					if(availableStock < c.getAmount()) {
+						hasStockError = true;
+						stockErrorMessage.append(String.format("Sản phẩm '%s': Yêu cầu %d, tồn kho %d. ", 
+							p.getName(), c.getAmount(), availableStock));
+					}
+					break;
+				}
+			}
+		}
+		
+		if(hasStockError) {
+			request.setAttribute("error", "Không đủ tồn kho: " + stockErrorMessage.toString());
+			request.getRequestDispatcher("DatHang.jsp").forward(request, response);
+			return;
+		}
+		
+		// Calculate total money for display purposes only
 		double totalMoney=0;
 		for(Cart c : list) {
 			for(Product p : list2) {
@@ -51,49 +85,13 @@ public class OrderControl extends HttpServlet {
 		}
 		double totalMoneyVAT=totalMoney+totalMoney*0.1;
 		
-		double tongTienBanHangThem=0;
-		int sell_ID;
-		for (Cart c : list) {
-			for (Product p : list2) {
-				if (c.getProductID() == p.getId()) {
-					tongTienBanHangThem = 0;
-					sell_ID = dao.getSellIDByProductID(p.getId());
-					tongTienBanHangThem = tongTienBanHangThem + (p.getPrice() * c.getAmount());
-					TongChiTieuBanHang t2 = dao.checkTongChiTieuBanHangExist(sell_ID);
-					if (t2 == null) {
-						dao.insertTongChiTieuBanHang(sell_ID, 0, tongTienBanHangThem);
-					} else {
-						dao.editTongBanHang(sell_ID, tongTienBanHangThem);
-					}
-				}
-			}
-		}
+		// Set attributes for displaying in the order form
+		request.setAttribute("cartList", list);
+		request.setAttribute("productList", list2);
+		request.setAttribute("totalMoney", totalMoney);
+		request.setAttribute("totalMoneyVAT", totalMoneyVAT);
 		
-		
-		for(Cart c : list) {
-			for(Product p : list2) {
-				if(c.getProductID()==p.getId()) {
-					SoLuongDaBan s = dao.checkSoLuongDaBanExist(p.getId());
-					if(s == null) {
-						dao.insertSoLuongDaBan(p.getId(), c.getAmount());
-					}
-					else {
-						dao.editSoLuongDaBan(p.getId(), c.getAmount());
-					}	
-				}
-			}
-		}
-		
-		dao.insertInvoice(accountID, totalMoneyVAT);
-		TongChiTieuBanHang t = dao.checkTongChiTieuBanHangExist(accountID);
-		if(t==null) {
-			dao.insertTongChiTieuBanHang(accountID,totalMoneyVAT,0);
-		}
-		else {
-			dao.editTongChiTieu(accountID, totalMoneyVAT);
-		}
-		
-		
+		// Forward to order form - NO order processing happens here
 		request.getRequestDispatcher("DatHang.jsp").forward(request, response);
 	}
 
@@ -119,8 +117,46 @@ public class OrderControl extends HttpServlet {
 			}
 			int accountID = a.getId();
 			DAO dao = new DAO();
+			WarehouseDAO warehouseDAO = new WarehouseDAO();
 			List<Cart> list = dao.getCartByAccountID(accountID);
 			List<Product> list2 = dao.getAllProduct();
+			
+			// Check if cart is empty
+			if(list == null || list.isEmpty()) {
+				request.setAttribute("error", "Giỏ hàng của bạn trống. Vui lòng thêm sản phẩm trước khi đặt hàng!");
+				request.getRequestDispatcher("DatHang.jsp").forward(request, response);
+				return;
+			}
+			
+			// Validate stock availability for all items in cart
+			if(!warehouseDAO.validateOrderStock(list)) {
+				request.setAttribute("error", "Một số sản phẩm trong giỏ hàng không đủ số lượng tồn kho. Vui lòng kiểm tra lại!");
+				request.getRequestDispatcher("DatHang.jsp").forward(request, response);
+				return;
+			}
+			
+			// Check each product individually and provide detailed error message
+			StringBuilder stockErrorMessage = new StringBuilder();
+			boolean hasStockError = false;
+			for(Cart c : list) {
+				for(Product p : list2) {
+					if(c.getProductID() == p.getId()) {
+						int availableStock = warehouseDAO.getTotalRemainingStock(c.getProductID());
+						if(availableStock < c.getAmount()) {
+							hasStockError = true;
+							stockErrorMessage.append(String.format("Sản phẩm '%s': Yêu cầu %d, tồn kho %d. ", 
+								p.getName(), c.getAmount(), availableStock));
+						}
+						break;
+					}
+				}
+			}
+			
+			if(hasStockError) {
+				request.setAttribute("error", "Không đủ tồn kho: " + stockErrorMessage.toString());
+				request.getRequestDispatcher("DatHang.jsp").forward(request, response);
+				return;
+			}
 				
 			double totalMoney=0;
 			for(Cart c : list) {
@@ -132,6 +168,58 @@ public class OrderControl extends HttpServlet {
 			}
 			double totalMoneyVAT=totalMoney+totalMoney*0.1;
 			
+			// Process stock reduction - this should be done before creating invoice
+			if(!warehouseDAO.processOrderStock(list)) {
+				request.setAttribute("error", "Không thể xử lý đơn hàng do lỗi cập nhật tồn kho. Vui lòng thử lại!");
+				request.getRequestDispatcher("DatHang.jsp").forward(request, response);
+				return;
+			}
+			
+			// Update sales statistics for sellers
+			double tongTienBanHangThem=0;
+			int sell_ID;
+			for (Cart c : list) {
+				for (Product p : list2) {
+					if (c.getProductID() == p.getId()) {
+						tongTienBanHangThem = 0;
+						sell_ID = dao.getSellIDByProductID(p.getId());
+						tongTienBanHangThem = tongTienBanHangThem + (p.getPrice() * c.getAmount());
+						TongChiTieuBanHang t2 = dao.checkTongChiTieuBanHangExist(sell_ID);
+						if (t2 == null) {
+							dao.insertTongChiTieuBanHang(sell_ID, 0, tongTienBanHangThem);
+						} else {
+							dao.editTongBanHang(sell_ID, tongTienBanHangThem);
+						}
+					}
+				}
+			}
+			
+			// Update sold quantity statistics
+			for(Cart c : list) {
+				for(Product p : list2) {
+					if(c.getProductID()==p.getId()) {
+						SoLuongDaBan s = dao.checkSoLuongDaBanExist(p.getId());
+						if(s == null) {
+							dao.insertSoLuongDaBan(p.getId(), c.getAmount());
+						}
+						else {
+							dao.editSoLuongDaBan(p.getId(), c.getAmount());
+						}	
+					}
+				}
+			}
+			
+			// Create invoice
+			dao.insertInvoice(accountID, totalMoneyVAT);
+			
+			// Update customer spending statistics
+			TongChiTieuBanHang t = dao.checkTongChiTieuBanHangExist(accountID);
+			if(t==null) {
+				dao.insertTongChiTieuBanHang(accountID,totalMoneyVAT,0);
+			}
+			else {
+				dao.editTongChiTieu(accountID, totalMoneyVAT);
+			}
 			
 			//old code
 			Email email =new Email();

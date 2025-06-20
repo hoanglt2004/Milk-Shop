@@ -6,9 +6,40 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>JSP Page</title>
+        <title>Giỏ Hàng - Shopping Cart</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-		
+        <style>
+            .btnSub, .btnAdd {
+                background: #da1919;
+                color: white;
+                border: none;
+                padding: 5px 10px;
+                border-radius: 3px;
+                margin: 0 5px;
+                cursor: pointer;
+                transition: background 0.3s;
+            }
+            .btnSub:hover, .btnAdd:hover {
+                background: #c41e3a;
+            }
+            .stock-warning {
+                animation: blink 1s infinite;
+            }
+            @keyframes blink {
+                50% { opacity: 0.5; }
+            }
+            .cart-quantity {
+                font-weight: bold;
+                color: #da1919;
+                margin: 0 10px;
+            }
+            .low-stock-row {
+                background-color: #fff3cd !important;
+            }
+            .out-of-stock-row {
+                background-color: #f8d7da !important;
+            }
+        </style>
     </head>
 
     <body onload="loadTotalMoney()">
@@ -49,6 +80,9 @@
                                                         <div class="py-2 text-uppercase">Số Lượng</div>
                                                     </th>
                                                     <th scope="col" class="border-0 bg-light">
+                                                        <div class="py-2 text-uppercase">Tồn Kho</div>
+                                                    </th>
+                                                    <th scope="col" class="border-0 bg-light">
                                                         <div class="py-2 text-uppercase">Xóa</div>
                                                     </th>
                                                 </tr>
@@ -57,7 +91,23 @@
                                             <c:forEach items="${listCart}" var="o">
                                              <c:forEach items="${listProduct}" var="p">
                                                 <c:if test="${o.productID == p.id}">
-                                                <tr>
+                                                <c:set var="rowClass" value="" />
+                                                <c:forEach items="${listProductStock}" var="ps">
+                                                    <c:if test="${ps.productID == p.id}">
+                                                        <c:choose>
+                                                            <c:when test="${ps.totalRemaining <= 0}">
+                                                                <c:set var="rowClass" value="out-of-stock-row" />
+                                                            </c:when>
+                                                            <c:when test="${ps.totalRemaining < o.amount}">
+                                                                <c:set var="rowClass" value="out-of-stock-row" />
+                                                            </c:when>
+                                                            <c:when test="${ps.totalRemaining <= 5}">
+                                                                <c:set var="rowClass" value="low-stock-row" />
+                                                            </c:when>
+                                                        </c:choose>
+                                                    </c:if>
+                                                </c:forEach>
+                                                <tr class="${rowClass}">
                                                     <th scope="row">
                                                         <div class="p-2">
                                                         
@@ -77,8 +127,33 @@
                                                     <td class="align-middle"><strong>${p.delivery}</strong></td>
                                                     <td class="align-middle">
                                                         <a href="subAmountCart?productID=${o.productID}&amount=${o.amount}"><button class="btnSub">-</button></a> 
-                                                        <strong>${o.amount}</strong>
+                                                        <span class="cart-quantity">${o.amount}</span>
                                                         <a href="addAmountCart?productID=${o.productID}&amount=${o.amount}"><button class="btnAdd">+</button></a>
+                                                    </td>
+                                                    <td class="align-middle">
+                                                        <c:set var="stockFound" value="false" />
+                                                        <c:forEach items="${listProductStock}" var="ps">
+                                                            <c:if test="${ps.productID == p.id && !stockFound}">
+                                                                <c:set var="stockFound" value="true" />
+                                                                <c:choose>
+                                                                    <c:when test="${ps.totalRemaining <= 0}">
+                                                                        <span class="badge badge-danger">Hết hàng</span>
+                                                                    </c:when>
+                                                                    <c:when test="${ps.totalRemaining <= 5}">
+                                                                        <span class="badge badge-warning">${ps.totalRemaining} (Sắp hết)</span>
+                                                                    </c:when>
+                                                                    <c:when test="${ps.totalRemaining < o.amount}">
+                                                                        <span class="badge badge-danger">${ps.totalRemaining} (Không đủ)</span>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <span class="badge badge-success">${ps.totalRemaining}</span>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+                                                            </c:if>
+                                                        </c:forEach>
+                                                        <c:if test="${!stockFound}">
+                                                            <span class="badge badge-secondary">Chưa nhập kho</span>
+                                                        </c:if>
                                                     </td>
                                                     <td class="align-middle"><a href="deleteCart?productID=${o.productID }" class="text-dark">
                                                             <button type="button" class="btn btn-danger">Delete</button>

@@ -170,4 +170,147 @@ public class WarehouseDAO extends DBContext {
             System.out.println("Product: " + ps.getProductName() + ", Total Stock: " + ps.getTotalRemaining());
         }
     }
+
+    /**
+     * Check if there's enough stock for a product
+     * @param productID The product ID to check
+     * @param requestedQuantity The quantity requested
+     * @return true if there's enough stock, false otherwise
+     */
+    public boolean hasEnoughStock(int productID, int requestedQuantity) {
+        String query = "SELECT COALESCE(SUM(remainingQuantity), 0) AS totalStock FROM Warehouse WHERE productID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            
+            ps.setInt(1, productID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int totalStock = rs.getInt("totalStock");
+                    return totalStock >= requestedQuantity;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Get total remaining stock for a specific product
+     * @param productID The product ID
+     * @return Total remaining quantity
+     */
+    public int getTotalRemainingStock(int productID) {
+        String query = "SELECT COALESCE(SUM(remainingQuantity), 0) AS totalStock FROM Warehouse WHERE productID = ?";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            
+            ps.setInt(1, productID);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt("totalStock");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Reduce stock quantity when products are sold
+     * Uses FIFO (First In, First Out) approach - reduces from oldest stock first
+     * @param productID The product ID
+     * @param quantityToReduce The quantity to reduce from stock
+     * @return true if successful, false if not enough stock
+     */
+    public boolean reduceStock(int productID, int quantityToReduce) {
+        // First check if we have enough stock
+        if (!hasEnoughStock(productID, quantityToReduce)) {
+            return false;
+        }
+
+        // Get warehouse entries for this product ordered by import date (FIFO)
+        String selectQuery = "SELECT warehouseID, remainingQuantity FROM Warehouse WHERE productID = ? AND remainingQuantity > 0 ORDER BY importDate ASC";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement selectPs = conn.prepareStatement(selectQuery)) {
+            
+            selectPs.setInt(1, productID);
+            try (ResultSet rs = selectPs.executeQuery()) {
+                int remainingToReduce = quantityToReduce;
+                
+                while (rs.next() && remainingToReduce > 0) {
+                    int warehouseID = rs.getInt("warehouseID");
+                    int currentRemaining = rs.getInt("remainingQuantity");
+                    
+                    int reduceFromThis = Math.min(remainingToReduce, currentRemaining);
+                    int newRemaining = currentRemaining - reduceFromThis;
+                    
+                    // Update this warehouse entry
+                    String updateQuery = "UPDATE Warehouse SET remainingQuantity = ? WHERE warehouseID = ?";
+                    try (PreparedStatement updatePs = conn.prepareStatement(updateQuery)) {
+                        updatePs.setInt(1, newRemaining);
+                        updatePs.setInt(2, warehouseID);
+                        updatePs.executeUpdate();
+                    }
+                    
+                    remainingToReduce -= reduceFromThis;
+                }
+                
+                return remainingToReduce == 0; // Should be 0 if all quantity was reduced successfully
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Validate order before processing - check if all items have enough stock
+     * @param cartItems List of cart items with productID and amount
+     * @return true if all items have sufficient stock, false otherwise
+     */
+    public boolean validateOrderStock(List<entity.Cart> cartItems) {
+        try {
+            for (entity.Cart cart : cartItems) {
+                if (!hasEnoughStock(cart.getProductID(), cart.getAmount())) {
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Process order - reduce stock for all items in the order
+     * This method should be called within a transaction to ensure data consistency
+     * @param cartItems List of cart items with productID and amount
+     * @return true if all stock reductions were successful, false otherwise
+     */
+    public boolean processOrderStock(List<entity.Cart> cartItems) {
+        try {
+            // First validate that all items have enough stock
+            if (!validateOrderStock(cartItems)) {
+                return false;
+            }
+            
+            // Then reduce stock for each item
+            for (entity.Cart cart : cartItems) {
+                if (!reduceStock(cart.getProductID(), cart.getAmount())) {
+                    // If any reduction fails, we have a problem
+                    // In a real application, this should be within a database transaction
+                    // that can be rolled back
+                    return false;
+                }
+            }
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 }
