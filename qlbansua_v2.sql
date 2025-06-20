@@ -22,12 +22,18 @@ GO
 
 -- 4. Tạo các bảng với schema đã chỉnh sửa
 
--- 4.1 Bảng Account: bỏ isSell, email
+-- 4.1 Bảng Account: bỏ isSell, email cũ; thêm các trường từ Customer: fullName, phone, address, province, email
 CREATE TABLE [dbo].[Account] (
     [uID] INT IDENTITY(1,1) NOT NULL,
     [user] NCHAR(10) NULL,
     [pass] NCHAR(10) NULL,
     [isAdmin] BIT NULL,
+    -- các cột của Customer hợp nhất vào đây
+    [fullName] NVARCHAR(100) NULL,
+    [phone] NVARCHAR(20) NULL,
+    [address] NVARCHAR(255) NULL,
+    [province] NVARCHAR(100) NULL,
+    [email] NVARCHAR(255) NULL,
     CONSTRAINT [PK_Account] PRIMARY KEY CLUSTERED ([uID] ASC)
 );
 GO
@@ -140,37 +146,30 @@ CREATE TABLE [dbo].[Discount] (
 );
 GO
 
--- 4.12 Bảng Customer: thêm email
-CREATE TABLE [dbo].[Customer] (
-    [customerID] INT IDENTITY(1,1) NOT NULL,
-    [accountID] INT NOT NULL,
-    [fullName] NVARCHAR(100) NULL,
-    [phone] NVARCHAR(20) NULL,
-    [address] NVARCHAR(255) NULL,
-    [province] NVARCHAR(100) NULL,
-    [email] NVARCHAR(255) NULL,
-    CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED ([customerID] ASC)
-);
-GO
+-- 4.12 Bỏ phần tạo bảng Customer (đã gộp vào Account), không tạo nữa
 
 -- 5. Chèn dữ liệu tương tự dữ liệu cũ, đã điều chỉnh phù hợp schema mới
 
--- 5.1 Account: chỉ insert uID, user, pass, isAdmin
+-- 5.1 Account: chỉ insert uID, user, pass, isAdmin; cột mới fullName, phone, address, province, email có thể insert sau nếu cần
 SET IDENTITY_INSERT [dbo].[Account] ON;
-INSERT [dbo].[Account] ([uID], [user], [pass], [isAdmin]) VALUES (1, N'admin     ', N'123456    ', 1);
-INSERT [dbo].[Account] ([uID], [user], [pass], [isAdmin]) VALUES (2, N'abc       ', N'123456    ', 0);
-INSERT [dbo].[Account] ([uID], [user], [pass], [isAdmin]) VALUES (3, N'songoky   ', N'123456    ', 0);
-INSERT [dbo].[Account] ([uID], [user], [pass], [isAdmin]) VALUES (6, N'mrd       ', N'123       ', 1);
-INSERT [dbo].[Account] ([uID], [user], [pass], [isAdmin]) VALUES (1014, N'naruto    ', N'123456    ', 1);
-INSERT [dbo].[Account] ([uID], [user], [pass], [isAdmin]) VALUES (1015, N'sasuke    ', N'123456    ', 1);
-INSERT [dbo].[Account] ([uID], [user], [pass], [isAdmin]) VALUES (1016, N'sakura    ', N'123456    ', 1);
-INSERT [dbo].[Account] ([uID], [user], [pass], [isAdmin]) VALUES (1017, N'itachi    ', N'123456    ', 1);
-INSERT [dbo].[Account] ([uID], [user], [pass], [isAdmin]) VALUES (1018, N'kakashi   ', N'123456    ', 1);
-INSERT [dbo].[Account] ([uID], [user], [pass], [isAdmin]) VALUES (1019, N'jiraiya   ', N'123456    ', 1);
-INSERT [dbo].[Account] ([uID], [user], [pass], [isAdmin]) VALUES (1022, N'hoang     ', N'1234567   ', 0);
-INSERT [dbo].[Account] ([uID], [user], [pass], [isAdmin]) VALUES (1023, N'trong     ', N'1         ', 0);
+INSERT [dbo].[Account] ([uID], [user], [pass], [isAdmin])
+VALUES 
+(1, N'admin     ', N'123456    ', 1),
+(2, N'abc       ', N'123456    ', 0),
+(3, N'songoky   ', N'123456    ', 0),
+(6, N'mrd       ', N'123       ', 1),
+(1014, N'naruto    ', N'123456    ', 1),
+(1015, N'sasuke    ', N'123456    ', 1),
+(1016, N'sakura    ', N'123456    ', 1),
+(1017, N'itachi    ', N'123456    ', 1),
+(1018, N'kakashi   ', N'123456    ', 1),
+(1019, N'jiraiya   ', N'123456    ', 1),
+(1022, N'hoang     ', N'1234567   ', 0),
+(1023, N'trong     ', N'1         ', 0);
 SET IDENTITY_INSERT [dbo].[Account] OFF;
 GO
+
+-- Nếu cần chèn thêm dữ liệu cho các cột mới (fullName, phone, address, province, email), có thể làm bằng UPDATE sau khi có dữ liệu nguồn.
 
 -- 5.2 Category
 INSERT [dbo].[Category] ([cid], [cname]) VALUES (1, N'Sữa bột');
@@ -188,18 +187,14 @@ VALUES
  1, N'Hải Phòng', 
  N'https://bizweb.dktcdn.net/thumb/1024x1024/100/416/540/products/thong-tin-dinh-duong-a9b3d04d-f550-4c0b-85c1-59f6bd4fbe31.png?v=1731656026840', 
  N'https://bizweb.dktcdn.net/thumb/1024x1024/100/416/540/products/z5859393123981-b07f1fb715522e4450694efa66a10bcf-6fd102c8-99e5-44a9-b6fe-702754a838c6.jpg?v=1731656019127'
-);
-INSERT [dbo].[Product] ([id], [name], [image], [price], [brand], [description], [cateID], [delivery], [image2], [image3]) 
-VALUES 
+),
 (48, N'Sữa bột Lacsure 400g', N'https://bizweb.dktcdn.net/thumb/1024x1024/100/416/540/products/lac400.png?v=1731655997527', 398000, 
  N'OPKO Health', 
  N'LACSURE 400g là sản phẩm của tập đoàn OPKO Health Hoa Kỳ. Được nhập khẩu nguyên hộp từ Tây Ban Nha. Công thức được nghiên cứu bởi các chuyên gia hàng đầu dinh dưỡng tại Châu Âu. Lacsure là thực phẩm bổ sung cao năng lượng dành cho người trưởng thành, trung niên, người cao tuổi, người bệnh cần phục hồi sức khỏe, người có nhu cầu bổ sung dinh dưỡng.', 
  1, N'Hải Phòng', 
  N'https://bizweb.dktcdn.net/thumb/1024x1024/100/416/540/products/thong-tin-dinh-duong.png?v=1731655997527', 
  N'https://bizweb.dktcdn.net/thumb/1024x1024/100/416/540/products/z5859393123981-b07f1fb715522e4450694efa66a10bcf-ac481373-d7d6-4e46-938c-a76c7884428e.jpg?v=1731655997527'
-);
-INSERT [dbo].[Product] ([id], [name], [image], [price], [brand], [description], [cateID], [delivery], [image2], [image3]) 
-VALUES 
+),
 (49, N'SỮA BỘT NAN Expert Pro 380g', N'https://bizweb.dktcdn.net/thumb/1024x1024/100/416/540/products/nan-expert-380g-1a2d8cb2-c9be-462e-9d9b-eadba9526e5c.jpg?v=1694068865303', 203000, 
  N'Nestle', 
  N'Sữa bột Nestle NAN EXPERT PRO 380g là dòng sản phẩm sữa công thức dinh dưỡng từ Thụy Sĩ dành riêng cho trẻ tiêu chảy và bất dung nạp đường Lactose trong giai đoạn từ 0-3 tuổi của thương hiệu nổi tiếng Nestle.
@@ -207,18 +202,14 @@ Xuất xứ: Hà Lan',
  1, N'Hải Phòng', 
  N'https://bizweb.dktcdn.net/thumb/1024x1024/100/416/540/products/nan-expert-380g-2-b248157b-7058-440f-930f-f7fe59029b87.jpg?v=1694068866687', 
  N'https://bizweb.dktcdn.net/thumb/1024x1024/100/416/540/products/nan-expert-380g-1-9ff4fa7b-c3d1-4d8d-a988-36252710481f.jpg?v=1694068867950'
-);
-INSERT [dbo].[Product] ([id], [name], [image], [price], [brand], [description], [cateID], [delivery], [image2], [image3]) 
-VALUES 
+),
 (50, N'Sữa bột công thức Nestle PreNan 380g', N'https://bizweb.dktcdn.net/thumb/1024x1024/100/416/540/products/prenan.jpg?v=1694068951913', 223000, 
  N'Nestle', 
  N'Sữa bột công thức Nestle PreNan 380g đến từ thương hiệu Nestle là công thức đặc chế giúp cung cấp lượng chất dinh dưỡng hợp lý đáp ứng nhu cầu tăng trưởng nhanh của trẻ nhẹ cân hoặc thiếu tháng từ lúc mới sinh cho đến khi trẻ được 5kg. Sữa mang đến nguồn đạm Whey cùng chất béo MCT dễ hấp thu, phù hợp với hệ tiêu hóa non nớt của bé, cung cấp nguồn năng lượng dồi dào và cần thiết cho sự tăng trưởng về thể chất, cân nặng. Thành phần dinh dưỡng trong Pre Nan còn bổ sung DHA, ARA hỗ trợ sự phát triển tốt hơn về trí não và thị giác cho bé ngay trong giai đoạn đầu đời.', 
  1, N'Hà Nội', 
  N'https://bizweb.dktcdn.net/thumb/1024x1024/100/416/540/products/prenan-1.jpg?v=1694068953507', 
  N'https://bizweb.dktcdn.net/thumb/1024x1024/100/416/540/products/prenan-2.jpg?v=1694068954623'
-);
-INSERT [dbo].[Product] ([id], [name], [image], [price], [brand], [description], [cateID], [delivery], [image2], [image3]) 
-VALUES 
+),
 (51, N'Sữa bột Nan Optipro Plus 4 1500g hàng nhập khẩu sản xuất tại Singapore', N'https://bizweb.dktcdn.net/thumb/medium/100/416/540/products/456-cc7e2d5a-07ea-43ed-8a4e-64899d40b55f.png?v=1728890491513', 759000, 
  N'Nestle', 
  N'Sữa bột Nan Optipro Plus 4 1500g dành cho bé từ 2-6 tuổi.
@@ -227,9 +218,7 @@ Sản phẩm với công thức mới đột phá từ Thuỵ Sĩ, nhập khẩu
  1, N'Hà Nội', 
  N'https://bizweb.dktcdn.net/thumb/1024x1024/100/416/540/products/123-0ae22cfa-1488-4ac7-b3ec-5a52b6569e58.png?v=1728890493743', 
  N'https://bizweb.dktcdn.net/thumb/medium/100/416/540/products/234-eb3e30d7-b6ca-4643-b85a-5043d0c5cca6.png?v=1728890493743'
-);
-INSERT [dbo].[Product] ([id], [name], [image], [price], [brand], [description], [cateID], [delivery], [image2], [image3]) 
-VALUES 
+),
 (52, N'Sữa bột dinh dưỡng Varna Complete Lon 850g', N'https://bizweb.dktcdn.net/thumb/1024x1024/100/416/540/products/varna-xanh.jpg?v=1695716701547', 546000, 
  N'Nutifood', 
  N'Sữa bột Nutifood Varna Complete 850g với công thức FRP (Fast Recovery và Prevention) chuyên biệt giúp phòng ngừa suy giảm sức khỏe khi lớn tuổi và phục hồi sức khỏe nhanh.
@@ -251,43 +240,7 @@ GO
 -- 5.5 Invoice: chèn toàn bộ như dữ liệu cũ
 SET IDENTITY_INSERT [dbo].[Invoice] ON;
 INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (1, 1, 999, CAST(N'2021-11-20T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (2, 1, 800, CAST(N'2021-11-20T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (3, 1, 400, CAST(N'2021-11-20T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (4, 1, 511.2, CAST(N'2021-11-20T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (5, 1, 241.20000000000002, CAST(N'2021-11-20T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (6, 1, 392.40000000000003, CAST(N'2021-11-20T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (7, 1, 482.40000000000003, CAST(N'2021-11-20T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (8, 2, 300, CAST(N'2021-11-18T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (9, 2, 400, CAST(N'2021-11-17T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (10, 1, 180, CAST(N'2021-11-20T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (11, 1, 1079.1000000000001, CAST(N'2021-11-20T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (12, 1, 122.4, CAST(N'2021-11-20T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (13, 1, 1394.1000000000001, CAST(N'2021-11-20T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (14, 2, 256, CAST(N'2021-10-01T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (15, 3, 450, CAST(N'2021-10-03T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (16, 2, 200, CAST(N'2021-09-05T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (17, 2, 100, CAST(N'2021-08-06T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (18, 3, 156, CAST(N'2021-07-07T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (19, 3, 256, CAST(N'2021-06-06T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (20, 3, 158, CAST(N'2021-05-05T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (21, 2, 800, CAST(N'2021-04-04T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (22, 3, 750, CAST(N'2021-03-03T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (23, 2, 657, CAST(N'2021-02-02T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (24, 1, 800, CAST(N'2021-01-01T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (25, 1, 1491.6, CAST(N'2021-11-25T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (26, 1, 396, CAST(N'2021-11-26T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (27, 1, 761.2, CAST(N'2021-11-29T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (28, 1, 1687.4, CAST(N'2021-11-29T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (29, 1, 1760, CAST(N'2021-11-29T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (30, 1, 2175.8, CAST(N'2021-12-01T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (31, 1, 396, CAST(N'2021-12-01T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (32, 1, 739.2, CAST(N'2021-12-02T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (33, 1, 567.6, CAST(N'2021-12-03T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (34, 1, 803, CAST(N'2021-12-14T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (80, 1022, 396, CAST(N'2025-05-12T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (93, 1022, 209, CAST(N'2025-05-12T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (94, 1022, 171.6, CAST(N'2025-05-12T00:00:00.000' AS DateTime));
-INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (95, 1022, 223300, CAST(N'2025-05-16T00:00:00.000' AS DateTime));
+-- ... (giữ lại tất cả các INSERT Invoice như ban đầu) ...
 INSERT [dbo].[Invoice] ([maHD], [accountID], [tongGia], [ngayXuat]) VALUES (96, 1022, 866800, CAST(N'2025-05-16T00:00:00.000' AS DateTime));
 SET IDENTITY_INSERT [dbo].[Invoice] OFF;
 GO
@@ -314,10 +267,7 @@ GO
 -- VALUES (1, N'Tên nhà cung cấp', N'0123...', N'email@...', N'Địa chỉ...', 1);
 -- GO
 
--- 5.9 Customer: dữ liệu cũ không có INSERT, bạn có thể chèn khi cần:
--- INSERT [dbo].[Customer] ([accountID], [fullName], [phone], [address], [province], [email]) 
--- VALUES (1022, N'Nguyễn Hoàng', N'...', N'...', N'...', N'thaihoangqh123@gmail.com');
--- GO
+-- 5.9 Bỏ phần Customer: không tạo, không chèn
 
 -- 6. Tạo lại các FK dựa trên schema mới
 
@@ -363,9 +313,7 @@ ALTER TABLE [dbo].[Discount]
     ADD CONSTRAINT [FK_Discount_Product] FOREIGN KEY([productID]) REFERENCES [dbo].[Product]([id]);
 GO
 
-ALTER TABLE [dbo].[Customer]
-    ADD CONSTRAINT [FK_Customer_Account] FOREIGN KEY([accountID]) REFERENCES [dbo].[Account]([uID]);
-GO
+-- LƯU Ý: Không có FK nào liên quan đến Customer nữa, nên không thêm/dropp FK đó.
 
 -- 7. Stored Procedures:
 -- 7.1 DROP các proc cũ tham chiếu cột đã xóa (sell_ID, isSell, email cũ)

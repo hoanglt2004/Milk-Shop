@@ -31,6 +31,11 @@ public class DAO {
     Connection conn = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
+    
+    // Helper method to safely trim strings from database
+    private String safeTrim(String str) {
+        return str != null ? str.trim() : null;
+    }
 
     public List<Product> getAllProduct() {
         List<Product> list = new ArrayList<>();
@@ -40,20 +45,22 @@ public class DAO {
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
+                list.add(new Product(rs.getInt(1),      // id
+                        rs.getString(2),                // name  
+                        rs.getString(3),                // image
+                        rs.getDouble(4),                // price
+                        rs.getString(5),                // brand (was title)
+                        rs.getString(6),                // description
+                        "",                             // model (removed from DB)
+                        "",                             // color (removed from DB)
+                        rs.getString(8),                // delivery
+                        rs.getString(9),                // image2
+                        rs.getString(10),               // image3
+                        ""));                           // image4 (removed from DB)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -230,14 +237,22 @@ public class DAO {
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new Account(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getInt(4),
-                        rs.getInt(5),
-                		rs.getString(6)));
+                // Database structure: uID, user, pass, isAdmin, fullName, phone, address, province, email
+                list.add(new Account(
+                    rs.getInt(1),       // uID
+                    rs.getString(2),    // user
+                    rs.getString(3),    // pass
+                    0,                  // isSell (không còn trong DB, set default = 0)
+                    rs.getInt(4),       // isAdmin
+                    rs.getString(9),    // email
+                    rs.getString(5),    // fullName
+                    rs.getString(6),    // phone
+                    rs.getString(7),    // address
+                    rs.getString(8)     // province
+                ));
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -290,20 +305,22 @@ public class DAO {
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
+                list.add(new Product(rs.getInt(1),      // id
+                        rs.getString(2),                // name  
+                        rs.getString(3),                // image
+                        rs.getDouble(4),                // price
+                        rs.getString(5),                // brand (was title)
+                        rs.getString(6),                // description
+                        "",                             // model (removed from DB)
+                        "",                             // color (removed from DB)
+                        rs.getString(8),                // delivery
+                        rs.getString(9),                // image2
+                        rs.getString(10),               // image3
+                        ""));                           // image4 (removed from DB)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -321,20 +338,22 @@ public class DAO {
             ps.setInt(1, amount);
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
+                list.add(new Product(rs.getInt(1),      // id
+                        rs.getString(2),                // name  
+                        rs.getString(3),                // image
+                        rs.getDouble(4),                // price
+                        rs.getString(5),                // brand (was title)
+                        rs.getString(6),                // description
+                        "",                             // model (removed from DB)
+                        "",                             // color (removed from DB)
+                        rs.getString(8),                // delivery
+                        rs.getString(9),                // image2
+                        rs.getString(10),               // image3
+                        ""));                           // image4 (removed from DB)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -352,20 +371,22 @@ public class DAO {
             ps.setInt(1, amount);
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
+                list.add(new Product(rs.getInt(1),      // id
+                        rs.getString(2),                // name  
+                        rs.getString(3),                // image
+                        rs.getDouble(4),                // price
+                        rs.getString(5),                // brand (was title)
+                        rs.getString(6),                // description
+                        "",                             // model (removed from DB)
+                        "",                             // color (removed from DB)
+                        rs.getString(8),                // delivery
+                        rs.getString(9),                // image2
+                        rs.getString(10),               // image3
+                        ""));                           // image4 (removed from DB)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -383,20 +404,22 @@ public class DAO {
             ps.setInt(1, amount);
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
+                list.add(new Product(rs.getInt(1),      // id
+                        rs.getString(2),                // name  
+                        rs.getString(3),                // image
+                        rs.getDouble(4),                // price
+                        rs.getString(5),                // brand (was title)
+                        rs.getString(6),                // description
+                        "",                             // model (removed from DB)
+                        "",                             // color (removed from DB)
+                        rs.getString(8),                // delivery
+                        rs.getString(9),                // image2
+                        rs.getString(10),               // image3
+                        ""));                           // image4 (removed from DB)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -411,20 +434,22 @@ public class DAO {
             ps.setString(1, cid);
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
+                list.add(new Product(rs.getInt(1),      // id
+                        rs.getString(2),                // name  
+                        rs.getString(3),                // image
+                        rs.getDouble(4),                // price
+                        rs.getString(5),                // brand (was title)
+                        rs.getString(6),                // description
+                        "",                             // model (removed from DB)
+                        "",                             // color (removed from DB)
+                        rs.getString(8),                // delivery
+                        rs.getString(9),                // image2
+                        rs.getString(10),               // image3
+                        ""));                           // image4 (removed from DB)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -477,16 +502,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -514,16 +540,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -562,16 +589,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -589,16 +617,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -616,16 +645,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -643,16 +673,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -670,16 +701,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -697,16 +729,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -725,16 +758,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -752,16 +786,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -777,20 +812,22 @@ public class DAO {
             ps.setInt(1, cateIDProductDetail);
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
+                list.add(new Product(rs.getInt(1),      // id
+                        rs.getString(2),                // name  
+                        rs.getString(3),                // image
+                        rs.getDouble(4),                // price
+                        rs.getString(5),                // brand (was title)
+                        rs.getString(6),                // description
+                        "",                             // model (removed from DB)
+                        "",                             // color (removed from DB)
+                        rs.getString(8),                // delivery
+                        rs.getString(9),                // image2
+                        rs.getString(10),               // image3
+                        ""));                           // image4 (removed from DB)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -826,20 +863,22 @@ public class DAO {
             ps.setString(1, id);
             rs = ps.executeQuery();
             while (rs.next()) {
-                return new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14));
+                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
+                return new Product(rs.getInt(1),        // id
+                        rs.getString(2),                // name  
+                        rs.getString(3),                // image
+                        rs.getDouble(4),                // price
+                        rs.getString(5),                // brand (was title)
+                        rs.getString(6),                // description
+                        "",                             // model (removed from DB)
+                        "",                             // color (removed from DB)
+                        rs.getString(8),                // delivery
+                        rs.getString(9),                // image2
+                        rs.getString(10),               // image3
+                        "");                            // image4 (removed from DB)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -971,20 +1010,22 @@ public class DAO {
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
-                return new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(7),
-                        rs.getString(8),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12));
+                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
+                return new Product(rs.getInt(1),        // id
+                        rs.getString(2),                // name  
+                        rs.getString(3),                // image
+                        rs.getDouble(4),                // price
+                        rs.getString(5),                // brand (was title)
+                        rs.getString(6),                // description
+                        "",                             // model (removed from DB)
+                        "",                             // color (removed from DB)
+                        rs.getString(8),                // delivery
+                        rs.getString(9),                // image2
+                        rs.getString(10),               // image3
+                        "");                            // image4 (removed from DB)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -997,20 +1038,22 @@ public class DAO {
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
-            	list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
+            	list.add(new Product(rs.getInt(1),      // id
+                        rs.getString(2),                // name  
+                        rs.getString(3),                // image
+                        rs.getDouble(4),                // price
+                        rs.getString(5),                // brand (was title)
+                        rs.getString(6),                // description
+                        "",                             // model (removed from DB)
+                        "",                             // color (removed from DB)
+                        rs.getString(8),                // delivery
+                        rs.getString(9),                // image2
+                        rs.getString(10),               // image3
+                        ""));                           // image4 (removed from DB)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -1025,20 +1068,22 @@ public class DAO {
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
-            	list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
+            	list.add(new Product(rs.getInt(1),      // id
+                        rs.getString(2),                // name  
+                        rs.getString(3),                // image
+                        rs.getDouble(4),                // price
+                        rs.getString(5),                // brand (was title)
+                        rs.getString(6),                // description
+                        "",                             // model (removed from DB)
+                        "",                             // color (removed from DB)
+                        rs.getString(8),                // delivery
+                        rs.getString(9),                // image2
+                        rs.getString(10),               // image3
+                        ""));                           // image4 (removed from DB)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -1053,20 +1098,22 @@ public class DAO {
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
-            	list.add(new Product(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getDouble(4),
-                        rs.getString(5),
-                        rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
+            	list.add(new Product(rs.getInt(1),      // id
+                        rs.getString(2),                // name  
+                        rs.getString(3),                // image
+                        rs.getDouble(4),                // price
+                        rs.getString(5),                // brand (was title)
+                        rs.getString(6),                // description
+                        "",                             // model (removed from DB)
+                        "",                             // color (removed from DB)
+                        rs.getString(8),                // delivery
+                        rs.getString(9),                // image2
+                        rs.getString(10),               // image3
+                        ""));                           // image4 (removed from DB)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -1082,14 +1129,22 @@ public class DAO {
             ps.setString(2, pass);
             rs = ps.executeQuery();
             while (rs.next()) {
-                return new Account(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getInt(4),
-                        rs.getInt(5),
-                		rs.getString(6));
+                // Database structure: uID, user, pass, isAdmin, fullName, phone, address, province, email
+                return new Account(
+                    rs.getInt(1),       // uID
+                    rs.getString(2),    // user
+                    rs.getString(3),    // pass
+                    0,                  // isSell (không còn trong DB, set default = 0)
+                    rs.getInt(4),       // isAdmin
+                    rs.getString(9),    // email
+                    rs.getString(5),    // fullName
+                    rs.getString(6),    // phone
+                    rs.getString(7),    // address
+                    rs.getString(8)     // province
+                );
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -1103,20 +1158,29 @@ public class DAO {
             ps.setString(1, user);
             rs = ps.executeQuery();
             while (rs.next()) {
-                return new Account(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getInt(4),
-                        rs.getInt(5),
-                		rs.getString(6));
+                // Database structure: uID, user, pass, isAdmin, fullName, phone, address, province, email
+                return new Account(
+                    rs.getInt(1),       // uID
+                    rs.getString(2),    // user
+                    rs.getString(3),    // pass
+                    0,                  // isSell (không còn trong DB, set default = 0)
+                    rs.getInt(4),       // isAdmin
+                    rs.getString(9),    // email
+                    rs.getString(5),    // fullName
+                    rs.getString(6),    // phone
+                    rs.getString(7),    // address
+                    rs.getString(8)     // province
+                );
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
     
     public Account checkAccountExistByUsernameAndEmail(String username, String email) {
-        String query = "select * from Account where [user]=? and [email]=?";
+        String query = "select * from Account\r\n"
+        		+ "where [user] = ? or [email] = ?";
         try {
             conn = new DBContext().getConnection();//mo ket noi voi sql
             ps = conn.prepareStatement(query);
@@ -1124,14 +1188,22 @@ public class DAO {
             ps.setString(2, email);
             rs = ps.executeQuery();
             while (rs.next()) {
-                return new Account(rs.getInt(1),
-                        rs.getString(2),
-                        rs.getString(3),
-                        rs.getInt(4),
-                        rs.getInt(5),
-                		rs.getString(6));
+                // Database structure: uID, user, pass, isAdmin, fullName, phone, address, province, email
+                return new Account(
+                    rs.getInt(1),       // uID
+                    rs.getString(2),    // user
+                    rs.getString(3),    // pass
+                    0,                  // isSell (không còn trong DB, set default = 0)
+                    rs.getInt(4),       // isAdmin
+                    rs.getString(9),    // email
+                    rs.getString(5),    // fullName
+                    rs.getString(6),    // phone
+                    rs.getString(7),    // address
+                    rs.getString(8)     // province
+                );
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
@@ -1335,20 +1407,19 @@ public class DAO {
         }
     }
     
-    public void insertAccount(String user, String pass, String isSell,
-    		String isAdmin, String email) {
-        String query = "insert Account([user], pass, isSell, isAdmin, email)\r\n"
-        		+ "values(?,?,?,?,?)";
+    public void insertAccount(String user, String pass, String isAdmin, String email) {
+        String query = "insert Account([user], pass, isAdmin, email)\r\n"
+        		+ "values(?,?,?,?)";
         try {
             conn = new DBContext().getConnection();//mo ket noi voi sql
             ps = conn.prepareStatement(query);
             ps.setString(1, user);
             ps.setString(2, pass);
-            ps.setString(3, isSell);
-            ps.setString(4, isAdmin);
-            ps.setString(5, email);
+            ps.setString(3, isAdmin);
+            ps.setString(4, email);
             ps.executeUpdate();
         } catch (Exception e) {
+            e.printStackTrace();
         }
     }
     
@@ -1596,16 +1667,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -1622,16 +1694,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -1649,16 +1722,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -1676,16 +1750,17 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5),
+                        rs.getString(5), // brand (was title)
                         rs.getString(6),
-                        rs.getString(9),
-                        rs.getString(10),
-                        rs.getString(11),
-                        rs.getString(12),
-                        rs.getString(13),
-                        rs.getString(14)));
+                        "", // model (removed)
+                        "", // color (removed)
+                        rs.getString(8), // delivery
+                        rs.getString(9), // image2
+                        rs.getString(10), // image3
+                        "")); // image4 (removed)
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -1747,6 +1822,78 @@ public class DAO {
             e.printStackTrace();
         }
         return list;
+    }
+
+    /**
+     * Check if email already exists in Account table
+     * @param email Email to check
+     * @return true if email exists, false otherwise
+     */
+    public boolean checkEmailExists(String email) {
+        String query = "select count(*) from Account where [email] = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, email);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+
+    // Cập nhật method signup để lưu đầy đủ thông tin vào bảng Account
+    public void signupWithFullInfo(String user, String pass, String fullName, String phone, 
+                                  String address, String province, String email) {
+        String query = "INSERT INTO Account ([user], pass, isAdmin, fullName, phone, address, province, email) " +
+                      "VALUES (?, ?, 0, ?, ?, ?, ?, ?)";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, user);
+            ps.setString(2, pass);
+            ps.setString(3, fullName);
+            ps.setString(4, phone);
+            ps.setString(5, address);
+            ps.setString(6, province);
+            ps.setString(7, email);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Lấy thông tin account đầy đủ bao gồm thông tin cá nhân
+    public Account getAccountWithFullInfo(int accountID) {
+        String query = "SELECT uID, [user], pass, isAdmin, fullName, phone, address, province, email " +
+                      "FROM Account WHERE uID = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, accountID);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                Account account = new Account();
+                account.setId(rs.getInt("uID"));
+                account.setUser(rs.getString("user"));
+                account.setPass(rs.getString("pass"));
+                account.setIsAdmin(rs.getInt("isAdmin"));
+                account.setEmail(rs.getString("email"));
+                account.setFullName(rs.getString("fullName"));
+                account.setPhone(rs.getString("phone"));
+                account.setAddress(rs.getString("address"));
+                account.setProvince(rs.getString("province"));
+                return account;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }

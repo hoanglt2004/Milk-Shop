@@ -113,6 +113,7 @@
                         class="img-fluid z-depth-1">
                     </a>
                   </figure>
+                  <c:if test="${not empty detail.image4}">
                   <figure class="view overlay rounded z-depth-1" style="visibility: hidden;">
                     <a href="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/14a.jpg"
                       data-size="710x823">
@@ -120,6 +121,7 @@
                         class="img-fluid z-depth-1">
                     </a>
                   </figure>
+                  </c:if>
                 </div>
                 <div class="col-12">
                   <div class="row">
@@ -144,6 +146,7 @@
                         <div class="mask rgba-white-slight"></div>
                       </div>
                     </div>
+                    <c:if test="${not empty detail.image4}">
                     <div class="col-3">
                       <div class="view overlay rounded z-depth-1 gallery-item hoverable">
                         <img src="${detail.image4}" 
@@ -151,6 +154,7 @@
                         <div class="mask rgba-white-slight"></div>
                       </div>
                     </div>
+                    </c:if>
                   </div>
                 </div>
               </div>

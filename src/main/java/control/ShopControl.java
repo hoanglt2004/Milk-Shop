@@ -42,10 +42,6 @@ public class ShopControl extends HttpServlet {
         // Check if category ID is provided
         String cid = request.getParameter("cid");
         String index = request.getParameter("index");
-        if(index == null) {
-        	index="1";
-        }
-        int indexPage = Integer.parseInt(index);
         
         List<Product> list;
         int allProduct;
@@ -61,26 +57,30 @@ public class ShopControl extends HttpServlet {
             }
             // Set selected category for JSP
             request.setAttribute("selectedCid", cid);
-        } else {
-            // Get all products with pagination
+        } else if(index != null && !index.isEmpty()) {
+            // Get products with pagination
+            int indexPage = Integer.parseInt(index);
             list = dao.getProductByIndex(indexPage);
             allProduct = dao.countAllProduct();
             endPage = allProduct/9;
             if(allProduct % 9 != 0) {
                 endPage++;
             }
+            request.setAttribute("tag", indexPage);
+        } else {
+            // Default: Show all products when accessing /shop directly
+            list = dao.getAllProduct();
+            allProduct = list.size();
+            endPage = allProduct/9;
+            if(allProduct % 9 != 0) {
+                endPage++;
+            }
+            request.setAttribute("tag", 1);
         }
         
-        
-        request.setAttribute("tag", indexPage);
         request.setAttribute("endPage", endPage);
         request.setAttribute("listCC", listC);
         request.setAttribute("listP", list);
-        
-        
-        
-        
-
 
         request.getRequestDispatcher("Shop.jsp").forward(request, response);
         //404 -> url

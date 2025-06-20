@@ -5,16 +5,15 @@
  */
 package control;
 
-import dao.DAO;
-import entity.Account;
 import java.io.IOException;
-import java.io.PrintWriter;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import dao.DAO;
+import entity.Account;
 
 @WebServlet(name = "SignUpControl", urlPatterns = {"/signup"})
 public class SignUpControl extends HttpServlet {
@@ -31,28 +30,108 @@ public class SignUpControl extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        String user = request.getParameter("user");
-        String pass = request.getParameter("pass");
-        String re_pass = request.getParameter("repass");
+        request.setCharacterEncoding("UTF-8");
+        
+        // Lấy thông tin từ form
+        String username = request.getParameter("username");
+        String password = request.getParameter("password");
+        String confirmPassword = request.getParameter("confirmPassword");
         String email = request.getParameter("email");
-        if(!pass.equals(re_pass)){
-            request.setAttribute("error", "Mật khẩu không khớp!");
-            request.getRequestDispatcher("Login.jsp").forward(request, response);
-        }else{
-            DAO dao = new DAO();
-            Account a = dao.checkAccountExist(user);
-            if(a == null){
-                //dc signup
-                dao.singup(user, pass, email);
-                request.setAttribute("mess", "Đăng ký thành công! Vui lòng đăng nhập.");
-                request.getRequestDispatcher("Login.jsp").forward(request, response);
-            }else{
-                //day ve trang login.jsp
-                request.setAttribute("error", "Tài khoản đã tồn tại!");
-                request.getRequestDispatcher("Login.jsp").forward(request, response);
+        String fullName = request.getParameter("fullName");
+        String phone = request.getParameter("phone");
+        String address = request.getParameter("address");
+        String province = request.getParameter("province");
+        
+        DAO dao = new DAO();
+        
+        try {
+            // Validation phía server
+            String errorMessage = validateInput(username, password, confirmPassword, email, fullName, phone, address, province);
+            
+            if (errorMessage != null) {
+                request.setAttribute("errorMessage", errorMessage);
+                request.getRequestDispatcher("SignUp.jsp").forward(request, response);
+                return;
             }
+            
+            // Kiểm tra tài khoản đã tồn tại
+            Account existingAccount = dao.checkAccountExist(username);
+            if (existingAccount != null) {
+                request.setAttribute("errorMessage", "Tên đăng nhập đã tồn tại!");
+                request.getRequestDispatcher("SignUp.jsp").forward(request, response);
+                return;
+            }
+            
+            // Kiểm tra email đã tồn tại
+            if (dao.checkEmailExists(email)) {
+                request.setAttribute("errorMessage", "Email đã được sử dụng!");
+                request.getRequestDispatcher("SignUp.jsp").forward(request, response);
+                return;
+            }
+            
+            // Tạo tài khoản mới với đầy đủ thông tin
+            dao.signupWithFullInfo(username, password, fullName, phone, address, province, email);
+            
+            // Chuyển hướng đến trang đăng nhập với thông báo thành công
+            request.getSession().setAttribute("successMessage", 
+                "Đăng ký tài khoản thành công! Chào mừng " + fullName + " đến với hệ thống. Vui lòng đăng nhập để tiếp tục.");
+            response.sendRedirect("Login.jsp");
+            return;
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            request.setAttribute("errorMessage", "Có lỗi xảy ra: " + e.getMessage());
+            request.getRequestDispatcher("SignUp.jsp").forward(request, response);
         }
-        //sign up
+    }
+    
+    private String validateInput(String username, String password, String confirmPassword, 
+                               String email, String fullName, String phone, String address, String province) {
+        
+        // Validate username
+        if (username == null || username.trim().length() < 3 || username.trim().length() > 20) {
+            return "Tên đăng nhập phải từ 3-20 ký tự";
+        }
+        if (!username.matches("^[a-zA-Z0-9_]+$")) {
+            return "Tên đăng nhập chỉ được chứa chữ cái, số và dấu gạch dưới";
+        }
+        
+        // Validate email
+        if (email == null || !email.matches("^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$")) {
+            return "Email không hợp lệ";
+        }
+        
+        // Validate password
+        if (password == null || password.length() < 6) {
+            return "Mật khẩu phải có ít nhất 6 ký tự";
+        }
+        
+        // Validate confirm password
+        if (!password.equals(confirmPassword)) {
+            return "Mật khẩu xác nhận không khớp";
+        }
+        
+        // Validate full name
+        if (fullName == null || fullName.trim().length() < 2) {
+            return "Họ và tên phải có ít nhất 2 ký tự";
+        }
+        
+        // Validate phone
+        if (phone == null || !phone.matches("^[0-9]{10,11}$")) {
+            return "Số điện thoại phải có 10-11 chữ số";
+        }
+        
+        // Validate province
+        if (province == null || province.trim().isEmpty()) {
+            return "Vui lòng chọn tỉnh/thành phố";
+        }
+        
+        // Validate address
+        if (address == null || address.trim().length() < 5) {
+            return "Địa chỉ phải có ít nhất 5 ký tự";
+        }
+        
+        return null; // No errors
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -67,7 +146,8 @@ public class SignUpControl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        processRequest(request, response);
+        // Chuyển đến trang đăng ký
+        request.getRequestDispatcher("SignUp.jsp").forward(request, response);
     }
 
     /**
@@ -91,7 +171,7 @@ public class SignUpControl extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Enhanced Signup Control for Account registration with full information";
     }// </editor-fold>
 
 }

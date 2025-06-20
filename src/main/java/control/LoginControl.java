@@ -64,7 +64,7 @@ public class LoginControl extends HttpServlet {
          DAO dao = new DAO();
          Account a = dao.login(username, password);
          if (a == null) {
-             request.setAttribute("error", "Sai username hoac password!");
+             request.setAttribute("error", "Sai tên đăng nhập hoặc mật khẩu!");
              request.getRequestDispatcher("Login.jsp").forward(request, response);
          } else {
              HttpSession session = request.getSession();
@@ -104,9 +104,21 @@ public class LoginControl extends HttpServlet {
              }
              
              request.setAttribute("mess", "Đăng nhập thành công!");
+             
+             // Debug log for admin permission checking
+             System.out.println("=== LOGIN DEBUG ===");
+             System.out.println("User: '" + a.getUser() + "'");
+             System.out.println("ID: " + a.getId());
+             System.out.println("IsAdmin: " + a.getIsAdmin());
+             System.out.println("Email: " + a.getEmail());
+             System.out.println("FullName: " + a.getFullName());
+             System.out.println("Checking admin status...");
+             
              if (a.getIsAdmin() == 1) {
+                 System.out.println("✅ Admin detected! Redirecting to admin dashboard...");
                  response.sendRedirect("admin");
              } else {
+                 System.out.println("👤 Normal user detected! Redirecting to home page...");
                  response.sendRedirect("home");
              }
          }

@@ -1,2 +1,8 @@
+/context/
 /control/
+/controller/
 /dao/
+/entity/
+/filter/
+/model/
+/utils/

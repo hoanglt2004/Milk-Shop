@@ -79,7 +79,7 @@ input[type="radio"]:checked + .sort-label {
 
 </head>
 
-<body class="skin-light" onload="loadAmountCart()">
+<body class="skin-light" onload="loadAmountCart(); initializeShopPage();">
 
   <!--Main Navigation-->
   <header>
@@ -517,6 +517,18 @@ input[type="radio"]:checked + .sort-label {
                  document.getElementById("amountCart").innerHTML = responseData;
              }
          });
+    }
+    
+    function initializeShopPage() {
+        // Check if there are products displayed
+        const contentDiv = document.getElementById("content");
+        const hasProducts = contentDiv.querySelectorAll('.col-md-4').length > 0;
+        
+        // If no products are displayed, load all products
+        if (!hasProducts) {
+            console.log("No products found on page load, loading all products...");
+            loadAllProducts();
+        }
     }         
   </script>
   	 <!-- MDB -->
