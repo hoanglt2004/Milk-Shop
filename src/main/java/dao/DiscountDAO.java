@@ -2,6 +2,7 @@ package dao;
 
 import entity.Discount;
 import entity.Product;
+import context.DBContext;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -36,7 +37,7 @@ public class DiscountDAO extends DBContext {
                 discount.setProduct(product);
                 list.add(discount);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
@@ -54,7 +55,7 @@ public class DiscountDAO extends DBContext {
             ps.setBoolean(5, discount.isActive());
 
             ps.executeUpdate();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -72,7 +73,7 @@ public class DiscountDAO extends DBContext {
             ps.setInt(6, discount.getDiscountID());
 
             ps.executeUpdate();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -84,7 +85,7 @@ public class DiscountDAO extends DBContext {
 
             ps.setInt(1, discountID);
             ps.executeUpdate();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -113,7 +114,7 @@ public class DiscountDAO extends DBContext {
                     return discount;
                 }
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -135,7 +136,7 @@ public class DiscountDAO extends DBContext {
                 list.add(product);
             }
             System.out.println("Total products found: " + list.size());
-        } catch (SQLException e) {
+        } catch (Exception e) {
             System.err.println("Error in getAllProducts: " + e.getMessage());
             e.printStackTrace();
         }

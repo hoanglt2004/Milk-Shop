@@ -24,7 +24,7 @@ public class QuanLyKhoControl extends HttpServlet {
         WarehouseDAO warehouseDAO = new WarehouseDAO();
         List<Warehouse> listEntries = warehouseDAO.getAllWarehouseEntries();
         List<Product> listProducts = warehouseDAO.getAllProducts();
-        List<dao.WarehouseDAO.ProductStock> listProductStock = warehouseDAO.getTotalStockPerProduct();
+        List<entity.ProductStock> listProductStock = warehouseDAO.getTotalStockPerProduct();
 
         request.setAttribute("listE", listEntries);
         request.setAttribute("listP", listProducts); // Pass product list for dropdown
@@ -52,6 +52,7 @@ public class QuanLyKhoControl extends HttpServlet {
                     entry.setRemainingQuantity(quantity); // Initially remaining is full quantity
 
                     warehouseDAO.addWarehouseEntry(entry);
+                    request.getSession().setAttribute("successMessage", "Thêm thông tin nhập kho thành công!");
 
                 } else if (action.equalsIgnoreCase("edit")) {
                     int warehouseID = Integer.parseInt(request.getParameter("warehouseID"));
@@ -68,14 +69,21 @@ public class QuanLyKhoControl extends HttpServlet {
                     entry.setRemainingQuantity(remainingQuantity);
 
                     warehouseDAO.updateWarehouseEntry(entry);
+                    request.getSession().setAttribute("successMessage", "Cập nhật thông tin kho thành công!");
 
                 } else if (action.equalsIgnoreCase("delete")) {
                     int warehouseID = Integer.parseInt(request.getParameter("warehouseID"));
                     warehouseDAO.deleteWarehouseEntry(warehouseID);
+                    request.getSession().setAttribute("successMessage", "Xóa thông tin kho thành công!");
                 }
             } catch (ParseException | NumberFormatException e) {
                 e.printStackTrace();
-                // Handle error appropriately
+                // Set error in session for redirect
+                request.getSession().setAttribute("errorMessage", "Lỗi: Dữ liệu nhập vào không hợp lệ. Vui lòng kiểm tra lại.");
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Set error in session for redirect
+                request.getSession().setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
             }
         }
 

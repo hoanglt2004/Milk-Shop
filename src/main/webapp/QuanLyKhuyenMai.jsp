@@ -33,15 +33,23 @@
                                 </div>
                             </div>
                             <div class="card-body">
-                                <c:if test="${requestScope.errorMessage != null}">
-                                    <div class="alert alert-danger" role="alert">
-                                        ${requestScope.errorMessage}
+                                <c:if test="${sessionScope.errorMessage != null}">
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        ${sessionScope.errorMessage}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
+                                    <c:remove var="errorMessage" scope="session"/>
                                 </c:if>
-                                 <c:if test="${requestScope.successMessage != null}">
-                                    <div class="alert alert-success" role="alert">
-                                        ${requestScope.successMessage}
+                                 <c:if test="${sessionScope.successMessage != null}">
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        ${sessionScope.successMessage}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
                                     </div>
+                                    <c:remove var="successMessage" scope="session"/>
                                 </c:if>
                                 <table class="table table-hover text-nowrap">
                                     <thead>
@@ -106,9 +114,12 @@
                     <div class="modal-body">
                         <div class="form-group">
                             <label>Sản phẩm</label>
-                            <input type="text" id="productSearch" class="form-control" placeholder="Nhập tên sản phẩm..." autocomplete="off" required>
-                            <input type="hidden" name="productID" id="productID">
-                            <div id="productSuggestions" class="list-group"></div>
+                            <select name="productID" class="form-control" required>
+                                <option value="">-- Chọn sản phẩm --</option>
+                                <c:forEach items="${listP}" var="p">
+                                    <option value="${p.id}">${p.name}</option>
+                                </c:forEach>
+                            </select>
                         </div>
                         <div class="form-group">
                             <label>Phần trăm giảm</label>
@@ -156,7 +167,7 @@
                              <select name="productID" id="editProductID" class="form-control" required>
                                 <c:forEach items="${listP}" var="p">
                                     <option value="${p.id}">${p.name}</option>
-                                ></c:forEach>
+                                </c:forEach>
                             </select>
                         </div>
                          <div class="form-group">
@@ -243,39 +254,7 @@
                 $('#deleteDiscountID').val(id);
             });
 
-            $('#productSearch').on('input', function() {
-                var query = $(this).val();
-                if (query.length < 1) {
-                    $('#productSuggestions').empty();
-                    return;
-                }
-                $.ajax({
-                    url: 'searchProduct',
-                    type: 'GET',
-                    data: { name: query },
-                    success: function(data) {
-                        var suggestions = JSON.parse(data);
-                        var html = '';
-                        suggestions.forEach(function(product) {
-                            html += '<a href="#" class="list-group-item list-group-item-action" data-id="' + product.id + '" data-name="' + product.name + '">' + product.name + '</a>';
-                        });
-                        $('#productSuggestions').html(html).show();
-                    }
-                });
-            });
-            $('#productSuggestions').on('click', 'a', function(e) {
-                e.preventDefault();
-                var id = $(this).data('id');
-                var name = $(this).data('name');
-                $('#productSearch').val(name);
-                $('#productID').val(id);
-                $('#productSuggestions').empty();
-            });
-            $(document).click(function(e) {
-                if (!$(e.target).closest('#productSearch, #productSuggestions').length) {
-                    $('#productSuggestions').empty();
-                }
-            });
+            // No additional scripts needed for simple dropdown
         });
     </script>
 </body>

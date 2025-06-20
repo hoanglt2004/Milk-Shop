@@ -39,6 +39,24 @@
                                 </div>
                             </div>
                             <div class="card-body">
+                                <c:if test="${sessionScope.errorMessage != null}">
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        ${sessionScope.errorMessage}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <c:remove var="errorMessage" scope="session"/>
+                                </c:if>
+                                <c:if test="${sessionScope.successMessage != null}">
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        ${sessionScope.successMessage}
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <c:remove var="successMessage" scope="session"/>
+                                </c:if>
                                 <table class="table table-hover text-nowrap">
                                     <thead>
                                         <tr>
@@ -76,41 +94,45 @@
                             </div>
                         </div>
                     </section>
+                    
+                    <!-- Tổng tồn kho theo sản phẩm -->
+                    <section class="mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0"><strong>Tổng tồn kho theo sản phẩm</strong></h5>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-hover text-nowrap mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Tên sản phẩm</th>
+                                                <th>Tổng số lượng tồn</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <c:forEach items="${listPS}" var="ps">
+                                                <tr>
+                                                    <td>${ps.productID}</td>
+                                                    <td>${ps.productName}</td>
+                                                    <td>
+                                                        <span class="badge ${ps.totalRemaining == 0 ? 'badge-danger' : ps.totalRemaining < 10 ? 'badge-warning' : 'badge-success'}">
+                                                            ${ps.totalRemaining}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            </c:forEach>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </div>
             </main>
         </div>
     </div>
-
-    <!-- Tổng tồn kho theo sản phẩm - Đặt trong card Bootstrap -->
-    <section class="mb-4">
-        <div class="card mt-4">
-            <div class="card-header">
-                <h5 class="mb-0"><strong>Tổng tồn kho theo sản phẩm</strong></h5>
-            </div>
-            <div class="card-body p-0">
-                <div class="table-responsive">
-                    <table class="table table-hover text-nowrap mb-0">
-                        <thead>
-                            <tr>
-                                <th>Sản phẩm ID</th>
-                                <th>Tên sản phẩm</th>
-                                <th>Tổng số lượng tồn</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <c:forEach items="${listPS}" var="ps">
-                                <tr>
-                                    <td>${ps.productID}</td>
-                                    <td>${ps.productName}</td>
-                                    <td>${ps.totalRemaining}</td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Modal thêm kho mới -->
     <div id="addWarehouseModal" class="modal fade">
@@ -166,7 +188,7 @@
                              <select name="productID" id="editWarehouseProductID" class="form-control" required>
                                 <c:forEach items="${listP}" var="p">
                                     <option value="${p.id}">${p.name}</option>
-                                ></c:forEach>
+                                </c:forEach>
                             </select>
                         </div>
                         <div class="form-group">

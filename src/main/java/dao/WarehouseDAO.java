@@ -2,6 +2,7 @@ package dao;
 
 import entity.Warehouse;
 import entity.Product;
+import context.DBContext;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,7 +36,7 @@ public class WarehouseDAO extends DBContext {
                 entry.setProduct(product);
                 list.add(entry);
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
@@ -52,7 +53,7 @@ public class WarehouseDAO extends DBContext {
             ps.setInt(4, entry.getQuantity()); // Initially remainingQuantity is the same as quantity
 
             ps.executeUpdate();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -72,7 +73,7 @@ public class WarehouseDAO extends DBContext {
             ps.setInt(5, entry.getWarehouseID());
 
             ps.executeUpdate();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -84,7 +85,7 @@ public class WarehouseDAO extends DBContext {
 
             ps.setInt(1, warehouseID);
             ps.executeUpdate();
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -112,7 +113,7 @@ public class WarehouseDAO extends DBContext {
                     return entry;
                 }
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -125,58 +126,36 @@ public class WarehouseDAO extends DBContext {
              PreparedStatement ps = conn.prepareStatement(query);
              ResultSet rs = ps.executeQuery()) {
 
+            System.out.println("Executing query: " + query);
             while (rs.next()) {
                 Product product = new Product();
                 product.setId(rs.getInt("id"));
                 product.setName(rs.getString("name"));
-                // You can set other product properties if needed
+                System.out.println("Found product: " + product.getId() + " - " + product.getName());
                 list.add(product);
             }
-        } catch (SQLException e) {
+            System.out.println("Total products found: " + list.size());
+        } catch (Exception e) {
+            System.err.println("Error in getAllProducts: " + e.getMessage());
             e.printStackTrace();
         }
         return list;
     }
 
     // Method to get total remaining quantity per product (Optional but helpful for overview)
-    public List<ProductStock> getTotalStockPerProduct() {
-        List<ProductStock> list = new ArrayList<>();
-        String query = "SELECT p.id, p.name, SUM(w.remainingQuantity) AS totalRemaining FROM Product p LEFT JOIN Warehouse w ON p.id = w.productID GROUP BY p.id, p.name";
+    public List<entity.ProductStock> getTotalStockPerProduct() {
+        List<entity.ProductStock> list = new ArrayList<>();
+        String query = "SELECT p.id, p.name, COALESCE(SUM(w.remainingQuantity), 0) AS totalRemaining FROM Product p LEFT JOIN Warehouse w ON p.id = w.productID GROUP BY p.id, p.name ORDER BY p.name";
         try (Connection conn = getConnection();
              PreparedStatement ps = conn.prepareStatement(query);
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
-                list.add(new ProductStock(rs.getInt("id"), rs.getString("name"), rs.getInt("totalRemaining")));
+                list.add(new entity.ProductStock(rs.getInt("id"), rs.getString("name"), rs.getInt("totalRemaining")));
             }
-        } catch (SQLException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return list;
-    }
-    
-     // Helper class for total stock (create a new file entity/ProductStock.java)
-    public static class ProductStock {
-        private int productID;
-        private String productName;
-        private int totalRemaining;
-
-        public ProductStock(int productID, String productName, int totalRemaining) {
-            this.productID = productID;
-            this.productName = productName;
-            this.totalRemaining = totalRemaining;
-        }
-
-        public int getProductID() {
-            return productID;
-        }
-
-        public String getProductName() {
-            return productName;
-        }
-
-        public int getTotalRemaining() {
-            return totalRemaining;
-        }
     }
 
     public static void main(String[] args) {
@@ -186,8 +165,8 @@ public class WarehouseDAO extends DBContext {
         for (Warehouse entry : entries) {
             System.out.println(entry.getWarehouseID() + " - " + entry.getProduct().getName() + " - " + entry.getQuantity() + " - " + entry.getRemainingQuantity());
         }
-         List<ProductStock> productStocks = dao.getTotalStockPerProduct();
-        for (ProductStock ps : productStocks) {
+         List<entity.ProductStock> productStocks = dao.getTotalStockPerProduct();
+        for (entity.ProductStock ps : productStocks) {
             System.out.println("Product: " + ps.getProductName() + ", Total Stock: " + ps.getTotalRemaining());
         }
     }

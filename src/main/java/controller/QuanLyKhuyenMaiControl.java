@@ -51,6 +51,7 @@ public class QuanLyKhuyenMaiControl extends HttpServlet {
                     discount.setActive(isActive);
 
                     discountDAO.addDiscount(discount);
+                    request.getSession().setAttribute("successMessage", "Thêm khuyến mãi thành công!");
 
                 } else if (action.equalsIgnoreCase("edit")) {
                     int discountID = Integer.parseInt(request.getParameter("discountID"));
@@ -69,14 +70,21 @@ public class QuanLyKhuyenMaiControl extends HttpServlet {
                     discount.setActive(isActive);
 
                     discountDAO.updateDiscount(discount);
+                    request.getSession().setAttribute("successMessage", "Cập nhật khuyến mãi thành công!");
 
                 } else if (action.equalsIgnoreCase("delete")) {
                     int discountID = Integer.parseInt(request.getParameter("discountID"));
                     discountDAO.deleteDiscount(discountID);
+                    request.getSession().setAttribute("successMessage", "Xóa khuyến mãi thành công!");
                 }
             } catch (ParseException | NumberFormatException e) {
                 e.printStackTrace();
-                // Handle error appropriately (e.g., send an error message to the JSP)
+                // Set error in session for redirect
+                request.getSession().setAttribute("errorMessage", "Lỗi: Dữ liệu nhập vào không hợp lệ. Vui lòng kiểm tra lại ngày tháng và số liệu.");
+            } catch (Exception e) {
+                e.printStackTrace();
+                // Set error in session for redirect
+                request.getSession().setAttribute("errorMessage", "Lỗi hệ thống: " + e.getMessage());
             }
         }
 

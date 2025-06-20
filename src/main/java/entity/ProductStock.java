@@ -5,6 +5,9 @@ public class ProductStock {
     private String productName;
     private int totalRemaining;
 
+    public ProductStock() {
+    }
+
     public ProductStock(int productID, String productName, int totalRemaining) {
         this.productID = productID;
         this.productName = productName;
