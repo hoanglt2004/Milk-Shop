@@ -158,6 +158,63 @@ public class WarehouseDAO extends DBContext {
         return list;
     }
 
+    /**
+     * Lấy danh sách sản phẩm cảnh báo (số lượng <= 5 hoặc đã hết hàng với thời gian đếm ngược)
+     * @return List các sản phẩm cần cảnh báo
+     */
+    public List<entity.ProductStock> getWarningProducts() {
+        List<entity.ProductStock> list = new ArrayList<>();
+        String query = "SELECT p.id, p.name, COALESCE(SUM(w.remainingQuantity), 0) AS totalRemaining, " +
+                      "(SELECT MIN(w2.importDate) FROM Warehouse w2 WHERE w2.productID = p.id AND w2.remainingQuantity = 0) AS lastStockDate " +
+                      "FROM Product p LEFT JOIN Warehouse w ON p.id = w.productID " +
+                      "GROUP BY p.id, p.name HAVING COALESCE(SUM(w.remainingQuantity), 0) <= 5 " +
+                      "ORDER BY totalRemaining ASC, p.name";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(query);
+             ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                int productID = rs.getInt("id");
+                String productName = rs.getString("name");
+                int totalRemaining = rs.getInt("totalRemaining");
+                Date lastStockDate = rs.getTimestamp("lastStockDate");
+                
+                // Tính số ngày còn lại (5-0) nếu sản phẩm đã hết hàng
+                int daysRemaining = 5;
+                if (totalRemaining == 0 && lastStockDate != null) {
+                    long daysPassed = (System.currentTimeMillis() - lastStockDate.getTime()) / (1000 * 60 * 60 * 24);
+                    daysRemaining = Math.max(0, 5 - (int)daysPassed);
+                }
+                
+                entity.ProductStock stock = new entity.ProductStock(productID, productName, totalRemaining, lastStockDate, daysRemaining);
+                list.add(stock);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * Tự động xóa sản phẩm đã hết hàng quá 5 ngày
+     * @return số lượng sản phẩm đã được xóa
+     */
+    public int autoDeleteExpiredProducts() {
+        int deletedCount = 0;
+        String query = "DELETE FROM Warehouse WHERE productID IN (" +
+                      "SELECT DISTINCT productID FROM Warehouse " +
+                      "WHERE remainingQuantity = 0 AND DATEDIFF(DAY, importDate, GETDATE()) > 5)";
+        
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+            deletedCount = ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return deletedCount;
+    }
+
     public static void main(String[] args) {
         // Example Usage (for testing)
         WarehouseDAO dao = new WarehouseDAO();

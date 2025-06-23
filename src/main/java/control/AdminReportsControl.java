@@ -2,16 +2,15 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
-  * author: H.M.Duc
  */
 package control;
 
 import dao.DAO;
 import entity.Account;
-import entity.Category;
 import entity.Product;
+import entity.SoLuongDaBan;
+import entity.TongChiTieuBanHang;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -20,9 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
-@WebServlet(name = "ManagerAccountControl", urlPatterns = {"/managerAccount"})
-public class ManagerAccountControl extends HttpServlet {
+@WebServlet(name = "AdminReportsControl", urlPatterns = {"/adminReports"})
+public class AdminReportsControl extends HttpServlet {
 
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -42,28 +40,34 @@ public class ManagerAccountControl extends HttpServlet {
         Account a = (Account) session.getAttribute("acc");
         DAO dao = new DAO();
         
-        // Kiểm tra đăng nhập
         if(a == null) {
             response.sendRedirect("login");
             return;
         }
         
         int uID = a.getId();
-        
-        // Kiểm tra quyền admin
         int checkIsAdmin = dao.checkAccountAdmin(uID);
         if(checkIsAdmin == 0) {
             response.sendRedirect("login");
             return;
         }
-
-        // Lấy danh sách tất cả tài khoản
-        List<Account> list = dao.getAllAccount();
+        
+        // Lấy dữ liệu Top 10 sản phẩm bán chạy
+        List<SoLuongDaBan> listTop10Product = dao.getTop10SanPhamBanChay();
+        List<Product> listAllProduct = dao.getAllProduct();
+        
+        // Lấy dữ liệu Top 5 khách hàng VIP
+        List<TongChiTieuBanHang> listTop5KhachHang = dao.getTop5KhachHang();
+        List<Account> listAllAccount = dao.getAllAccount();
         
         // Set attributes cho JSP
-        request.setAttribute("listA", list);
+        request.setAttribute("listTop10Product", listTop10Product);
+        request.setAttribute("listAllProduct", listAllProduct);
+        request.setAttribute("listTop5KhachHang", listTop5KhachHang);
+        request.setAttribute("listAllAccount", listAllAccount);
         
-        request.getRequestDispatcher("QuanLyTaiKhoan.jsp").forward(request, response);
+        // Forward đến trang Reports
+        request.getRequestDispatcher("AdminReports.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
@@ -102,7 +106,7 @@ public class ManagerAccountControl extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Manager Account Controller";
+        return "Admin Reports Controller";
     }// </editor-fold>
 
-}
+} 

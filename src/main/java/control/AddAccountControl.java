@@ -34,17 +34,48 @@ public class AddAccountControl extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+        
         String user = request.getParameter("user");
         String pass = request.getParameter("pass");
-        String isSell = request.getParameter("isSell");
         String isAdmin = request.getParameter("isAdmin");
         String email = request.getParameter("email");
+        String fullName = request.getParameter("fullName");
+        String phone = request.getParameter("phone");
        
-        
+        // Validation
+        if(user == null || user.trim().isEmpty() || 
+           pass == null || pass.trim().isEmpty() || 
+           isAdmin == null || isAdmin.trim().isEmpty() ||
+           email == null || email.trim().isEmpty()) {
+            request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin bắt buộc!");
+            request.getRequestDispatcher("managerAccount").forward(request, response);
+            return;
+        }
         
         DAO dao = new DAO();
-        dao.insertAccount(user, pass, isSell, isAdmin, email);
-        request.setAttribute("mess", "Account Added!");
+        
+        // Kiểm tra tài khoản đã tồn tại
+        Account existingAccount = dao.checkAccountExist(user);
+        if(existingAccount != null) {
+            request.setAttribute("error", "Tên đăng nhập đã tồn tại!");
+            request.getRequestDispatcher("managerAccount").forward(request, response);
+            return;
+        }
+        
+        // Kiểm tra email đã tồn tại
+        if(dao.checkEmailExists(email)) {
+            request.setAttribute("error", "Email đã được sử dụng!");
+            request.getRequestDispatcher("managerAccount").forward(request, response);
+            return;
+        }
+        
+        try {
+            // Thêm tài khoản mới
+            dao.insertAccount(user, pass, isAdmin, email);
+            request.setAttribute("mess", "Thêm tài khoản thành công!");
+        } catch (Exception e) {
+            request.setAttribute("error", "Có lỗi xảy ra khi thêm tài khoản: " + e.getMessage());
+        }
 
         request.getRequestDispatcher("managerAccount").forward(request, response);
     }
@@ -85,7 +116,7 @@ public class AddAccountControl extends HttpServlet {
      */
     @Override
     public String getServletInfo() {
-        return "Short description";
+        return "Add Account Controller";
     }// </editor-fold>
 
 }

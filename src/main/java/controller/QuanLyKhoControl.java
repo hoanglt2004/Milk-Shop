@@ -22,13 +22,23 @@ public class QuanLyKhoControl extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         WarehouseDAO warehouseDAO = new WarehouseDAO();
+        
+        // Tự động xóa sản phẩm hết hàng quá 5 ngày
+        int deletedCount = warehouseDAO.autoDeleteExpiredProducts();
+        if (deletedCount > 0) {
+            request.getSession().setAttribute("successMessage", 
+                "Đã tự động xóa " + deletedCount + " sản phẩm hết hàng quá 5 ngày khỏi kho!");
+        }
+        
         List<Warehouse> listEntries = warehouseDAO.getAllWarehouseEntries();
         List<Product> listProducts = warehouseDAO.getAllProducts();
         List<entity.ProductStock> listProductStock = warehouseDAO.getTotalStockPerProduct();
+        List<entity.ProductStock> listWarningProducts = warehouseDAO.getWarningProducts(); // Danh sách cảnh báo
 
         request.setAttribute("listE", listEntries);
         request.setAttribute("listP", listProducts); // Pass product list for dropdown
         request.setAttribute("listPS", listProductStock); // Pass total stock per product
+        request.setAttribute("listWarning", listWarningProducts); // Pass warning products
         request.getRequestDispatcher("QuanLyKho.jsp").forward(request, response);
     }
 

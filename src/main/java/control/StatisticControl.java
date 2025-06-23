@@ -55,8 +55,7 @@ public class StatisticControl extends HttpServlet {
        		return;
        }
         	
-        	
-       
+        // Lấy dữ liệu doanh thu theo ngày trong tuần	
         double totalMoney1 = dao.totalMoneyDay(1);
         double totalMoney2 = dao.totalMoneyDay(2);
         double totalMoney3 = dao.totalMoneyDay(3);
@@ -65,6 +64,7 @@ public class StatisticControl extends HttpServlet {
         double totalMoney6 = dao.totalMoneyDay(6);
         double totalMoney7 = dao.totalMoneyDay(7);
         
+        // Lấy dữ liệu doanh thu theo tháng
         double totalMoneyMonth1 = dao.totalMoneyMonth(1);
         double totalMoneyMonth2 = dao.totalMoneyMonth(2);
         double totalMoneyMonth3 = dao.totalMoneyMonth(3);
@@ -78,20 +78,28 @@ public class StatisticControl extends HttpServlet {
         double totalMoneyMonth11 = dao.totalMoneyMonth(11);
         double totalMoneyMonth12 = dao.totalMoneyMonth(12);
         
-        int allReview = dao.countAllReview();
-        int allProduct = dao.countAllProduct();
-        double sumAllInvoice = dao.sumAllInvoice();
+        // Lấy thống kê tổng quan
+        List<Account> allAccounts = dao.getAllAccount();
+        int totalAccount = allAccounts.size();
+        int totalProduct = dao.countAllProduct();
+        List<Invoice> allInvoices = dao.getAllInvoice();
+        int totalOrder = allInvoices.size();
+        double totalMoney = dao.sumAllInvoice();
         
         List<Invoice> listAllInvoice = dao.getAllInvoice();
         List<Account> listAllAccount = dao.getAllAccount();
         
+        // Set attributes cho JSP
         request.setAttribute("listAllInvoice", listAllInvoice);
         request.setAttribute("listAllAccount", listAllAccount);
-        request.setAttribute("sumAllInvoice", sumAllInvoice);
         
-        request.setAttribute("allReview", allReview);
-        request.setAttribute("allProduct", allProduct);
+        // Thống kê tổng quan
+        request.setAttribute("totalAccount", totalAccount);
+        request.setAttribute("totalProduct", totalProduct);
+        request.setAttribute("totalOrder", totalOrder);
+        request.setAttribute("totalMoney", totalMoney);
         
+        // Dữ liệu biểu đồ theo ngày
         request.setAttribute("totalMoney1", totalMoney1);
         request.setAttribute("totalMoney2", totalMoney2);
         request.setAttribute("totalMoney3", totalMoney3);
@@ -100,6 +108,7 @@ public class StatisticControl extends HttpServlet {
         request.setAttribute("totalMoney6", totalMoney6);
         request.setAttribute("totalMoney7", totalMoney7);
         
+        // Dữ liệu biểu đồ theo tháng
         request.setAttribute("totalMoneyMonth1", totalMoneyMonth1);
         request.setAttribute("totalMoneyMonth2", totalMoneyMonth2);
         request.setAttribute("totalMoneyMonth3", totalMoneyMonth3);
@@ -113,12 +122,8 @@ public class StatisticControl extends HttpServlet {
         request.setAttribute("totalMoneyMonth11", totalMoneyMonth11);
         request.setAttribute("totalMoneyMonth12", totalMoneyMonth12);
         
-       
-    
-        request.getRequestDispatcher("Statistic.jsp").forward(request, response);
-      
-       
-       
+        // Forward đến trang Dashboard mới
+        request.getRequestDispatcher("AdminDashboard.jsp").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
