@@ -52,12 +52,9 @@ public class DAO {
                         rs.getDouble(4),                // price
                         rs.getString(5),                // brand (was title)
                         rs.getString(6),                // description
-                        "",                             // model (removed from DB)
-                        "",                             // color (removed from DB)
                         rs.getString(8),                // delivery
                         rs.getString(9),                // image2
-                        rs.getString(10),               // image3
-                        ""));                           // image4 (removed from DB)
+                        rs.getString(10)));             // image3
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1578,6 +1575,85 @@ public class DAO {
             ps.executeUpdate();
         } catch (Exception e) {
         }
+    }
+    
+    // Method cập nhật profile với đầy đủ thông tin
+    public void editProfileWithFullInfo(String username, String password, String email, 
+                                       String fullName, String phone, String address, String province, int uID) {
+        String query = "UPDATE Account SET [user]=?, [pass]=?, [email]=?, [fullName]=?, [phone]=?, [address]=?, [province]=? WHERE [uID] = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ps.setString(3, email);
+            ps.setString(4, fullName);
+            ps.setString(5, phone);
+            ps.setString(6, address);
+            ps.setString(7, province);
+            ps.setInt(8, uID);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    // Method để lấy chi tiết đơn hàng (giả lập từ Cart history)
+    public List<Cart> getOrderDetailsByInvoiceId(int invoiceId) {
+        List<Cart> list = new ArrayList<>();
+        // Vì không có bảng OrderDetails, ta sẽ giả lập bằng cách lấy từ Cart
+        // Trong thực tế nên có bảng OrderDetails để lưu chi tiết đơn hàng
+        String query = "SELECT TOP 3 c.* FROM Cart c " +
+                      "INNER JOIN Invoice i ON c.accountID = i.accountID " +
+                      "WHERE i.maHD = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, invoiceId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Cart(rs.getInt(1),
+                        rs.getInt(2),
+                        rs.getInt(3),
+                        rs.getInt(4),
+                        rs.getString(5)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
+    // Method để lấy sản phẩm đã mua nhiều nhất
+    public List<Product> getTopPurchasedProducts(int accountId, int limit) {
+        List<Product> list = new ArrayList<>();
+        String query = "SELECT TOP (?) p.* FROM Product p " +
+                      "INNER JOIN Cart c ON p.id = c.productID " +
+                      "INNER JOIN Invoice i ON c.accountID = i.accountID " +
+                      "WHERE i.accountID = ? " +
+                      "GROUP BY p.id, p.name, p.image, p.price, p.brand, p.description, p.cateID, p.delivery, p.image2, p.image3 " +
+                      "ORDER BY SUM(c.amount) DESC";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, limit);
+            ps.setInt(2, accountId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
     
     public void editTongChiTieu(int accountID, double totalMoneyVAT) {

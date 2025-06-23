@@ -174,7 +174,7 @@
             </p>
             
                     
-            <p class="pt-1">${detail.description}</p>
+            <p class="pt-1"><strong>Thương hiệu:</strong> ${detail.brand}</p>
             <div class="table-responsive">
               <table class="table table-sm table-borderless mb-0">
                 <tbody>
@@ -232,40 +232,13 @@
               aria-controls="description" aria-selected="true">Description</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="info"
-              aria-selected="false">Information</a>
-          </li>
-          <li class="nav-item">
             <a class="nav-link" id="reviews-tab" data-toggle="tab" href="#reviews" role="tab" aria-controls="reviews"
               aria-selected="false">Reviews (${countAllReview })</a>
           </li>
         </ul>
         <div class="tab-content" id="advancedTabContent">
           <div class="tab-pane fade show active" id="description" role="tabpanel" aria-labelledby="description-tab">
-            <h5>Product Description</h5>
-            
-            <h6>
-                <fmt:formatNumber value="${detail.price}" pattern="#,###" var="currentPrice"/>
-                ${fn:replace(currentPrice, ',', '.')} VNĐ
-            </h6>
             <p class="pt-1">${detail.description}</p>
-          </div>
-          <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
-            <h5>Additional Information</h5>
-            <table class="table table-striped table-bordered mt-3">
-              <thead>
-                <tr>
-                  <th scope="row" class="w-150 dark-grey-text h6">Weight</th>
-                  <td><em>0.3 kg</em></td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <th scope="row" class="w-150 dark-grey-text h6">Dimensions</th>
-                  <td><em>50 × 60 cm</em></td>
-                </tr>
-              </tbody>
-            </table>
           </div>
           <div class="tab-pane fade" id="reviews" role="tabpanel" aria-labelledby="reviews-tab">
             <h5><span>${countAllReview }</span> review for <span>${detail.name }</span></h5>
@@ -351,7 +324,7 @@
 
               <div class="pt-4">
 
-                <h5>${o.title }</h5>
+                <h5>${o.name }</h5>
                 <p>
                     <span class="text-danger mr-1"><strong>
                         <fmt:formatNumber value="${o.price}" pattern="#,###" var="relatedCurrentPrice"/>

@@ -14,14 +14,26 @@ public class Product {
     private String name;
     private String image;
     private double price;
-    private String title;
+    private String brand;
     private String description;
-    private String model;
-    private String color;
     private String delivery;
     private String image2;
     private String image3;
-    private String image4;
+	public Product(int id, String name, String image, double price, String brand, String description,
+			String delivery, String image2, String image3) {
+		
+		this.id = id;
+		this.name = name;
+		this.image = image;
+		this.price = price;
+		this.brand = brand;
+		this.description = description;
+		this.delivery = delivery;
+		this.image2 = image2;
+		this.image3 = image3;
+	}
+	
+	// Constructor tương thích ngược với code cũ
 	public Product(int id, String name, String image, double price, String title, String description, String model,
 			String color, String delivery, String image2, String image3, String image4) {
 		
@@ -29,23 +41,22 @@ public class Product {
 		this.name = name;
 		this.image = image;
 		this.price = price;
-		this.title = title;
+		this.brand = title; // title được map thành brand
 		this.description = description;
-		this.model = model;
-		this.color = color;
 		this.delivery = delivery;
 		this.image2 = image2;
 		this.image3 = image3;
-		this.image4 = image4;
+		// Bỏ qua model, color, image4 vì không còn trong schema mới
 	}
+	
 	public Product() {
 		
 	}
 	@Override
 	public String toString() {
-		return "Product [id=" + id + ", name=" + name + ", image=" + image + ", price=" + price + ", title=" + title
-				+ ", description=" + description + ", model=" + model + ", color=" + color + ", delivery=" + delivery
-				+ ", image2=" + image2 + ", image3=" + image3 + ", image4=" + image4 + "]";
+		return "Product [id=" + id + ", name=" + name + ", image=" + image + ", price=" + price + ", brand=" + brand
+				+ ", description=" + description + ", delivery=" + delivery
+				+ ", image2=" + image2 + ", image3=" + image3 + "]";
 	}
 	public int getId() {
 		return id;
@@ -71,29 +82,25 @@ public class Product {
 	public void setPrice(double price) {
 		this.price = price;
 	}
+	public String getBrand() {
+		return brand;
+	}
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+	
+	// Getter tương thích ngược cho title
 	public String getTitle() {
-		return title;
+		return brand;
 	}
 	public void setTitle(String title) {
-		this.title = title;
+		this.brand = title;
 	}
 	public String getDescription() {
 		return description;
 	}
 	public void setDescription(String description) {
 		this.description = description;
-	}
-	public String getModel() {
-		return model;
-	}
-	public void setModel(String model) {
-		this.model = model;
-	}
-	public String getColor() {
-		return color;
-	}
-	public void setColor(String color) {
-		this.color = color;
 	}
 	public String getDelivery() {
 		return delivery;
@@ -113,11 +120,27 @@ public class Product {
 	public void setImage3(String image3) {
 		this.image3 = image3;
 	}
+	
+	// Getter/setter tương thích ngược cho các field đã xóa
+	public String getModel() {
+		return ""; // Trả về empty string vì đã xóa khỏi DB
+	}
+	public void setModel(String model) {
+		// Không làm gì vì field đã bị xóa
+	}
+	
+	public String getColor() {
+		return ""; // Trả về empty string vì đã xóa khỏi DB  
+	}
+	public void setColor(String color) {
+		// Không làm gì vì field đã bị xóa
+	}
+	
 	public String getImage4() {
-		return image4;
+		return ""; // Trả về empty string vì đã xóa khỏi DB
 	}
 	public void setImage4(String image4) {
-		this.image4 = image4;
+		// Không làm gì vì field đã bị xóa
 	}
     
 	
