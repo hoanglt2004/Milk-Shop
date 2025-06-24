@@ -83,19 +83,22 @@ public class DAO {
     
     public List<Invoice> getAllInvoice() {
         List<Invoice> list = new ArrayList<>();
-        String query = "select * from Invoice";
+        String query = "select * from Invoice ORDER BY maHD DESC";
         try {
             conn = new DBContext().getConnection();//mo ket noi voi sql
             ps = conn.prepareStatement(query);
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new Invoice(rs.getInt(1),
-                        rs.getInt(2),
-                        rs.getDouble(3),
-                        rs.getDate(4)
+                list.add(new Invoice(rs.getInt(1),      // maHD
+                        rs.getInt(2),                   // accountID
+                        rs.getDouble(3),                // tongGia
+                        rs.getDate(4),                  // ngayXuat
+                        rs.getString(5),                // status
+                        rs.getDate(6)                   // deliveryDate
                        ));
             }
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return list;
     }
@@ -136,7 +139,7 @@ public class DAO {
         String query = "select \r\n"
         		+ "	SUM(tongGia) \r\n"
         		+ "from Invoice\r\n"
-        		+ "where DATEPART(dw,[ngayXuat]) = ?\r\n"
+        		+ "where DATEPART(dw,[ngayXuat]) = ? AND status = N'Hoàn thành'\r\n"
         		+ "Group by ngayXuat ";
         try {
             conn = new DBContext().getConnection();//mo ket noi voi sql
@@ -153,7 +156,7 @@ public class DAO {
     
     public double totalMoneyMonth(int month) {
         String query = "select SUM(tongGia) from Invoice\r\n"
-        		+ "where MONTH(ngayXuat)=?\r\n"
+        		+ "where MONTH(ngayXuat)=? AND status = N'Hoàn thành'\r\n"
         		+ "Group by MONTH(ngayXuat)";
         try {
             conn = new DBContext().getConnection();//mo ket noi voi sql
@@ -183,7 +186,7 @@ public class DAO {
     }
     
     public double sumAllInvoice() {
-        String query = "select SUM(tongGia) from Invoice";
+        String query = "select SUM(tongGia) from Invoice WHERE status = N'Hoàn thành'";
         try {
             conn = new DBContext().getConnection();//mo ket noi voi sql
             ps = conn.prepareStatement(query);
@@ -1970,6 +1973,95 @@ public class DAO {
             e.printStackTrace();
         }
         return null;
+    }
+    
+    public void updateInvoiceStatus(int maHD, String status) {
+        String query = "UPDATE Invoice SET status = ?, deliveryDate = ? WHERE maHD = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setString(1, status);
+            
+            // Nếu status = "Hoàn thành" thì set deliveryDate = ngày hiện tại
+            if ("Hoàn thành".equals(status)) {
+                ps.setTimestamp(2, new java.sql.Timestamp(System.currentTimeMillis()));
+            } else {
+                ps.setNull(2, java.sql.Types.TIMESTAMP);
+            }
+            
+            ps.setInt(3, maHD);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public void updateRevenueAndSales(int maHD) {
+        String query = "SELECT c.productID, c.amount, p.price, i.accountID " +
+                      "FROM Cart c INNER JOIN Product p ON c.productID = p.id " +
+                      "INNER JOIN Invoice i ON c.accountID = i.accountID " +
+                      "WHERE i.maHD = ?";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, maHD);
+            rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                int productID = rs.getInt("productID");
+                int amount = rs.getInt("amount");
+                
+                // Cập nhật số lượng đã bán
+                updateSoLuongDaBan(productID, amount);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    private void updateSoLuongDaBan(int productID, int amount) {
+        // Kiểm tra xem productID đã có trong bảng SoLuongDaBan chưa
+        String checkQuery = "SELECT soLuongDaBan FROM SoLuongDaBan WHERE productID = ?";
+        String updateQuery = "UPDATE SoLuongDaBan SET soLuongDaBan = soLuongDaBan + ? WHERE productID = ?";
+        String insertQuery = "INSERT INTO SoLuongDaBan (productID, soLuongDaBan) VALUES (?, ?)";
+        
+        try {
+            // Kiểm tra tồn tại
+            ps = conn.prepareStatement(checkQuery);
+            ps.setInt(1, productID);
+            rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                // Đã tồn tại, cập nhật
+                ps = conn.prepareStatement(updateQuery);
+                ps.setInt(1, amount);
+                ps.setInt(2, productID);
+                ps.executeUpdate();
+            } else {
+                // Chưa tồn tại, thêm mới
+                ps = conn.prepareStatement(insertQuery);
+                ps.setInt(1, productID);
+                ps.setInt(2, amount);
+                ps.executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    
+    public int countCompletedInvoices() {
+        String query = "SELECT COUNT(*) FROM Invoice WHERE status = N'Hoàn thành'";
+        try {
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(query);
+            rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
     }
 
 }

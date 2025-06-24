@@ -1,24 +1,37 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
     <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-        <%@page contentType="text/html" pageEncoding="UTF-8" %>
-            <!DOCTYPE html>
-            <html>
+        <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+            <%@page contentType="text/html" pageEncoding="UTF-8" %>
+                <!DOCTYPE html>
+                <html>
 
-            <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-                <title>Quản Lý Khuyến Mãi</title>
-                <link rel="stylesheet"
-                    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-                <link href="css/admin-simple.css" rel="stylesheet" type="text/css" />
-            </head>
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                    <title>Quản Lý Khuyến Mãi</title>
+                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-            <body>
-                <c:set var="currentPage" value="quanLyKhuyenMai" />
-                <div class="container-fluid">
-                    <div class="row">
+                    <!-- Bootstrap CSS -->
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css"
+                        rel="stylesheet">
+
+                    <!-- Font Awesome -->
+                    <link rel="stylesheet"
+                        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+                    <!-- CSS Admin simple (không xung đột) -->
+                    <link
+                        href="${pageContext.request.contextPath}/css/admin-simple.css?v=<%= System.currentTimeMillis() / 1000 %>"
+                        rel="stylesheet" type="text/css" />
+                </head>
+
+                <body class="admin-page">
+                    <div class="admin-layout">
+                        <!-- Sidebar -->
                         <jsp:include page="LeftAdmin.jsp" />
+
+                        <!-- Main Content -->
                         <main class="main-content">
-                            <div class="container pt-4">
+                            <div class="container-fluid pt-4">
                                 <section class="mb-4">
                                     <div class="card">
                                         <div class="card-header py-3 row">
@@ -66,7 +79,8 @@
                                                         <c:forEach items="${listD}" var="d">
                                                             <tr>
                                                                 <td>${d.discountID}</td>
-                                                                <td>${d.product != null ? d.product.name : 'No Product'}
+                                                                <td>${d.product != null ? d.product.name : 'No
+                                                                    Product'}
                                                                 </td>
                                                                 <td>${d.percentOff}%</td>
                                                                 <td>${d.startDate}</td>
@@ -98,171 +112,170 @@
                             </div>
                         </main>
                     </div>
-                </div>
 
-                <!-- Add Discount Modal -->
-                <div id="addDiscountModal" class="modal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form action="quanLyKhuyenMai" method="POST">
-                                <input type="hidden" name="action" value="add">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Thêm khuyến mãi</h4>
-                                    <button type="button" class="close"
-                                        onclick="closeModal('addDiscountModal')">&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label>Sản phẩm</label>
-                                        <select name="productID" class="form-control" required>
-                                            <option value="">-- Chọn sản phẩm --</option>
-                                            <c:forEach items="${listP}" var="p">
-                                                <option value="${p.id}">${p.name}</option>
-                                            </c:forEach>
-                                        </select>
+                    <!-- Add Discount Modal -->
+                    <div id="addDiscountModal" class="modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="quanLyKhuyenMai" method="POST">
+                                    <input type="hidden" name="action" value="add">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Thêm khuyến mãi</h4>
+                                        <button type="button" class="close"
+                                            onclick="closeModal('addDiscountModal')">&times;</button>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Phần trăm giảm</label>
-                                        <input type="number" name="percentOff" class="form-control" required min="1"
-                                            max="100">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label>Sản phẩm</label>
+                                            <select name="productID" class="form-control" required>
+                                                <option value="">-- Chọn sản phẩm --</option>
+                                                <c:forEach items="${listP}" var="p">
+                                                    <option value="${p.id}">${p.name}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Phần trăm giảm</label>
+                                            <input type="number" name="percentOff" class="form-control" required min="1"
+                                                max="100">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Ngày bắt đầu</label>
+                                            <input type="date" name="startDate" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Ngày kết thúc</label>
+                                            <input type="date" name="endDate" class="form-control" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Trạng thái</label>
+                                            <select name="isActive" class="form-control">
+                                                <option value="true">Active</option>
+                                                <option value="false">Inactive</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Ngày bắt đầu</label>
-                                        <input type="date" name="startDate" class="form-control" required>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            onclick="closeModal('addDiscountModal')">Hủy</button>
+                                        <button type="submit" class="btn btn-success">Thêm</button>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Ngày kết thúc</label>
-                                        <input type="date" name="endDate" class="form-control" required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Trạng thái</label>
-                                        <select name="isActive" class="form-control">
-                                            <option value="true">Active</option>
-                                            <option value="false">Inactive</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        onclick="closeModal('addDiscountModal')">Hủy</button>
-                                    <button type="submit" class="btn btn-success">Thêm</button>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Edit Discount Modal -->
-                <div id="editDiscountModal" class="modal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form action="quanLyKhuyenMai" method="POST">
-                                <input type="hidden" name="action" value="edit">
-                                <input type="hidden" name="discountID" id="editDiscountID">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Sửa khuyến mãi</h4>
-                                    <button type="button" class="close"
-                                        onclick="closeModal('editDiscountModal')">&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label>Sản phẩm</label>
-                                        <select name="productID" id="editProductID" class="form-control" required>
-                                            <c:forEach items="${listP}" var="p">
-                                                <option value="${p.id}">${p.name}</option>
-                                            </c:forEach>
-                                        </select>
+                    <!-- Edit Discount Modal -->
+                    <div id="editDiscountModal" class="modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="quanLyKhuyenMai" method="POST">
+                                    <input type="hidden" name="action" value="edit">
+                                    <input type="hidden" name="discountID" id="editDiscountID">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Sửa khuyến mãi</h4>
+                                        <button type="button" class="close"
+                                            onclick="closeModal('editDiscountModal')">&times;</button>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Phần trăm giảm</label>
-                                        <input type="number" name="percentOff" id="editPercentOff" class="form-control"
-                                            required min="1" max="100">
+                                    <div class="modal-body">
+                                        <div class="form-group">
+                                            <label>Sản phẩm</label>
+                                            <select name="productID" id="editProductID" class="form-control" required>
+                                                <c:forEach items="${listP}" var="p">
+                                                    <option value="${p.id}">${p.name}</option>
+                                                </c:forEach>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Phần trăm giảm</label>
+                                            <input type="number" name="percentOff" id="editPercentOff"
+                                                class="form-control" required min="1" max="100">
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Ngày bắt đầu</label>
+                                            <input type="date" name="startDate" id="editStartDate" class="form-control"
+                                                required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Ngày kết thúc</label>
+                                            <input type="date" name="endDate" id="editEndDate" class="form-control"
+                                                required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label>Trạng thái</label>
+                                            <select name="isActive" id="editIsActive" class="form-control">
+                                                <option value="true">Active</option>
+                                                <option value="false">Inactive</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Ngày bắt đầu</label>
-                                        <input type="date" name="startDate" id="editStartDate" class="form-control"
-                                            required>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            onclick="closeModal('editDiscountModal')">Hủy</button>
+                                        <button type="submit" class="btn btn-info">Lưu</button>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Ngày kết thúc</label>
-                                        <input type="date" name="endDate" id="editEndDate" class="form-control"
-                                            required>
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Trạng thái</label>
-                                        <select name="isActive" id="editIsActive" class="form-control">
-                                            <option value="true">Active</option>
-                                            <option value="false">Inactive</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        onclick="closeModal('editDiscountModal')">Hủy</button>
-                                    <button type="submit" class="btn btn-info">Lưu</button>
-                                </div>
-                            </form>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Delete Discount Modal -->
-                <div id="deleteDiscountModal" class="modal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form action="quanLyKhuyenMai" method="POST">
-                                <input type="hidden" name="action" value="delete">
-                                <input type="hidden" name="discountID" id="deleteDiscountID">
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Xóa khuyến mãi</h4>
-                                    <button type="button" class="close"
-                                        onclick="closeModal('deleteDiscountModal')">&times;</button>
-                                </div>
-                                <div class="modal-body">
-                                    <p>Bạn có chắc chắn muốn xóa khuyến mãi này?</p>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        onclick="closeModal('deleteDiscountModal')">Hủy</button>
-                                    <button type="submit" class="btn btn-danger">Xóa</button>
-                                </div>
-                            </form>
+                    <!-- Delete Discount Modal -->
+                    <div id="deleteDiscountModal" class="modal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="quanLyKhuyenMai" method="POST">
+                                    <input type="hidden" name="action" value="delete">
+                                    <input type="hidden" name="discountID" id="deleteDiscountID">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Xóa khuyến mãi</h4>
+                                        <button type="button" class="close"
+                                            onclick="closeModal('deleteDiscountModal')">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Bạn có chắc chắn muốn xóa khuyến mãi này?</p>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary"
+                                            onclick="closeModal('deleteDiscountModal')">Hủy</button>
+                                        <button type="submit" class="btn btn-danger">Xóa</button>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <script>
-                    // Modal functions
-                    function openModal(modalId) {
-                        document.getElementById(modalId).classList.add('show');
-                    }
-
-                    function closeModal(modalId) {
-                        document.getElementById(modalId).classList.remove('show');
-                    }
-
-                    function editDiscount(id, productId, percentOff, startDate, endDate, isActive) {
-                        document.getElementById('editDiscountID').value = id;
-                        document.getElementById('editProductID').value = productId;
-                        document.getElementById('editPercentOff').value = percentOff;
-                        document.getElementById('editStartDate').value = startDate;
-                        document.getElementById('editEndDate').value = endDate;
-                        document.getElementById('editIsActive').value = isActive;
-                        openModal('editDiscountModal');
-                    }
-
-                    function deleteDiscount(id) {
-                        document.getElementById('deleteDiscountID').value = id;
-                        openModal('deleteDiscountModal');
-                    }
-
-                    // Close modal when clicking outside
-                    window.onclick = function (event) {
-                        if (event.target.classList.contains('modal')) {
-                            event.target.classList.remove('show');
+                    <script>
+                        // Modal functions
+                        function openModal(modalId) {
+                            document.getElementById(modalId).classList.add('show');
                         }
-                    }
-                </script>
-            </body>
 
-            </html>
+                        function closeModal(modalId) {
+                            document.getElementById(modalId).classList.remove('show');
+                        }
+
+                        function editDiscount(id, productId, percentOff, startDate, endDate, isActive) {
+                            document.getElementById('editDiscountID').value = id;
+                            document.getElementById('editProductID').value = productId;
+                            document.getElementById('editPercentOff').value = percentOff;
+                            document.getElementById('editStartDate').value = startDate;
+                            document.getElementById('editEndDate').value = endDate;
+                            document.getElementById('editIsActive').value = isActive;
+                            openModal('editDiscountModal');
+                        }
+
+                        function deleteDiscount(id) {
+                            document.getElementById('deleteDiscountID').value = id;
+                            openModal('deleteDiscountModal');
+                        }
+
+                        // Close modal when clicking outside
+                        window.onclick = function (event) {
+                            if (event.target.classList.contains('modal')) {
+                                event.target.classList.remove('show');
+                            }
+                        }
+                    </script>
+                </body>
+
+                </html>

@@ -10,126 +10,122 @@
           <title>Quản Lý Hóa Đơn - Admin</title>
           <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-          <!-- ONLY ADMIN CSS -->
+          <!-- Bootstrap CSS -->
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+          <!-- Font Awesome -->
           <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
-          <link href="css/admin-simple.css" rel="stylesheet" type="text/css" />
+
+          <!-- CSS Admin simple (không xung đột) -->
+          <link
+            href="${pageContext.request.contextPath}/css/admin-simple.css?v=<%= System.currentTimeMillis() / 1000 %>"
+            rel="stylesheet" type="text/css" />
 
         </head>
 
         <body class="admin-page">
-          <div class="container-fluid">
-            <div class="row">
-              <!-- Sidebar -->
-              <jsp:include page="LeftAdmin.jsp" />
+          <div class="admin-layout">
+            <!-- Sidebar -->
+            <jsp:include page="LeftAdmin.jsp" />
 
-              <!-- Main Content -->
-              <main class="main-content">
-                <div class="container-fluid pt-4">
-                  <section class="mb-4">
-                    <div class="card">
-                      <div class="card-header">
-                        <div class="row">
-                          <div class="col-sm-6">
-                            <h5 class="mb-0"><strong>Quản Lý Hóa Đơn</strong></h5>
-                          </div>
-                          <div class="col-sm-6 text-right">
-                            <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm hóa đơn..."
-                              style="width: 300px; display: inline-block;">
-                          </div>
+            <!-- Main Content -->
+            <main class="main-content">
+              <div class="container-fluid pt-4">
+                <section class="mb-4">
+                  <div class="card">
+                    <div class="card-header">
+                      <div class="row">
+                        <div class="col-sm-6">
+                          <h5 class="mb-0"><strong>Danh Sách Hóa Đơn</strong></h5>
                         </div>
-                      </div>
-
-                      <div class="card-body">
-                        <!-- Invoices Table -->
-                        <div class="table-responsive">
-                          <table class="table table-hover">
-                            <thead>
-                              <tr>
-                                <th>ID</th>
-                                <th>Mã hóa đơn</th>
-                                <th>Khách hàng</th>
-                                <th>Ngày đặt</th>
-                                <th>Tổng tiền</th>
-                                <th>Trạng thái</th>
-                                <th>Thao tác</th>
-                              </tr>
-                            </thead>
-                            <tbody>
-                              <c:forEach items="${listI}" var="invoice">
-                                <tr>
-                                  <td>${invoice.maHD}</td>
-                                  <td>${invoice.maHD}</td>
-                                  <td>${invoice.accountID}</td>
-                                  <td>
-                                    <fmt:formatDate value="${invoice.ngayXuat}" pattern="dd/MM/yyyy" />
-                                  </td>
-                                  <td>
-                                    <fmt:formatNumber value="${invoice.tongGia}" pattern="#,###" var="totalPrice" />
-                                    ${fn:replace(totalPrice, ',', '.')} VNĐ
-                                  </td>
-                                  <td>
-                                    <span class="text-success">
-                                      <i class="fa fa-check-circle"></i> Hoàn thành
-                                    </span>
-                                  </td>
-                                  <td>
-                                    <button class="btn btn-info btn-action"
-                                      onclick="showInvoiceDetail('${invoice.maHD}')">
-                                      <i class="fa fa-eye"></i>
-                                    </button>
-                                  </td>
-                                </tr>
-                              </c:forEach>
-                            </tbody>
-                          </table>
+                        <div class="col-sm-6 text-right">
+                          <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm hóa đơn..."
+                            style="width: 300px; display: inline-block;">
                         </div>
                       </div>
                     </div>
-                  </section>
-                </div>
-              </main>
-            </div>
-          </div>
 
-          <!-- Invoice Detail Modal -->
-          <div class="modal" id="invoiceDetailModal">
-            <div class="modal-dialog" style="max-width: 700px;">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title">Chi Tiết Hóa Đơn</h5>
-                  <button type="button" class="close" onclick="hideModal('invoiceDetailModal')">
-                    <span>&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body" id="invoiceDetailContent">
-                  <!-- Content will be loaded here -->
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary"
-                    onclick="hideModal('invoiceDetailModal')">Đóng</button>
-                </div>
+                    <div class="card-body">
+                      <!-- Invoices Table -->
+                      <div class="table-responsive">
+                        <table class="table table-hover">
+                          <thead>
+                            <tr>
+                              <th>ID</th>
+                              <th>Mã hóa đơn</th>
+                              <th>Khách hàng</th>
+                              <th>Ngày đặt</th>
+                              <th>Ngày giao</th>
+                              <th>Tổng tiền</th>
+                              <th>Trạng thái</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <c:forEach items="${listAllInvoice}" var="invoice">
+                              <tr>
+                                <td>${invoice.maHD}</td>
+                                <td>HD${invoice.maHD}</td>
+                                <td>
+                                  <c:forEach items="${listAllAccount}" var="account">
+                                    <c:if test="${account.id == invoice.accountID}">
+                                      ${account.user}
+                                    </c:if>
+                                  </c:forEach>
+                                </td>
+                                <td>
+                                  <fmt:formatDate value="${invoice.ngayXuat}" pattern="dd/MM/yyyy HH:mm" />
+                                </td>
+                                <td>
+                                  <c:choose>
+                                    <c:when test="${invoice.deliveryDate != null}">
+                                      <fmt:formatDate value="${invoice.deliveryDate}" pattern="dd/MM/yyyy HH:mm" />
+                                    </c:when>
+                                    <c:otherwise>
+                                      <span class="text-muted">Chưa giao</span>
+                                    </c:otherwise>
+                                  </c:choose>
+                                </td>
+                                <td>
+                                  <fmt:formatNumber value="${invoice.tongGia}" pattern="#,###" var="totalPrice" />
+                                  ${fn:replace(totalPrice, ',', '.')} VNĐ
+                                </td>
+                                <td>
+                                  <select class="form-control status-select" data-invoice-id="${invoice.maHD}"
+                                    style="width: auto; display: inline-block;">
+                                    <option value="Chờ xác nhận" ${invoice.status=='Chờ xác nhận' ? 'selected' : '' }>
+                                      Chờ xác nhận
+                                    </option>
+                                    <option value="Đang giao" ${invoice.status=='Đang giao' ? 'selected' : '' }>
+                                      Đang giao
+                                    </option>
+                                    <option value="Hoàn thành" ${invoice.status=='Hoàn thành' ? 'selected' : '' }>
+                                      Hoàn thành
+                                    </option>
+                                  </select>
+                                </td>
+                              </tr>
+                            </c:forEach>
+                            <c:if test="${empty listAllInvoice}">
+                              <tr>
+                                <td colspan="7" class="text-center text-muted">
+                                  <i class="fa fa-info-circle"></i> Chưa có hóa đơn nào
+                                </td>
+                              </tr>
+                            </c:if>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                </section>
               </div>
-            </div>
+            </main>
           </div>
 
           <!-- Minimal JavaScript -->
+          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
           <script>
-            // Modal functionality
-            function showModal(modalId) {
-              document.getElementById(modalId).classList.add('show');
-            }
-
-            function hideModal(modalId) {
-              document.getElementById(modalId).classList.remove('show');
-            }
-
-            // Close modal when clicking outside
-            window.onclick = function (event) {
-              if (event.target.classList.contains('modal')) {
-                event.target.classList.remove('show');
-              }
-            }
-
             // Search functionality
             document.getElementById('searchInput').addEventListener('keyup', function () {
               const searchText = this.value.toLowerCase();
@@ -140,12 +136,55 @@
               });
             });
 
-            // Show invoice detail
-            function showInvoiceDetail(invoiceId) {
-              document.getElementById('invoiceDetailContent').innerHTML =
-                '<p>Đang tải chi tiết hóa đơn ' + invoiceId + '...</p>';
-              showModal('invoiceDetailModal');
-            }
+            // Status update functionality
+            document.querySelectorAll('.status-select').forEach(select => {
+              select.addEventListener('change', function () {
+                const invoiceId = this.getAttribute('data-invoice-id');
+                const newStatus = this.value;
+                const originalValue = this.querySelector('option[selected]').value;
+
+                // Disable select while processing
+                this.disabled = true;
+
+                fetch('updateInvoiceStatus', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                  },
+                  body: 'maHD=' + invoiceId + '&status=' + encodeURIComponent(newStatus)
+                })
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.success) {
+                      // Update delivery date column if status is "Hoàn thành"
+                      if (newStatus === 'Hoàn thành') {
+                        const row = this.closest('tr');
+                        const deliveryCell = row.children[4]; // Index 4 is delivery date column
+                        const now = new Date();
+                        const dateStr = now.toLocaleDateString('vi-VN') + ' ' +
+                          now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+                        deliveryCell.innerHTML = dateStr;
+                      }
+
+                      // Show success message
+                      alert('Cập nhật trạng thái thành công!');
+                    } else {
+                      // Revert to original value on error
+                      this.value = originalValue;
+                      alert('Lỗi: ' + data.message);
+                    }
+                  })
+                  .catch(error => {
+                    // Revert to original value on error
+                    this.value = originalValue;
+                    alert('Lỗi kết nối: ' + error.message);
+                  })
+                  .finally(() => {
+                    // Re-enable select
+                    this.disabled = false;
+                  });
+              });
+            });
           </script>
         </body>
 

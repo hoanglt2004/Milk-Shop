@@ -84,7 +84,8 @@ public class StatisticControl extends HttpServlet {
         int totalProduct = dao.countAllProduct();
         List<Invoice> allInvoices = dao.getAllInvoice();
         int totalOrder = allInvoices.size();
-        double totalMoney = dao.sumAllInvoice();
+        int totalCompletedOrder = dao.countCompletedInvoices(); // Chỉ đếm đơn hàng hoàn thành
+        double totalMoney = dao.sumAllInvoice(); // Chỉ tính tiền từ đơn hàng hoàn thành
         
         List<Invoice> listAllInvoice = dao.getAllInvoice();
         List<Account> listAllAccount = dao.getAllAccount();
@@ -97,6 +98,7 @@ public class StatisticControl extends HttpServlet {
         request.setAttribute("totalAccount", totalAccount);
         request.setAttribute("totalProduct", totalProduct);
         request.setAttribute("totalOrder", totalOrder);
+        request.setAttribute("totalCompletedOrder", totalCompletedOrder);
         request.setAttribute("totalMoney", totalMoney);
         
         // Dữ liệu biểu đồ theo ngày

@@ -1,6 +1,190 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
   <%@page contentType="text/html" pageEncoding="UTF-8" %>
 
+    <style>
+      /* CSS cho LeftAdmin.jsp - Flexbox Layout */
+      .admin-layout {
+        display: flex;
+        min-height: 100vh;
+        width: 100%;
+      }
+
+      .sidebar {
+        flex: 0 0 250px;
+        background: #ffffff;
+        border-right: 1px solid #e0e0e0;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        overflow-y: auto;
+        position: relative;
+        z-index: 1000;
+        font-family: Arial, sans-serif;
+      }
+
+      .main-content {
+        flex: 1;
+        min-height: 100vh;
+        padding: 20px;
+        background-color: #f8f9fa;
+        overflow-x: auto;
+      }
+
+      .sidebar-header {
+        display: flex;
+        padding: 20px 15px;
+        border-bottom: 1px solid #e0e0e0;
+        background: #fff;
+        text-align: center;
+        justify-content: space-around;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+      }
+
+      .btn-home,
+      .btn-logout {
+        display: inline-block;
+        padding: 8px 12px;
+        margin: 5px;
+        border: none;
+        border-radius: 4px;
+        text-decoration: none;
+        font-size: 13px;
+        cursor: pointer;
+        color: white;
+        font-weight: 500;
+        transition: all 0.3s ease;
+      }
+
+      .btn-home {
+        background-color: #007bff;
+      }
+
+      .btn-home:hover {
+        background-color: #0056b3;
+        color: white;
+        text-decoration: none;
+      }
+
+      .btn-logout {
+        background-color: #dc3545;
+      }
+
+      .btn-logout:hover {
+        background-color: #c82333;
+        color: white;
+        text-decoration: none;
+      }
+
+      .sidebar-menu {
+        padding: 0;
+        margin: 0;
+      }
+
+      .menu-item {
+        display: block !important;
+        padding: 15px 20px !important;
+        color: #555 !important;
+        text-decoration: none !important;
+        border: none !important;
+        background: none !important;
+        width: 100% !important;
+        text-align: left !important;
+        cursor: pointer !important;
+        font-size: 14px !important;
+        border-bottom: 1px solid #f0f0f0 !important;
+        position: relative !important;
+        transition: all 0.3s ease !important;
+        box-sizing: border-box !important;
+      }
+
+      .menu-item:hover {
+        background-color: #f8f9fa !important;
+        color: #007bff !important;
+        text-decoration: none !important;
+      }
+
+      .menu-item:active,
+      .menu-item:focus {
+        outline: none !important;
+        background-color: #e3f2fd !important;
+        color: #0056b3 !important;
+      }
+
+      .sidebar .menu-item.active,
+      .sidebar-menu .menu-item.active {
+        background-color: #007bff !important;
+        color: white !important;
+        font-weight: 600 !important;
+        border-left: 4px solid #0056b3 !important;
+      }
+
+      .sidebar .menu-item.active:hover,
+      .sidebar-menu .menu-item.active:hover {
+        background-color: #0056b3 !important;
+        color: white !important;
+      }
+
+      .sidebar .menu-item.active i,
+      .sidebar-menu .menu-item.active i {
+        color: white !important;
+      }
+
+      .menu-item i {
+        width: 20px !important;
+        margin-right: 10px !important;
+        text-align: center !important;
+        font-size: 14px !important;
+      }
+
+      .menu-item span {
+        font-size: 14px !important;
+      }
+
+      /* Responsive */
+      @media (max-width: 768px) {
+        .admin-layout {
+          flex-direction: column;
+        }
+
+        .sidebar {
+          flex: none;
+          width: 100%;
+          height: auto;
+          max-height: 60vh;
+          position: relative;
+        }
+
+        .main-content {
+          flex: 1;
+          padding: 10px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .main-content {
+          padding: 5px;
+        }
+      }
+
+      /* Scrollbar */
+      .sidebar::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .sidebar::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb {
+        background: #c1c1c1;
+        border-radius: 3px;
+      }
+
+      .sidebar::-webkit-scrollbar-thumb:hover {
+        background: #a8a8a8;
+      }
+    </style>
+
     <!-- Sidebar Admin -->
     <nav class="sidebar">
       <!-- Header với nút Home và Logout -->

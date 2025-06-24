@@ -43,14 +43,14 @@ public class HoaDonControl extends HttpServlet {
       
         
 
-        double sumAllInvoice = dao.sumAllInvoice();
+        double sumCompletedInvoice = dao.sumAllInvoice(); // Chỉ tính đơn hoàn thành
         
         List<Invoice> listAllInvoice = dao.getAllInvoice();
         List<Account> listAllAccount = dao.getAllAccount();
         
         request.setAttribute("listAllInvoice", listAllInvoice);
         request.setAttribute("listAllAccount", listAllAccount);
-        request.setAttribute("sumAllInvoice", sumAllInvoice);
+        request.setAttribute("sumCompletedInvoice", sumCompletedInvoice);
         
       
         request.getRequestDispatcher("HoaDon.jsp").forward(request, response);

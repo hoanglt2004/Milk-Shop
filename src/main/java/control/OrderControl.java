@@ -178,39 +178,8 @@ public class OrderControl extends HttpServlet {
 				return;
 			}
 			
-			// Update sales statistics for sellers
-			double tongTienBanHangThem=0;
-			int sell_ID;
-			for (Cart c : list) {
-				for (Product p : list2) {
-					if (c.getProductID() == p.getId()) {
-						tongTienBanHangThem = 0;
-						sell_ID = dao.getSellIDByProductID(p.getId());
-						tongTienBanHangThem = tongTienBanHangThem + (p.getPrice() * c.getAmount());
-						TongChiTieuBanHang t2 = dao.checkTongChiTieuBanHangExist(sell_ID);
-						if (t2 == null) {
-							dao.insertTongChiTieuBanHang(sell_ID, 0, tongTienBanHangThem);
-						} else {
-							dao.editTongBanHang(sell_ID, tongTienBanHangThem);
-						}
-					}
-				}
-			}
-			
-			// Update sold quantity statistics
-			for(Cart c : list) {
-				for(Product p : list2) {
-					if(c.getProductID()==p.getId()) {
-						SoLuongDaBan s = dao.checkSoLuongDaBanExist(p.getId());
-						if(s == null) {
-							dao.insertSoLuongDaBan(p.getId(), c.getAmount());
-						}
-						else {
-							dao.editSoLuongDaBan(p.getId(), c.getAmount());
-						}	
-					}
-				}
-			}
+			// NOTE: Không cập nhật số liệu bán hàng ở đây!
+			// Chỉ cập nhật khi hóa đơn có status = "Hoàn thành" trong UpdateInvoiceStatusControl
 			
 			// Create invoice
 			dao.insertInvoice(accountID, totalMoneyVAT);
