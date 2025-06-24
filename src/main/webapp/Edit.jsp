@@ -20,9 +20,52 @@
                     width: 200px;
                     height: 120px;
                 }
+
+                .exit-button {
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    z-index: 1000;
+                }
+
+                .exit-button a {
+                    display: inline-block;
+                    padding: 10px 20px;
+                    background-color: #dc3545;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 4px;
+                    font-weight: bold;
+                    transition: background-color 0.3s ease;
+                }
+
+                .exit-button a:hover {
+                    background-color: #c82333;
+                    text-decoration: none;
+                    color: white;
+                }
+
+                .exit-button i {
+                    margin-right: 5px;
+                }
+
+                /* Hiệu ứng hover cho nút Lưu */
+                .modal-footer .btn-success {
+                    transition: background-color 0.3s ease;
+                }
+
+                .modal-footer .btn-success:hover {
+                    background-color: #218838;
+                }
             </style>
 
         <body>
+            <!-- Thêm nút thoát -->
+            <div class="exit-button">
+                <a href="manager">
+                    <i class="fa fa-times"></i> Thoát
+                </a>
+            </div>
 
             <div class="container">
                 <div class="table-wrapper">
@@ -69,16 +112,12 @@
                                         <input value="${detail.image3}" name="image3" type="text" class="form-control">
                                     </div>
                                     <div class="form-group">
-                                        <label>Image 4</label>
-                                        <input value="${detail.image4}" name="image4" type="text" class="form-control">
-                                    </div>
-                                    <div class="form-group">
                                         <label>Giá (VNĐ)</label>
                                         <input value="${detail.price}" name="price" type="text" class="form-control"
                                             placeholder="Nhập giá bằng VNĐ">
                                     </div>
                                     <div class="form-group">
-                                        <label>Title</label>
+                                        <label>Brand</label>
                                         <textarea name="title" class="form-control" required>${detail.title}</textarea>
                                     </div>
                                     <div class="form-group">

@@ -1397,15 +1397,12 @@ public class DAO {
         		+ "set [name] = ?,\r\n"
         		+ "[image] = ?,\r\n"
         		+ "price = ?,\r\n"
-        		+ "title = ?,\r\n"
+        		+ "brand = ?,\r\n"
         		+ "[description] = ?,\r\n"
         		+ "cateID = ?,\r\n"
-        		+ "model= ?,\r\n"
-        		+ "color= ?,\r\n"
-        		+ "delivery=?,\r\n"
-        		+ "image2=?,\r\n"
-        		+ "image3=?,\r\n"
-        		+ "image4=?\r\n"
+        		+ "delivery = ?,\r\n"
+        		+ "image2 = ?,\r\n"
+        		+ "image3 = ?\r\n"
         		+ "where [id] = ?";
         try {
             ps = conn.prepareStatement(query);
@@ -1420,9 +1417,8 @@ public class DAO {
             ps.setString(9, pimage3);
             ps.setInt(10, Integer.parseInt(pid));
             ps.executeUpdate();
-           
         } catch (Exception e) {
-        	 
+            throw new RuntimeException("Error updating product: " + e.getMessage(), e);
         }
     }
     

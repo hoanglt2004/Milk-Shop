@@ -33,33 +33,34 @@ public class EditControl extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+        
         String pid = request.getParameter("id");
         String pname = request.getParameter("name");
         String pimage = request.getParameter("image");
-        
         String pimage2 = request.getParameter("image2");
         String pimage3 = request.getParameter("image3");
-        String pimage4 = request.getParameter("image4");
-        String pmodel = request.getParameter("model");
-        String pcolor = request.getParameter("color");
-        String pdelivery = request.getParameter("delivery");
-        
         String pprice = request.getParameter("price");
-        String pbrand = request.getParameter("title");
+        String pbrand = request.getParameter("title"); // Note: form field is still 'title' but represents brand
         String pdescription = request.getParameter("description");
+        String pdelivery = request.getParameter("delivery");
         String pcategory = request.getParameter("category");
+        
         DAO dao = new DAO();
-        if (pid == null || pid.isEmpty()) {
-            // Thêm mới
-            dao.insertProduct(pname, pimage, pprice, pbrand, pdescription, pcategory, pdelivery, pimage2, pimage3);
-            request.setAttribute("mess", "Đã thêm sản phẩm mới!");
-        } else {
-            // Sửa
-            dao.editProduct(pname, pimage, pprice, pbrand, pdescription, pcategory, "", "", pdelivery, pimage2, pimage3, "", pid);
-            request.setAttribute("mess", "Đã cập nhật sản phẩm!");
+        try {
+            if (pid == null || pid.isEmpty()) {
+                // Add new product
+                dao.insertProduct(pname, pimage, pprice, pbrand, pdescription, pcategory, pdelivery, pimage2, pimage3);
+                request.setAttribute("mess", "Đã thêm sản phẩm mới!");
+            } else {
+                // Update existing product
+                dao.editProduct(pname, pimage, pprice, pbrand, pdescription, pcategory, "", "", pdelivery, pimage2, pimage3, "", pid);
+                request.setAttribute("mess", "Đã cập nhật sản phẩm!");
+            }
+            request.getRequestDispatcher("manager").forward(request, response);
+        } catch (Exception e) {
+            request.setAttribute("error", "Có lỗi xảy ra: " + e.getMessage());
+            request.getRequestDispatcher("manager").forward(request, response);
         }
-       request.getRequestDispatcher("manager").forward(request, response);
-//        response.sendRedirect("manager");
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
