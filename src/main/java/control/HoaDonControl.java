@@ -41,8 +41,22 @@ public class HoaDonControl extends HttpServlet {
       
         DAO dao = new DAO();
       
+        // Handle delete invoice
+        String deleteInvoice = request.getParameter("deleteInvoice");
+        String maHDStr = request.getParameter("maHD");
+        if ("1".equals(deleteInvoice) && maHDStr != null) {
+            try {
+                int maHD = Integer.parseInt(maHDStr);
+                dao.deleteInvoiceById(maHD);
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().println("{\"success\": true, \"message\": \"Đã xóa hóa đơn thành công\"}");
+            } catch (Exception e) {
+                response.setContentType("application/json;charset=UTF-8");
+                response.getWriter().println("{\"success\": false, \"message\": \"Lỗi: " + e.getMessage() + "\"}");
+            }
+            return;
+        }
         
-
         double sumCompletedInvoice = dao.sumAllInvoice(); // Chỉ tính đơn hoàn thành
         
         List<Invoice> listAllInvoice = dao.getAllInvoice();

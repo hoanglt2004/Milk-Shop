@@ -2064,4 +2064,27 @@ public class DAO {
         return 0;
     }
 
+    public void deleteInvoiceById(int maHD) {
+        try {
+            // Lấy accountID từ Invoice
+            String getAccountIdQuery = "SELECT accountID FROM Invoice WHERE maHD = ?";
+            conn = new DBContext().getConnection();
+            ps = conn.prepareStatement(getAccountIdQuery);
+            ps.setInt(1, maHD);
+            rs = ps.executeQuery();
+            int accountID = -1;
+            if (rs.next()) {
+                accountID = rs.getInt(1);
+            }
+            // Xóa Invoice trước
+            new InvoiceDAO().deleteInvoice(maHD);
+            // Sau đó xóa Cart nếu cần
+            if (accountID != -1) {
+                deleteCartByAccountID(accountID);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 }

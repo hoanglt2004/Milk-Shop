@@ -44,14 +44,22 @@ public class InvoiceDAO {
     }
 
     public void deleteInvoice(int maHD) {
-        String query = "DELETE FROM Invoice WHERE maHD = ?";
+        String query = "DELETE FROM [dbo].[Invoice] WHERE [maHD] = ?";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
             ps.setInt(1, maHD);
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
+            System.out.println("Deleted " + rowsAffected + " invoice(s) with maHD: " + maHD);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            try {
+                if (ps != null) ps.close();
+                if (conn != null) conn.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 

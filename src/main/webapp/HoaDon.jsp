@@ -58,6 +58,7 @@
                               <th>Ngày giao</th>
                               <th>Tổng tiền</th>
                               <th>Trạng thái</th>
+                              <th>Xóa</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -81,7 +82,7 @@
                                       <fmt:formatDate value="${invoice.deliveryDate}" pattern="dd/MM/yyyy HH:mm" />
                                     </c:when>
                                     <c:otherwise>
-                                      <span class="text-muted">Chưa giao</span>
+                                      <span class="text-muted">Chờ</span>
                                     </c:otherwise>
                                   </c:choose>
                                 </td>
@@ -102,6 +103,12 @@
                                       Hoàn thành
                                     </option>
                                   </select>
+                                </td>
+                                <td>
+                                  <button class="btn btn-danger btn-sm delete-invoice-btn"
+                                    data-invoice-id="${invoice.maHD}" title="Xóa hóa đơn">
+                                    <i class="fa fa-trash"></i>
+                                  </button>
                                 </td>
                               </tr>
                             </c:forEach>
@@ -182,6 +189,30 @@
                   .finally(() => {
                     // Re-enable select
                     this.disabled = false;
+                  });
+              });
+            });
+
+            // Delete invoice functionality
+            document.querySelectorAll('.delete-invoice-btn').forEach(btn => {
+              btn.addEventListener('click', function () {
+                if (!confirm('Bạn có chắc chắn muốn xóa hóa đơn này?')) return;
+                const invoiceId = this.getAttribute('data-invoice-id');
+                const row = this.closest('tr');
+                fetch('hoaDon?deleteInvoice=1&maHD=' + invoiceId, {
+                  method: 'POST'
+                })
+                  .then(response => response.json())
+                  .then(data => {
+                    if (data.success) {
+                      row.remove();
+                      alert('Đã xóa hóa đơn thành công!');
+                    } else {
+                      alert('Lỗi: ' + data.message);
+                    }
+                  })
+                  .catch(error => {
+                    alert('Lỗi kết nối: ' + error.message);
                   });
               });
             });

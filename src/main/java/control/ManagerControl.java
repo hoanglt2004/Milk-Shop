@@ -50,20 +50,12 @@ public class ManagerControl extends HttpServlet {
         int indexPage = Integer.parseInt(index);
         
         DAO dao = new DAO();
-        List<Product> list = dao.getProductBySellIDAndIndex(id, indexPage);
+        List<Product> list = dao.getAllProduct();
         List<Category> listC = dao.getAllCategory();
-        int allProductBySellID = dao.countAllProductBySellID(id);
-        int endPage = allProductBySellID/5;
-        if(allProductBySellID % 5 != 0) {
-        	endPage++;
-        }
-        
         
         request.setAttribute("tag", indexPage);
-        request.setAttribute("endPage", endPage);
         request.setAttribute("listCC", listC);
         request.setAttribute("listP", list);
-   //     request.getRequestDispatcher("ManagerProduct.jsp").forward(request, response);
         request.getRequestDispatcher("QuanLySanPham.jsp").forward(request, response);
     }
 
