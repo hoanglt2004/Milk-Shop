@@ -114,7 +114,7 @@
                                     <div class="modal-body">
                                         <div class="form-group">
                                             <label>Tên danh mục:</label>
-                                            <input type="text" name="categoryName" class="form-control" required>
+                                            <input type="text" name="cname" class="form-control" required>
                                         </div>
                                     </div>
                                     <div class="modal-footer">

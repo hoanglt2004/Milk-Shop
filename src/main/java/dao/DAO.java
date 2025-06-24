@@ -1404,8 +1404,7 @@ public class DAO {
     }
     
     public void insertAccount(String user, String pass, String isAdmin, String email) {
-        String query = "insert Account([user], pass, isAdmin, email)\r\n"
-        		+ "values(?,?,?,?)";
+        String query = "insert into Account([user], pass, isAdmin, email) values(?,?,?,?)";
         try {
             conn = new DBContext().getConnection();//mo ket noi voi sql
             ps = conn.prepareStatement(query);

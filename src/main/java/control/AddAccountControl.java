@@ -39,8 +39,6 @@ public class AddAccountControl extends HttpServlet {
         String pass = request.getParameter("pass");
         String isAdmin = request.getParameter("isAdmin");
         String email = request.getParameter("email");
-        String fullName = request.getParameter("fullName");
-        String phone = request.getParameter("phone");
        
         // Validation
         if(user == null || user.trim().isEmpty() || 

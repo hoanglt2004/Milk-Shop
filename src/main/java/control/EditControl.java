@@ -58,7 +58,7 @@ public class EditControl extends HttpServlet {
             dao.editProduct(pname, pimage, pprice, pbrand, pdescription, pcategory, "", "", pdelivery, pimage2, pimage3, "", pid);
             request.setAttribute("mess", "Đã cập nhật sản phẩm!");
         }
-        request.getRequestDispatcher("manager").forward(request, response);
+       request.getRequestDispatcher("manager").forward(request, response);
 //        response.sendRedirect("manager");
     }
 

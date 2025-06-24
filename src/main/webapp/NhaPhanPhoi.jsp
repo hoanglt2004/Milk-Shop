@@ -163,19 +163,39 @@
           <script>
             // Modal functions
             function openModal(modalId) {
-              document.getElementById(modalId).classList.add('show');
+              const modal = document.getElementById(modalId);
+              if (modal) {
+                modal.classList.add('show');
+                modal.style.display = 'block';
+              }
             }
 
             function closeModal(modalId) {
-              document.getElementById(modalId).classList.remove('show');
+              const modal = document.getElementById(modalId);
+              if (modal) {
+                modal.classList.remove('show');
+                modal.style.display = 'none';
+              }
             }
 
             // Close modal when clicking outside
             window.onclick = function (event) {
               if (event.target.classList.contains('modal')) {
                 event.target.classList.remove('show');
+                event.target.style.display = 'none';
               }
             }
+
+            // Close modal when pressing Escape key
+            document.addEventListener('keydown', function (event) {
+              if (event.key === 'Escape') {
+                const modals = document.querySelectorAll('.modal.show');
+                modals.forEach(modal => {
+                  modal.classList.remove('show');
+                  modal.style.display = 'none';
+                });
+              }
+            });
           </script>
         </body>
 
