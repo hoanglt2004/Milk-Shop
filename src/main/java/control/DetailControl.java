@@ -38,31 +38,53 @@ public class DetailControl extends HttpServlet {
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         String id = request.getParameter("pid");
-        DAO dao = new DAO();
-        Product p = dao.getProductByID(id);
         
-        int cateIDProductDetail = dao.getCateIDByProductID(id);
-        List<Product> listRelatedProduct = dao.getRelatedProduct(cateIDProductDetail);
-        
-        List<Review> listAllReview = dao.getAllReviewByProductID(id);
-        int countAllReview = listAllReview.size();
-        
-        List<Account> listAllAcount = dao.getAllAccount();
-        
-        Product last = dao.getLast();
+        try {
+            if (id == null || id.trim().isEmpty()) {
+                response.sendRedirect("home");
+                return;
+            }
+            
+            int pid = Integer.parseInt(id);
+            DAO dao = new DAO();
+            Product p = dao.getProductByID(id);
 
-        // Lấy số lượng còn lại từ Warehouse
-        WarehouseDAO warehouseDAO = new WarehouseDAO();
-        int remainingQuantity = warehouseDAO.getTotalRemainingStock(Integer.parseInt(id));
+            if (p == null) {
+                response.sendRedirect("home");
+                return;
+            }
 
-        request.setAttribute("detail", p);
-        request.setAttribute("listRelatedProduct", listRelatedProduct);
-        request.setAttribute("listAllReview", listAllReview);
-        request.setAttribute("listAllAcount", listAllAcount);
-        request.setAttribute("countAllReview", countAllReview);
-        request.setAttribute("p", last);
-        request.setAttribute("remainingQuantity", remainingQuantity);
-        request.getRequestDispatcher("DetailProduct.jsp").forward(request, response);
+            List<Category> listC = dao.getAllCategory();
+            
+            int cateIDProductDetail = p.getCateID();
+            List<Product> listRelatedProduct = dao.getRelatedProduct(cateIDProductDetail);
+            
+            List<Review> listAllReview = dao.getAllReviewByProductID(id);
+            int countAllReview = listAllReview.size();
+            
+            List<Account> listAllAcount = dao.getAllAccount();
+            
+            Product last = dao.getLast();
+
+            WarehouseDAO warehouseDAO = new WarehouseDAO();
+            int remainingQuantity = warehouseDAO.getTotalRemainingStock(pid);
+
+            request.setAttribute("detail", p);
+            request.setAttribute("listC", listC);
+            request.setAttribute("listRelatedProduct", listRelatedProduct);
+            request.setAttribute("listAllReview", listAllReview);
+            request.setAttribute("listAllAcount", listAllAcount);
+            request.setAttribute("countAllReview", countAllReview);
+            request.setAttribute("p", last);
+            request.setAttribute("remainingQuantity", remainingQuantity);
+            request.getRequestDispatcher("DetailProduct.jsp").forward(request, response);
+
+        } catch (Exception e) {
+            // Log the exception for debugging purposes
+            e.printStackTrace();
+            // Redirect to a safe page
+            response.sendRedirect("home");
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

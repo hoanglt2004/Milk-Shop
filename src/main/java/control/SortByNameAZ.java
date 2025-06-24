@@ -31,25 +31,41 @@ public class SortByNameAZ extends HttpServlet {
         list.sort(Comparator.comparing(Product::getName, String.CASE_INSENSITIVE_ORDER));
         PrintWriter out = response.getWriter();
         for (Product o : list) {
-            out.println("<div class=\"col-md-4 mb-5\">\n"
-                    + "                <div class=\"\">\n"
-                    + "                  <div class=\"view zoom overlay rounded z-depth-2\">\n"
-                    + "                    <img class=\"img-fluid w-100\"\n"
-                    + "                      src=\"" + o.getImage() + "\" alt=\"Sample\">\n"
-                    + "                    <a href=\"detail?pid=" + o.getId() + "\">\n"
-                    + "                      <div class=\"mask\">\n"
-                    + "                        <img class=\"img-fluid w-100\"\n"
-                    + "                          src=\"" + o.getImage() + "\">\n"
-                    + "                        <div class=\"mask rgba-black-slight\"></div>\n"
-                    + "                      </div>\n"
-                    + "                    </a>\n"
-                    + "                  </div>\n"
-                    + "                  <div class=\"text-center pt-4\">\n"
-                    + "                    <h5 class=\"product-name\">" + o.getName() + "</h5>\n"
-                    + "                    <p><span class=\"mr-1\"><strong>" + String.format("%,.0f", o.getPrice()).replace(",", ".") + " VNĐ</strong></span></p>\n"
-                    + "                  </div>\n"
-                    + "                </div>\n"
-                    + "              </div>");
+            out.println("<div class=\"col-md-4 mb-5 product-card-container\">\n" +
+"                <div class=\"product-card h-100\">\n" +
+"                  <div class=\"product-image-container\">\n" +
+"                    <img class=\"product-image\" src=\"" + o.getImage() + "\" alt=\"" + o.getName() + "\">\n" +
+"                    <a href=\"detail?pid=" + o.getId() + "\">\n" +
+"                      <div class=\"quick-view-overlay\">\n" +
+"                        <button class=\"quick-view-btn\" onclick=\"window.location.href='detail?pid=" + o.getId() + "'; event.preventDefault();\">\n" +
+"                            <i class=\"fas fa-eye mr-2\"></i>Xem chi tiết\n" +
+"                        </button>\n" +
+"                      </div>\n" +
+"                    </a>\n" +
+"                  </div>\n" +
+"                  <div class=\"product-card-body\">\n" +
+"                    <h4 class=\"product-title\">\n" +
+"                        <a href=\"detail?pid=" + o.getId() + "\" title=\"View Product\">" + o.getName() + "</a>\n" +
+"                    </h4>\n" +
+"                    <p class=\"product-description\">" + o.getBrand() + "</p>\n" +
+"                    <div class=\"product-rating\">\n" +
+"                        <div class=\"stars\">\n" +
+"                            <i class=\"fas fa-star\"></i>\n" +
+"                            <i class=\"fas fa-star\"></i>\n" +
+"                            <i class=\"fas fa-star\"></i>\n" +
+"                            <i class=\"fas fa-star\"></i>\n" +
+"                            <i class=\"fas fa-star-half-alt\"></i>\n" +
+"                        </div>\n" +
+"                        <span class=\"rating-text\">(4.5)</span>\n" +
+"                    </div>\n" +
+"                     <div class=\"product-price-section\">\n" +
+"                        <a href=\"detail?pid=" + o.getId() + "\" class=\"product-price\">\n" +
+"                            " + String.format("%,.0f", o.getPrice()).replace(",", ".") + " VNĐ\n" +
+"                        </a>\n" +
+"                    </div>\n" +
+"                  </div>\n" +
+"                </div>\n" +
+"              </div>");
         }
     }
     @Override

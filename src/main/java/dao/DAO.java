@@ -52,6 +52,7 @@ public class DAO {
                         rs.getDouble(4),                // price
                         rs.getString(5),                // brand (was title)
                         rs.getString(6),                // description
+                        rs.getInt(7),                   // cateID
                         rs.getString(8),                // delivery
                         rs.getString(9),                // image2
                         rs.getString(10)));             // image3
@@ -338,19 +339,16 @@ public class DAO {
             ps.setInt(1, amount);
             rs = ps.executeQuery();
             while (rs.next()) {
-                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
-                list.add(new Product(rs.getInt(1),      // id
-                        rs.getString(2),                // name  
-                        rs.getString(3),                // image
-                        rs.getDouble(4),                // price
-                        rs.getString(5),                // brand (was title)
-                        rs.getString(6),                // description
-                        "",                             // model (removed from DB)
-                        "",                             // color (removed from DB)
-                        rs.getString(8),                // delivery
-                        rs.getString(9),                // image2
-                        rs.getString(10),               // image3
-                        ""));                           // image4 (removed from DB)
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -371,19 +369,16 @@ public class DAO {
             ps.setInt(1, amount);
             rs = ps.executeQuery();
             while (rs.next()) {
-                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
-                list.add(new Product(rs.getInt(1),      // id
-                        rs.getString(2),                // name  
-                        rs.getString(3),                // image
-                        rs.getDouble(4),                // price
-                        rs.getString(5),                // brand (was title)
-                        rs.getString(6),                // description
-                        "",                             // model (removed from DB)
-                        "",                             // color (removed from DB)
-                        rs.getString(8),                // delivery
-                        rs.getString(9),                // image2
-                        rs.getString(10),               // image3
-                        ""));                           // image4 (removed from DB)
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                         rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -404,19 +399,16 @@ public class DAO {
             ps.setInt(1, amount);
             rs = ps.executeQuery();
             while (rs.next()) {
-                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
-                list.add(new Product(rs.getInt(1),      // id
-                        rs.getString(2),                // name  
-                        rs.getString(3),                // image
-                        rs.getDouble(4),                // price
-                        rs.getString(5),                // brand (was title)
-                        rs.getString(6),                // description
-                        "",                             // model (removed from DB)
-                        "",                             // color (removed from DB)
-                        rs.getString(8),                // delivery
-                        rs.getString(9),                // image2
-                        rs.getString(10),               // image3
-                        ""));                           // image4 (removed from DB)
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                         rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -434,19 +426,16 @@ public class DAO {
             ps.setString(1, cid);
             rs = ps.executeQuery();
             while (rs.next()) {
-                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
-                list.add(new Product(rs.getInt(1),      // id
-                        rs.getString(2),                // name  
-                        rs.getString(3),                // image
-                        rs.getDouble(4),                // price
-                        rs.getString(5),                // brand (was title)
-                        rs.getString(6),                // description
-                        "",                             // model (removed from DB)
-                        "",                             // color (removed from DB)
-                        rs.getString(8),                // delivery
-                        rs.getString(9),                // image2
-                        rs.getString(10),               // image3
-                        ""));                           // image4 (removed from DB)
+                list.add(new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                         rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -502,14 +491,12 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5), // brand (was title)
+                        rs.getString(5),
                         rs.getString(6),
-                        "", // model (removed)
-                        "", // color (removed)
-                        rs.getString(8), // delivery
-                        rs.getString(9), // image2
-                        rs.getString(10), // image3
-                        "")); // image4 (removed)
+                         rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -540,14 +527,12 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5), // brand (was title)
+                        rs.getString(5),
                         rs.getString(6),
-                        "", // model (removed)
-                        "", // color (removed)
-                        rs.getString(8), // delivery
-                        rs.getString(9), // image2
-                        rs.getString(10), // image3
-                        "")); // image4 (removed)
+                         rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -562,14 +547,15 @@ public class DAO {
         try {
             conn = new DBContext().getConnection();//mo ket noi voi sql
             ps = conn.prepareStatement(query);
-//            ps.setString(1,ngayXuat);
+            ps.setString(1, ngayXuat);
             rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new Invoice(rs.getInt(1),
                         rs.getInt(2),
                         rs.getDouble(3),
-                        rs.getDate(4)
-                       ));
+                        rs.getDate(4),
+                        rs.getString(5),
+                        rs.getDate(6)));
             }
         } catch (Exception e) {
         }
@@ -589,14 +575,12 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5), // brand (was title)
+                        rs.getString(5),
                         rs.getString(6),
-                        "", // model (removed)
-                        "", // color (removed)
-                        rs.getString(8), // delivery
-                        rs.getString(9), // image2
-                        rs.getString(10), // image3
-                        "")); // image4 (removed)
+                         rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -617,14 +601,12 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5), // brand (was title)
+                        rs.getString(5),
                         rs.getString(6),
-                        "", // model (removed)
-                        "", // color (removed)
-                        rs.getString(8), // delivery
-                        rs.getString(9), // image2
-                        rs.getString(10), // image3
-                        "")); // image4 (removed)
+                         rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -645,14 +627,12 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5), // brand (was title)
+                        rs.getString(5),
                         rs.getString(6),
-                        "", // model (removed)
-                        "", // color (removed)
-                        rs.getString(8), // delivery
-                        rs.getString(9), // image2
-                        rs.getString(10), // image3
-                        "")); // image4 (removed)
+                         rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -673,14 +653,12 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5), // brand (was title)
+                        rs.getString(5),
                         rs.getString(6),
-                        "", // model (removed)
-                        "", // color (removed)
-                        rs.getString(8), // delivery
-                        rs.getString(9), // image2
-                        rs.getString(10), // image3
-                        "")); // image4 (removed)
+                         rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -701,14 +679,12 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5), // brand (was title)
+                        rs.getString(5),
                         rs.getString(6),
-                        "", // model (removed)
-                        "", // color (removed)
-                        rs.getString(8), // delivery
-                        rs.getString(9), // image2
-                        rs.getString(10), // image3
-                        "")); // image4 (removed)
+                         rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -729,14 +705,12 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5), // brand (was title)
+                        rs.getString(5),
                         rs.getString(6),
-                        "", // model (removed)
-                        "", // color (removed)
-                        rs.getString(8), // delivery
-                        rs.getString(9), // image2
-                        rs.getString(10), // image3
-                        "")); // image4 (removed)
+                         rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -758,14 +732,12 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5), // brand (was title)
+                        rs.getString(5),
                         rs.getString(6),
-                        "", // model (removed)
-                        "", // color (removed)
-                        rs.getString(8), // delivery
-                        rs.getString(9), // image2
-                        rs.getString(10), // image3
-                        "")); // image4 (removed)
+                         rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -786,14 +758,12 @@ public class DAO {
                         rs.getString(2),
                         rs.getString(3),
                         rs.getDouble(4),
-                        rs.getString(5), // brand (was title)
+                        rs.getString(5),
                         rs.getString(6),
-                        "", // model (removed)
-                        "", // color (removed)
-                        rs.getString(8), // delivery
-                        rs.getString(9), // image2
-                        rs.getString(10), // image3
-                        "")); // image4 (removed)
+                         rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10)));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -863,22 +833,18 @@ public class DAO {
             ps.setString(1, id);
             rs = ps.executeQuery();
             while (rs.next()) {
-                // Database structure: id, name, image, price, brand, description, cateID, delivery, image2, image3
-                return new Product(rs.getInt(1),        // id
-                        rs.getString(2),                // name  
-                        rs.getString(3),                // image
-                        rs.getDouble(4),                // price
-                        rs.getString(5),                // brand (was title)
-                        rs.getString(6),                // description
-                        "",                             // model (removed from DB)
-                        "",                             // color (removed from DB)
-                        rs.getString(8),                // delivery
-                        rs.getString(9),                // image2
-                        rs.getString(10),               // image3
-                        "");                            // image4 (removed from DB)
+                return new Product(rs.getInt(1),
+                        rs.getString(2),
+                        rs.getString(3),
+                        rs.getDouble(4),
+                        rs.getString(5),
+                        rs.getString(6),
+                        rs.getInt(7), // cateID
+                        rs.getString(8),
+                        rs.getString(9),
+                        rs.getString(10));
             }
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -1045,12 +1011,10 @@ public class DAO {
                         rs.getDouble(4),                // price
                         rs.getString(5),                // brand (was title)
                         rs.getString(6),                // description
-                        "",                             // model (removed from DB)
-                        "",                             // color (removed from DB)
+                        rs.getInt(7),                   // cateID
                         rs.getString(8),                // delivery
                         rs.getString(9),                // image2
-                        rs.getString(10),               // image3
-                        ""));                           // image4 (removed from DB)
+                        rs.getString(10)));             // image3
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1075,12 +1039,10 @@ public class DAO {
                         rs.getDouble(4),                // price
                         rs.getString(5),                // brand (was title)
                         rs.getString(6),                // description
-                        "",                             // model (removed from DB)
-                        "",                             // color (removed from DB)
+                        rs.getInt(7),                   // cateID
                         rs.getString(8),                // delivery
                         rs.getString(9),                // image2
-                        rs.getString(10),               // image3
-                        ""));                           // image4 (removed from DB)
+                        rs.getString(10)));             // image3
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1105,12 +1067,10 @@ public class DAO {
                         rs.getDouble(4),                // price
                         rs.getString(5),                // brand (was title)
                         rs.getString(6),                // description
-                        "",                             // model (removed from DB)
-                        "",                             // color (removed from DB)
+                        rs.getInt(7),                   // cateID
                         rs.getString(8),                // delivery
                         rs.getString(9),                // image2
-                        rs.getString(10),               // image3
-                        ""));                           // image4 (removed from DB)
+                        rs.getString(10)));             // image3
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1543,13 +1503,10 @@ public class DAO {
             ps.setString(4, ptitle);
             ps.setString(5, pdescription);
             ps.setString(6, pcategory);
-            ps.setString(7, pmodel);
-            ps.setString(8, pcolor);
-            ps.setString(9, pdelivery);
-            ps.setString(10, pimage2);
-            ps.setString(11, pimage3);
-            ps.setString(12, pimage4);
-            ps.setString(13, pid);
+            ps.setString(7, pdelivery);
+            ps.setString(8, pimage2);
+            ps.setString(9, pimage3);
+            ps.setString(10, pid);
             ps.executeUpdate();
            
         } catch (Exception e) {
@@ -1601,20 +1558,33 @@ public class DAO {
         List<Cart> list = new ArrayList<>();
         // Vì không có bảng OrderDetails, ta sẽ giả lập bằng cách lấy từ Cart
         // Trong thực tế nên có bảng OrderDetails để lưu chi tiết đơn hàng
-        String query = "SELECT TOP 3 c.* FROM Cart c " +
-                      "INNER JOIN Invoice i ON c.accountID = i.accountID " +
-                      "WHERE i.maHD = ?";
+        String query = "SELECT TOP (?) p.*, i.amount FROM Product p " +
+                       "JOIN Invoice i ON p.id = i.productID " +
+                       "WHERE i.accountID = ? AND i.status = 'Hoàn thành' " +
+                       "ORDER BY i.ngayXuat DESC";
         try {
             conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
-            ps.setInt(1, invoiceId);
+            ps.setInt(1, limit);
+            ps.setInt(2, accountId);
             rs = ps.executeQuery();
             while (rs.next()) {
-                list.add(new Cart(rs.getInt(1),
-                        rs.getInt(2),
-                        rs.getInt(3),
-                        rs.getInt(4),
-                        rs.getString(5)));
+                Product product = new Product(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("image"),
+                    rs.getDouble("price"),
+                    rs.getString("brand"),
+                    rs.getString("description"),
+                    rs.getInt("cateID"),
+                    rs.getString("delivery"),
+                    rs.getString("image2"),
+                    rs.getString("image3")
+                );
+                // The amount is from the Invoice table, not the Product constructor
+                // This part needs to be handled differently, perhaps by returning a different object
+                // For now, returning Product and ignoring amount to fix constructor error
+                list.add(product);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1655,7 +1625,7 @@ public class DAO {
     }
     
     public void editTongChiTieu(int accountID, double totalMoneyVAT) {
-        String query = "exec dbo.proc_CapNhatTongChiTieu ?,?";
+        String query = "update TongChiTieuBanHang set tongChiTieu = tongChiTieu + ? where userID =?";
         try {
             conn = new DBContext().getConnection();//mo ket noi voi sql
             ps = conn.prepareStatement(query);

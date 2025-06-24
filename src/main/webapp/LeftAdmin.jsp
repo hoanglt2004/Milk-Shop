@@ -243,8 +243,8 @@
           <i class="fas fa-warehouse"></i>
           <span>Quản Lý Kho</span>
         </a>
-      </div>
-    </nav>
+    </div>
+  </nav>
 
     <script>
       document.addEventListener('DOMContentLoaded', function () {

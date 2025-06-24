@@ -126,21 +126,51 @@
                 object-fit: cover;
                 border-radius: 8px;
             }
+
+            /* Breadcrumb Styles */
+            .breadcrumb-container {
+                background-color: #f8f9fa;
+                border-radius: 8px;
+            }
+            .breadcrumb {
+                background-color: transparent;
+                padding: .75rem 1rem;
+                margin-bottom: 0;
+            }
+            .breadcrumb-item a {
+                color: #da1919;
+                font-weight: 500;
+                transition: color 0.3s ease;
+            }
+            .breadcrumb-item a:hover {
+                color: #c41e3a;
+                text-decoration: none;
+            }
+            .breadcrumb-item.active {
+                color: #6c757d;
+            }
+            .breadcrumb-item+.breadcrumb-item::before {
+                color: #6c757d;
+            }
           </style>
         </head>
 
         <body class="skin-light">
           <jsp:include page="Menu.jsp"></jsp:include>
 
-          <div class="jumbotron color-grey-light mt-70">
-            <div class="d-flex align-items-center h-100">
-              <div class="container text-center py-5">
-                <h3 class="mb-0"></h3>
-              </div>
-            </div>
+          <div class="container breadcrumb-container my-4">
+              <nav aria-label="breadcrumb">
+                  <ol class="breadcrumb">
+                      <li class="breadcrumb-item"><a href="home">Home</a></li>
+                      <c:forEach items="${listC}" var="c">
+                          <c:if test="${detail.cateID == c.cid}">
+                              <li class="breadcrumb-item"><a href="shop?cid=${c.cid}">${c.cname}</a></li>
+                          </c:if>
+                      </c:forEach>
+                      <li class="breadcrumb-item active" aria-current="page">${detail.name}</li>
+                  </ol>
+              </nav>
           </div>
-
-          <!--Main Navigation-->
 
           <!--Main layout-->
           <main>

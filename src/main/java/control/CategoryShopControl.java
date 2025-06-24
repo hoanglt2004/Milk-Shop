@@ -40,36 +40,41 @@ public class CategoryShopControl extends HttpServlet {
         //in list p day
         PrintWriter out = response.getWriter();
         for(Product o : list) {
-        	out.println("  <!-- Grid column -->\r\n"
-        			+ "              <div class=\"col-md-4 mb-5\">\r\n"
-        			+ "\r\n"
-        			+ "                <!-- Card -->\r\n"
-        			+ "                <div class=\"\">\r\n"
-        			+ "\r\n"
-        			+ "                  <div class=\"view zoom overlay rounded z-depth-2\">\r\n"
-        			+ "                    <img class=\"img-fluid w-100\"\r\n"
-        			+ "                      src=\""+o.getImage()+"\" alt=\"Sample\">\r\n"
-        			+ "                    <a href=\"detail?pid="+o.getId()+"\">\r\n"
-        			+ "                      <div class=\"mask\">\r\n"
-        			+ "                        <img class=\"img-fluid w-100\"\r\n"
-        			+ "                          src=\""+o.getImage()+"\">\r\n"
-        			+ "                        <div class=\"mask rgba-black-slight\"></div>\r\n"
-        			+ "                      </div>\r\n"
-        			+ "                    </a>\r\n"
-        			+ "                  </div>\r\n"
-        			+ "\r\n"
-        			+ "                  <div class=\"text-center pt-4\">\r\n"
-        			+ "\r\n"
-        			+ "                    <h5>"+o.getName()+"</h5>\r\n"
-        			+ "                    <p><span class=\"mr-1\"><strong>"+String.format("%,.0f", o.getPrice()).replace(",", ".") + " VNĐ</strong></span></p>\r\n"
-        			+ "\r\n"
-        			+ "                  </div>\r\n"
-        			+ "\r\n"
-        			+ "                </div>\r\n"
-        			+ "                <!-- Card -->\r\n"
-        			+ "\r\n"
-        			+ "              </div>\r\n"
-        			+ "              <!-- Grid column -->");
+            out.println("<div class=\"col-md-4 mb-5 product-card-container\">\n" +
+"                <div class=\"product-card h-100\">\n" +
+"                  <div class=\"product-image-container\">\n" +
+"                    <img class=\"product-image\" src=\"" + o.getImage() + "\" alt=\"" + o.getName() + "\">\n" +
+"                    <a href=\"detail?pid=" + o.getId() + "\">\n" +
+"                      <div class=\"quick-view-overlay\">\n" +
+"                        <button class=\"quick-view-btn\" onclick=\"window.location.href='detail?pid=" + o.getId() + "'; event.preventDefault();\">\n" +
+"                            <i class=\"fas fa-eye mr-2\"></i>Xem chi tiết\n" +
+"                        </button>\n" +
+"                      </div>\n" +
+"                    </a>\n" +
+"                  </div>\n" +
+"                  <div class=\"product-card-body\">\n" +
+"                    <h4 class=\"product-title\">\n" +
+"                        <a href=\"detail?pid=" + o.getId() + "\" title=\"View Product\">" + o.getName() + "</a>\n" +
+"                    </h4>\n" +
+"                    <p class=\"product-description\">" + o.getBrand() + "</p>\n" + // Assuming getBrand() is what was meant by title
+"                    <div class=\"product-rating\">\n" +
+"                        <div class=\"stars\">\n" +
+"                            <i class=\"fas fa-star\"></i>\n" +
+"                            <i class=\"fas fa-star\"></i>\n" +
+"                            <i class=\"fas fa-star\"></i>\n" +
+"                            <i class=\"fas fa-star\"></i>\n" +
+"                            <i class=\"fas fa-star-half-alt\"></i>\n" +
+"                        </div>\n" +
+"                        <span class=\"rating-text\">(4.5)</span>\n" +
+"                    </div>\n" +
+"                     <div class=\"product-price-section\">\n" +
+"                        <a href=\"detail?pid=" + o.getId() + "\" class=\"product-price\">\n" +
+"                            " + String.format("%,.0f", o.getPrice()).replace(",", ".") + " VNĐ\n" +
+"                        </a>\n" +
+"                    </div>\n" +
+"                  </div>\n" +
+"                </div>\n" +
+"              </div>");
         }
 //        List<Category> listC = dao.getAllCategory();
 //        Product last = dao.getLast();

@@ -92,7 +92,7 @@ input[type="radio"]:checked + .sort-label {
 
   <!--Main layout-->
   <main>
-    <div class="container" style="margin-top:100px">
+    <div class="container">
 
       <!-- Category Selection Banner -->
       <c:if test="${selectedCid != null}">

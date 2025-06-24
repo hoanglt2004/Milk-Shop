@@ -16,10 +16,11 @@ public class Product {
     private double price;
     private String brand;
     private String description;
+    private int cateID;
     private String delivery;
     private String image2;
     private String image3;
-	public Product(int id, String name, String image, double price, String brand, String description,
+	public Product(int id, String name, String image, double price, String brand, String description, int cateID,
 			String delivery, String image2, String image3) {
 		
 		this.id = id;
@@ -28,6 +29,7 @@ public class Product {
 		this.price = price;
 		this.brand = brand;
 		this.description = description;
+		this.cateID = cateID;
 		this.delivery = delivery;
 		this.image2 = image2;
 		this.image3 = image3;
@@ -43,6 +45,7 @@ public class Product {
 		this.price = price;
 		this.brand = title; // title được map thành brand
 		this.description = description;
+		this.cateID = 0; // Gán giá trị mặc định vì không có trong constructor cũ
 		this.delivery = delivery;
 		this.image2 = image2;
 		this.image3 = image3;
@@ -55,7 +58,7 @@ public class Product {
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", image=" + image + ", price=" + price + ", brand=" + brand
-				+ ", description=" + description + ", delivery=" + delivery
+				+ ", description=" + description + ", cateID=" + cateID + ", delivery=" + delivery
 				+ ", image2=" + image2 + ", image3=" + image3 + "]";
 	}
 	public int getId() {
@@ -143,7 +146,13 @@ public class Product {
 		// Không làm gì vì field đã bị xóa
 	}
     
-	
+    public int getCateID() {
+        return cateID;
+    }
+
+    public void setCateID(int cateID) {
+        this.cateID = cateID;
+    }
     
     
 }
