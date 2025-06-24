@@ -35,25 +35,20 @@ public class AddControl extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String pname = request.getParameter("name");
         String pimage = request.getParameter("image");
-        
-        String pimage2 = request.getParameter("image2");
-        String pimage3 = request.getParameter("image3");
-        String pimage4 = request.getParameter("image4");
-        String pmodel = request.getParameter("model");
-        String pcolor = request.getParameter("color");
-        String pdelivery = request.getParameter("delivery");
-        
         String pprice = request.getParameter("price");
-        String ptitle = request.getParameter("title");
+        String pbrand = request.getParameter("title");
         String pdescription = request.getParameter("description");
         String pcategory = request.getParameter("category");
+        String pdelivery = request.getParameter("delivery");
+        String pimage2 = request.getParameter("image2");
+        String pimage3 = request.getParameter("image3");
         HttpSession session = request.getSession();
         Account a = (Account) session.getAttribute("acc");
         int sid = a.getId();
         
         
         DAO dao = new DAO();
-        dao.insertProduct(pname, pimage, pprice, ptitle, pdescription, pcategory, sid, pmodel, pcolor, pdelivery, pimage2, pimage3, pimage4);
+        dao.insertProduct(pname, pimage, pprice, pbrand, pdescription, pcategory, pdelivery, pimage2, pimage3);
         request.setAttribute("mess", "Product Added!");
         request.getRequestDispatcher("manager").forward(request, response);
     }

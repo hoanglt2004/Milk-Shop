@@ -45,13 +45,20 @@ public class EditControl extends HttpServlet {
         String pdelivery = request.getParameter("delivery");
         
         String pprice = request.getParameter("price");
-        String ptitle = request.getParameter("title");
+        String pbrand = request.getParameter("title");
         String pdescription = request.getParameter("description");
         String pcategory = request.getParameter("category");
         DAO dao = new DAO();
-        dao.editProduct(pname, pimage, pprice, ptitle, pdescription, pcategory, pmodel, pcolor, pdelivery, pimage2, pimage3, pimage4, pid);
-       request.setAttribute("mess", "Edited!");
-       request.getRequestDispatcher("manager").forward(request, response);
+        if (pid == null || pid.isEmpty()) {
+            // Thêm mới
+            dao.insertProduct(pname, pimage, pprice, pbrand, pdescription, pcategory, pdelivery, pimage2, pimage3);
+            request.setAttribute("mess", "Đã thêm sản phẩm mới!");
+        } else {
+            // Sửa
+            dao.editProduct(pname, pimage, pprice, pbrand, pdescription, pcategory, "", "", pdelivery, pimage2, pimage3, "", pid);
+            request.setAttribute("mess", "Đã cập nhật sản phẩm!");
+        }
+        request.getRequestDispatcher("manager").forward(request, response);
 //        response.sendRedirect("manager");
     }
 

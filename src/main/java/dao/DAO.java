@@ -1382,28 +1382,24 @@ public class DAO {
         }
     }
 
-    public void insertProduct(String name, String image, String price,
-            String title, String description, String category, int sid, String model, String color, String delivery, String image2, String image3, String image4) {
-        String query = "insert Product([name],[image],[price],[title],\r\n"
-        		+ "[description],[cateID],[sell_ID],[model],\r\n"
-        		+ "[color],[delivery],[image2],[image3],[image4])\r\n"
-        		+ "values(N'"+name+"','"+image+"','"+price+"',N'"+title+"',N'"+description+"','"+category+"','"+sid+"',N'"+model+"',N'"+color+"',N'"+delivery+"','"+image2+"','"+image3+"','"+image4+"')";
+    public void insertProduct(String name, String image, String price, String brand, String description, String category, String delivery, String image2, String image3) {
+        String query = "insert into Product([name],[image],[price],[brand],[description],[cateID],[delivery],[image2],[image3])\n"
+                + "values(?,?,?,?,?,?,?,?,?)";
         try {
-        	
-            conn = new DBContext().getConnection();//mo ket noi voi sql
+            conn = new DBContext().getConnection();
             ps = conn.prepareStatement(query);
-			/*
-			 * ps.setString(1, name); ps.setString(2, image); ps.setString(3, price);
-			 * ps.setString(4, title); ps.setString(5, description); ps.setString(6,
-			 * category); ps.setInt(7, sid); ps.setString(8, model); ps.setString(9, color);
-			 * ps.setString(10, delivery); ps.setString(11, image2); ps.setString(12,
-			 * image3); ps.setString(13, image4);
-			 */
+            ps.setString(1, name);
+            ps.setString(2, image);
+            ps.setString(3, price);
+            ps.setString(4, brand);
+            ps.setString(5, description);
+            ps.setString(6, category);
+            ps.setString(7, delivery);
+            ps.setString(8, image2);
+            ps.setString(9, image3);
             ps.executeUpdate();
-           
         } catch (Exception e) {
-        	
-        	
+            e.printStackTrace();
         }
     }
     

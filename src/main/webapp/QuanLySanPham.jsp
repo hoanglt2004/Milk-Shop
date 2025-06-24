@@ -39,9 +39,9 @@
                           <h5 class="mb-0"><strong>Quản Lý Sản Phẩm</strong></h5>
                         </div>
                         <div class="col-sm-6 text-right">
-                          <button onclick="showModal('addProductModal')" class="btn btn-success">
+                          <a href="loadProduct" class="btn btn-success">
                             <i class="fa fa-plus"></i> Thêm Sản Phẩm
-                          </button>
+                          </a>
                           <form action="xuatExcelProductControl" method="get"
                             style="display: inline-block; margin-left: 10px;">
                             <button type="submit" class="btn btn-primary">
@@ -111,72 +111,27 @@
             </main>
           </div>
 
-          <!-- Add Product Modal -->
-          <div class="modal" id="addProductModal">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <form action="add" method="post">
-                  <div class="modal-header">
-                    <h5 class="modal-title">Thêm Sản Phẩm Mới</h5>
-                    <button type="button" class="close" onclick="hideModal('addProductModal')">
-                      <span>&times;</span>
-                    </button>
-                  </div>
-                  <div class="modal-body">
-                    <div class="form-group">
-                      <label>Tên sản phẩm:</label>
-                      <input type="text" name="name" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                      <label>Hình ảnh (URL):</label>
-                      <input type="text" name="image" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                      <label>Giá:</label>
-                      <input type="number" name="price" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                      <label>Thương hiệu:</label>
-                      <input type="text" name="title" class="form-control" required>
-                    </div>
-                    <div class="form-group">
-                      <label>Mô tả:</label>
-                      <textarea name="description" class="form-control" rows="3" required></textarea>
-                    </div>
-                    <div class="form-group">
-                      <label>Danh mục:</label>
-                      <select name="category" class="form-control" required>
-                        <option value="">Chọn danh mục</option>
-                        <c:forEach items="${listCC}" var="category">
-                          <option value="${category.cid}">${category.cname}</option>
-                        </c:forEach>
-                      </select>
-                    </div>
-                  </div>
-                  <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="hideModal('addProductModal')">Hủy</button>
-                    <button type="submit" class="btn btn-success">Thêm Sản Phẩm</button>
-                  </div>
-                </form>
-              </div>
-            </div>
-          </div>
-
           <!-- Minimal JavaScript -->
           <script>
             // Modal functionality
             function showModal(modalId) {
-              document.getElementById(modalId).classList.add('show');
+              var modal = document.getElementById(modalId);
+              modal.style.display = 'flex';
+              setTimeout(function () {
+                var firstInput = modal.querySelector('input,textarea,select');
+                if (firstInput) firstInput.focus();
+              }, 100);
             }
 
             function hideModal(modalId) {
-              document.getElementById(modalId).classList.remove('show');
+              var modal = document.getElementById(modalId);
+              modal.style.display = 'none';
             }
 
             // Close modal when clicking outside
             window.onclick = function (event) {
               if (event.target.classList.contains('modal')) {
-                event.target.classList.remove('show');
+                event.target.style.display = 'none';
               }
             }
 
