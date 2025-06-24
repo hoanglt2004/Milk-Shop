@@ -372,6 +372,9 @@ input[type="radio"]:checked + .sort-label {
                         </button>
                       </div>
                     </a>
+                    <c:if test="${o.discountPercent > 0}">
+                        <div class="product-badge sale-badge">-${o.discountPercent}%</div>
+                    </c:if>
                   </div>
 
                   <div class="product-card-body">
@@ -389,11 +392,24 @@ input[type="radio"]:checked + .sort-label {
                         </div>
                         <span class="rating-text">(4.5)</span>
                     </div>
-                     <div class="product-price-section">
-                        <a href="detail?pid=${o.id}" class="product-price">
-                            <fmt:formatNumber value="${o.price}" pattern="#,###" var="shopPrice"/>
-                            ${fn:replace(shopPrice, ',', '.')} VNĐ
-                        </a>
+                     <div class="product-price-section" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80px; gap: 5px; margin-top: 10px;">
+                        <c:choose>
+                            <c:when test="${o.discountPercent > 0}">
+                                <div class="price-pill" style="background-color: #c41e3a; color: white; padding: 4px 15px; border-radius: 20px; font-size: 0.9em; text-decoration: line-through; opacity: 0.9;">
+                                    <fmt:formatNumber value="${o.price}" pattern="#,##0' VNĐ'"/>
+                                </div>
+                                <div class="price-pill" style="background-color: #c41e3a; color: white; padding: 6px 20px; border-radius: 20px; font-size: 1.1em; font-weight: bold;">
+                                    <fmt:formatNumber value="${o.salePrice}" pattern="#,##0' VNĐ'"/>
+                                </div>
+                            </c:when>
+                            <c:otherwise>
+                                <!-- Placeholder to align prices -->
+                                <div style="padding: 4px 15px; font-size: 0.9em; visibility: hidden;">&nbsp;</div>
+                                <div class="price-pill" style="background-color: #c41e3a; color: white; padding: 6px 20px; border-radius: 20px; font-size: 1.1em; font-weight: bold;">
+                                    <fmt:formatNumber value="${o.price}" pattern="#,##0' VNĐ'"/>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
                     </div>
 
                   </div>

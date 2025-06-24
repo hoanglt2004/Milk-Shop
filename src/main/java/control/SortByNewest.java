@@ -28,44 +28,10 @@ public class SortByNewest extends HttpServlet {
         } else {
             list = dao.getAllProduct();
         }
-        list.sort((a, b) -> Integer.compare(b.getId(), a.getId())); // id giảm dần
+        list.sort(Comparator.comparing(Product::getId).reversed());
         PrintWriter out = response.getWriter();
         for (Product o : list) {
-            out.println("<div class=\"col-md-4 mb-5 product-card-container\">\n" +
-"                <div class=\"product-card h-100\">\n" +
-"                  <div class=\"product-image-container\">\n" +
-"                    <img class=\"product-image\" src=\"" + o.getImage() + "\" alt=\"" + o.getName() + "\">\n" +
-"                    <a href=\"detail?pid=" + o.getId() + "\">\n" +
-"                      <div class=\"quick-view-overlay\">\n" +
-"                        <button class=\"quick-view-btn\" onclick=\"window.location.href='detail?pid=" + o.getId() + "'; event.preventDefault();\">\n" +
-"                            <i class=\"fas fa-eye mr-2\"></i>Xem chi tiết\n" +
-"                        </button>\n" +
-"                      </div>\n" +
-"                    </a>\n" +
-"                  </div>\n" +
-"                  <div class=\"product-card-body\">\n" +
-"                    <h4 class=\"product-title\">\n" +
-"                        <a href=\"detail?pid=" + o.getId() + "\" title=\"View Product\">" + o.getName() + "</a>\n" +
-"                    </h4>\n" +
-"                    <p class=\"product-description\">" + o.getBrand() + "</p>\n" +
-"                    <div class=\"product-rating\">\n" +
-"                        <div class=\"stars\">\n" +
-"                            <i class=\"fas fa-star\"></i>\n" +
-"                            <i class=\"fas fa-star\"></i>\n" +
-"                            <i class=\"fas fa-star\"></i>\n" +
-"                            <i class=\"fas fa-star\"></i>\n" +
-"                            <i class=\"fas fa-star-half-alt\"></i>\n" +
-"                        </div>\n" +
-"                        <span class=\"rating-text\">(4.5)</span>\n" +
-"                    </div>\n" +
-"                     <div class=\"product-price-section\">\n" +
-"                        <a href=\"detail?pid=" + o.getId() + "\" class=\"product-price\">\n" +
-"                            " + String.format("%,.0f", o.getPrice()).replace(",", ".") + " VNĐ\n" +
-"                        </a>\n" +
-"                    </div>\n" +
-"                  </div>\n" +
-"                </div>\n" +
-"              </div>");
+            out.println(utils.ProductCardUtil.generateProductCardHtml(o));
         }
     }
     @Override

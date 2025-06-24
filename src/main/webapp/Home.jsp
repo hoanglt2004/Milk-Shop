@@ -182,7 +182,7 @@
                 <div class="row justify-content-center">
                     <c:forEach items="${listCC}" var="category">
                         <div class="col-lg-4 col-md-6 col-sm-12 mb-4">
-                            <div class="category-card card h-100" onclick="goToShopCategory(${category.cid})">
+                            <div class="category-card card h-100" onclick="goToShopCategory('${category.cid}')">
                                 <div class="card-body text-center p-4">
                                     <div class="category-icon mb-3">
                                         <c:choose>
@@ -242,7 +242,10 @@
                                     <div class="product-card">
                                         <div class="product-image-container">
                                             <img class="product-image" src="${o.image}" alt="${o.name}">
-                                            <div class="product-badge">Mới</div>
+                                            <c:if test="${o.discountPercent > 0}">
+                                                <div class="product-badge sale-badge">-${o.discountPercent}%</div>
+                                            </c:if>
+                                            <div class="product-badge new-badge">Mới</div>
                                             <div class="quick-view-overlay">
                                                 <button class="quick-view-btn" onclick="window.location.href='detail?pid=${o.id}'">
                                                     <i class="fas fa-eye mr-2"></i>Xem chi tiết
@@ -253,7 +256,7 @@
                                             <h4 class="product-title">
                                                 <a href="detail?pid=${o.id}" title="View Product">${o.name}</a>
                                             </h4>
-                                            <p class="product-description">${o.title}</p>
+                                            <p class="product-description">${o.brand}</p>
                                             <div class="product-rating">
                                                 <div class="stars">
                                                     <i class="fas fa-star"></i>
@@ -264,11 +267,24 @@
                                                 </div>
                                                 <span class="rating-text">(5.0)</span>
                                             </div>
-                                            <div class="product-price-section">
-                                                <a href="detail?pid=${o.id}" class="product-price">
-                                                    <fmt:formatNumber value="${o.price}" pattern="#,###" var="vndPrice"/>
-                                                    ${fn:replace(vndPrice, ',', '.')} VNĐ
-                                                </a>
+                                            <div class="product-price-section" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80px; gap: 5px; margin-top: 10px;">
+                                                <c:choose>
+                                                    <c:when test="${o.discountPercent > 0}">
+                                                        <div class="price-pill" style="background-color: #c41e3a; color: white; padding: 4px 15px; border-radius: 20px; font-size: 0.9em; text-decoration: line-through; opacity: 0.9;">
+                                                            <fmt:formatNumber value="${o.price}" pattern="#,##0' VNĐ'"/>
+                                                        </div>
+                                                        <div class="price-pill" style="background-color: #c41e3a; color: white; padding: 6px 20px; border-radius: 20px; font-size: 1.1em; font-weight: bold;">
+                                                            <fmt:formatNumber value="${o.salePrice}" pattern="#,##0' VNĐ'"/>
+                                                        </div>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <!-- Placeholder to align prices -->
+                                                        <div style="padding: 4px 15px; font-size: 0.9em; visibility: hidden;">&nbsp;</div>
+                                                        <div class="price-pill" style="background-color: #c41e3a; color: white; padding: 6px 20px; border-radius: 20px; font-size: 1.1em; font-weight: bold;">
+                                                             <fmt:formatNumber value="${o.price}" pattern="#,##0' VNĐ'"/>
+                                                        </div>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
                                         </div>
                                     </div>

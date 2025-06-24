@@ -83,7 +83,7 @@
                     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
                     width: 300px;
                 }
-                
+
                 /* Dropdown styling */
                 .dropdown-menu {
                     border: none;
@@ -168,30 +168,30 @@
                             <li class="nav-item <%= isShopPage ? "active" : "" %>">
                                 <a class="nav-link" href="shop"><i class="fas fa-store"></i>Cửa hàng</a>
                             </li>
-                             <li class="nav-item">
+                            <li class="nav-item">
                                 <a class="nav-link" href="#" data-toggle="modal" data-target="#supportModal"><i class="fas fa-headset"></i>Hỗ trợ</a>
                             </li>
                             
                             <!-- Search bar -->
-                            <li class="nav-item">
-                                <input type="text" name="txt" class="search-input"
-                                    placeholder="Tìm kiếm sản phẩm..." form="searchForm">
-                            </li>
+                                <li class="nav-item">
+                                    <input type="text" name="txt" class="search-input"
+                                        placeholder="Tìm kiếm sản phẩm..." form="searchForm">
+                                </li>
                         </ul>
 
                         <ul class="navbar-nav">
                              <!-- User Authentication Links -->
-                            <c:if test="${sessionScope.acc == null}">
+                                        <c:if test="${sessionScope.acc == null}">
                                 <li class="nav-item <%= isLoginPage ? "active" : "" %>">
                                     <a class="nav-link" href="login"><i class="fas fa-sign-in-alt"></i>Đăng nhập</a>
-                                </li>
+                                            </li>
                                 <li class="nav-item <%= isForgotPasswordPage ? "active" : "" %>">
                                     <a class="nav-link" href="forgotPassword"><i class="fas fa-key"></i>Quên mật khẩu</a>
-                                </li>
-                            </c:if>
+                                            </li>
+                                        </c:if>
 
                             <!-- User Dropdown Menu -->
-                            <c:if test="${sessionScope.acc != null}">
+                                        <c:if test="${sessionScope.acc != null}">
                                 <li class="nav-item dropdown">
                                     <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-user-circle"></i>Xin chào, ${sessionScope.acc.user}
@@ -206,10 +206,10 @@
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="logout"><i class="fas fa-sign-out-alt"></i>Đăng xuất</a>
                                     </div>
-                                </li>
+                                            </li>
                             </c:if>
                         </ul>
-                        
+
                         <form action="search" method="post" class="form-inline my-2 my-lg-0" id="searchForm">
                             <a class="btn btn-sm ml-3 cart-btn" href="managerCart">
                                 <i class="fa fa-shopping-cart"></i> Giỏ hàng

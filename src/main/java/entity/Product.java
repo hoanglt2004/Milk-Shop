@@ -20,6 +20,11 @@ public class Product {
     private String delivery;
     private String image2;
     private String image3;
+    
+    // Fields for discount
+    private double salePrice;
+    private int discountPercent;
+
 	public Product(int id, String name, String image, double price, String brand, String description, int cateID,
 			String delivery, String image2, String image3) {
 		
@@ -33,6 +38,8 @@ public class Product {
 		this.delivery = delivery;
 		this.image2 = image2;
 		this.image3 = image3;
+		this.salePrice = 0; // Default to 0
+        this.discountPercent = 0; // Default to 0
 	}
 	
 	// Constructor tương thích ngược với code cũ
@@ -50,16 +57,19 @@ public class Product {
 		this.image2 = image2;
 		this.image3 = image3;
 		// Bỏ qua model, color, image4 vì không còn trong schema mới
+		this.salePrice = 0; // Default to 0
+        this.discountPercent = 0; // Default to 0
 	}
 	
 	public Product() {
-		
+		this.salePrice = 0; // Default to 0
+        this.discountPercent = 0; // Default to 0
 	}
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", image=" + image + ", price=" + price + ", brand=" + brand
 				+ ", description=" + description + ", cateID=" + cateID + ", delivery=" + delivery
-				+ ", image2=" + image2 + ", image3=" + image3 + "]";
+				+ ", image2=" + image2 + ", image3=" + image3 + ", salePrice=" + salePrice + ", discountPercent=" + discountPercent + "]";
 	}
 	public int getId() {
 		return id;
@@ -154,5 +164,24 @@ public class Product {
         this.cateID = cateID;
     }
     
-    
+    @Deprecated
+    public void setSell_ID(int sell_ID) {
+        // Không làm gì, phương thức này chỉ để tương thích ngược
+    }
+
+    public double getSalePrice() {
+        return salePrice;
+    }
+
+    public void setSalePrice(double salePrice) {
+        this.salePrice = salePrice;
+    }
+
+    public int getDiscountPercent() {
+        return discountPercent;
+    }
+
+    public void setDiscountPercent(int discountPercent) {
+        this.discountPercent = discountPercent;
+    }
 }

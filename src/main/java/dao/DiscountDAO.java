@@ -192,6 +192,38 @@ public class DiscountDAO extends DBContext {
         }
     }
 
+    /**
+     * Retrieves the currently active discount for a given product ID.
+     * An active discount is one that is marked as active and where the current date is within the start and end dates.
+     * @param productId The ID of the product to check for an active discount.
+     * @return A Discount object if an active discount is found, otherwise null.
+     */
+    public Discount getActiveDiscountByProductId(int productId) {
+        String query = "SELECT * FROM Discount WHERE productID = ? AND isActive = 1 AND ? BETWEEN startDate AND endDate";
+        try (Connection conn = getConnection();
+             PreparedStatement ps = conn.prepareStatement(query)) {
+
+            ps.setInt(1, productId);
+            ps.setDate(2, new java.sql.Date(new Date().getTime()));
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Discount discount = new Discount();
+                    discount.setDiscountID(rs.getInt("discountID"));
+                    discount.setProductID(rs.getInt("productID"));
+                    discount.setPercentOff(rs.getInt("percentOff"));
+                    discount.setStartDate(rs.getDate("startDate"));
+                    discount.setEndDate(rs.getDate("endDate"));
+                    discount.setActive(rs.getBoolean("isActive"));
+                    return discount;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public static void main(String[] args) {
         // Test the connection and data
         DiscountDAO dao = new DiscountDAO();

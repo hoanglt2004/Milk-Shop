@@ -206,14 +206,25 @@
                   <div class="col-md-6">
 
                     <h5>${detail.name}</h5>
-
-                    <p>
-                      <span class="mr-1"><strong>
-                          <fmt:formatNumber value="${detail.price}" pattern="#,###" var="currentPrice" />
-                          ${fn:replace(currentPrice, ',', '.')} VNĐ
-                        </strong></span>
-                    </p>
-
+                    
+                    <div class="product-price-section mb-2">
+                      <c:choose>
+                          <c:when test="${detail.discountPercent > 0}">
+                              <span class="h4 font-weight-bold text-danger sale-price">
+                                  <fmt:formatNumber value="${detail.salePrice}" pattern="#,##0" /> VNĐ
+                              </span>
+                              <span class="text-muted original-price ml-2">
+                                  <del><fmt:formatNumber value="${detail.price}" pattern="#,##0" /> VNĐ</del>
+                              </span>
+                              <span class="badge bg-danger text-white ml-2" style="background-color: #c41e3a !important; font-size: 0.9rem; vertical-align: middle;">-${detail.discountPercent}%</span>
+                          </c:when>
+                          <c:otherwise>
+                              <span class="h4 font-weight-bold">
+                                  <fmt:formatNumber value="${detail.price}" pattern="#,##0" /> VNĐ
+                              </span>
+                          </c:otherwise>
+                      </c:choose>
+                    </div>
 
                     <p class="pt-1"><strong>Thương hiệu:</strong> ${detail.brand}</p>
                     <div class="table-responsive">
@@ -386,12 +397,29 @@
                           <h4 class="product-title">
                               <a href="detail?pid=${o.id}" title="View Product">${o.name}</a>
                           </h4>
-                           <p class="product-description">${o.title}</p>
-                           <div class="product-price-section">
-                              <a href="detail?pid=${o.id}" class="product-price">
-                                  <fmt:formatNumber value="${o.price}" pattern="#,###" var="relatedCurrentPrice" />
-                                  ${fn:replace(relatedCurrentPrice, ',', '.')} VNĐ
-                              </a>
+                           <p class="product-description">${o.brand}</p>
+                           <div class="product-price-section" style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+                              <c:choose>
+                                <c:when test="${o.discountPercent > 0}">
+                                    <div class="original-price-wrapper">
+                                        <span class="product-price original-price" style="color: rgba(255, 255, 255, 0.75); font-size: 0.9em; text-decoration: line-through;">
+                                            <fmt:formatNumber value="${o.price}" pattern="#,##0" /> VNĐ
+                                        </span>
+                                    </div>
+                                    <div class="sale-price-wrapper">
+                                        <span class="product-price sale-price" style="color: white; font-weight: bold; font-size: 1.1em;">
+                                            <fmt:formatNumber value="${o.salePrice}" pattern="#,##0" /> VNĐ
+                                        </span>
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="price-wrapper">
+                                        <span class="product-price" style="color: white; font-weight: bold; font-size: 1.1em;">
+                                          <fmt:formatNumber value="${o.price}" pattern="#,###"/> VNĐ
+                                        </span>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
                           </div>
                         </div>
 
