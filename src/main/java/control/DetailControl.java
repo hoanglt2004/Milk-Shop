@@ -6,6 +6,7 @@
 package control;
 
 import dao.DAO;
+import dao.WarehouseDAO;
 import entity.Account;
 import entity.Category;
 import entity.Product;
@@ -50,12 +51,17 @@ public class DetailControl extends HttpServlet {
         
         Product last = dao.getLast();
 
+        // Lấy số lượng còn lại từ Warehouse
+        WarehouseDAO warehouseDAO = new WarehouseDAO();
+        int remainingQuantity = warehouseDAO.getTotalRemainingStock(Integer.parseInt(id));
+
         request.setAttribute("detail", p);
         request.setAttribute("listRelatedProduct", listRelatedProduct);
         request.setAttribute("listAllReview", listAllReview);
         request.setAttribute("listAllAcount", listAllAcount);
         request.setAttribute("countAllReview", countAllReview);
         request.setAttribute("p", last);
+        request.setAttribute("remainingQuantity", remainingQuantity);
         request.getRequestDispatcher("DetailProduct.jsp").forward(request, response);
     }
 
