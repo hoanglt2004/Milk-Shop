@@ -28,6 +28,7 @@
         <!------ Include the above in your HEAD tag ------>
        <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
         <link href="css/style.css" rel="stylesheet" type="text/css"/> 
+        <link href="css/product-cards.css" rel="stylesheet" type="text/css"/>
 
 <style>
 .sort-option {
@@ -356,32 +357,44 @@ input[type="radio"]:checked + .sort-label {
 
 <c:forEach items="${listP}" var="o">
               <!-- Grid column -->
-              <div class="col-md-4 mb-5">
+              <div class="col-md-4 mb-5 product-card-container">
 
                 <!-- Card -->
-                <div class="">
+                <div class="product-card h-100">
 
-                  <div class="view zoom overlay rounded z-depth-2">
-                    <img class="img-fluid w-100"
-                      src="${o.image }" alt="Sample">
+                  <div class="product-image-container">
+                    <img class="product-image"
+                      src="${o.image }" alt="${o.name}">
                     <a href="detail?pid=${o.id}">
-                      <div class="mask">
-                        <img class="img-fluid w-100"
-                          src="${o.image }">
-                        <div class="mask rgba-black-slight"></div>
+                      <div class="quick-view-overlay">
+                        <button class="quick-view-btn" onclick="window.location.href='detail?pid=${o.id}'; event.preventDefault();">
+                            <i class="fas fa-eye mr-2"></i>Xem chi tiết
+                        </button>
                       </div>
                     </a>
                   </div>
 
-                  <div class="text-center pt-4">
-
-                    <h5>${o.name }</h5>
-                    <p>
-                        <span class="mr-1"><strong>
+                  <div class="product-card-body">
+                    <h4 class="product-title">
+                        <a href="detail?pid=${o.id}" title="View Product">${o.name}</a>
+                    </h4>
+                    <p class="product-description">${o.title}</p>
+                    <div class="product-rating">
+                        <div class="stars">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                        <span class="rating-text">(4.5)</span>
+                    </div>
+                     <div class="product-price-section">
+                        <a href="detail?pid=${o.id}" class="product-price">
                             <fmt:formatNumber value="${o.price}" pattern="#,###" var="shopPrice"/>
                             ${fn:replace(shopPrice, ',', '.')} VNĐ
-                        </strong></span>
-                    </p>
+                        </a>
+                    </div>
 
                   </div>
 

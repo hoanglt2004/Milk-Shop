@@ -27,6 +27,7 @@
           <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
           <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
           <link href="css/style.css" rel="stylesheet" type="text/css" />
+          <link href="css/product-cards.css" rel="stylesheet" type="text/css"/>
 
           <style>
             .gallery-wrap .img-big-wrap img {
@@ -62,6 +63,69 @@
               width: 100% !important;
               height: auto !important;
             }
+
+            /* New Product Gallery Styles */
+            .product-gallery-container {
+                border-radius: 15px;
+                padding: 15px;
+                background-color: #fff;
+            }
+
+            .main-image-wrapper {
+                text-align: center;
+                margin-bottom: 15px;
+                height: 450px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                overflow: hidden;
+                border-radius: 10px;
+                /* background-color: #f9f9f9; */
+                 border: 1px solid #eee;
+            }
+
+            .main-image-display {
+                max-width: 100%;
+                max-height: 100%;
+                width: auto;
+                height: 100%;
+                object-fit: contain;
+                transition: transform 0.3s ease;
+            }
+
+            .thumbnail-list {
+                display: flex;
+                justify-content: center;
+                gap: 10px;
+                flex-wrap: wrap;
+            }
+
+            .thumbnail-item {
+                width: 80px;
+                height: 80px;
+                border: 2px solid #eee;
+                border-radius: 10px;
+                cursor: pointer;
+                overflow: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .thumbnail-item:hover {
+                border-color: #c41e3a;
+                transform: scale(1.05);
+            }
+
+            .thumbnail-item.active {
+                border-color: #da1919;
+                box-shadow: 0 0 10px rgba(218, 25, 25, 0.4);
+            }
+
+            .thumbnail-img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-radius: 8px;
+            }
           </style>
         </head>
 
@@ -87,75 +151,27 @@
 
                 <div class="row">
                   <div class="col-md-6 mb-4 mb-md-0">
-
-                    <div id="mdb-lightbox-ui"></div>
-
-                    <div class="mdb-lightbox">
-
-                      <div class="row product-gallery mx-1">
-
-                        <div class="col-12 mb-0">
-                          <figure class="view overlay rounded z-depth-1 main-img" style="max-height: 450px;">
-                            <a href="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/15a.jpg"
-                              data-size="710x823">
-                              <img src="${detail.image}" class="img-fluid z-depth-1" style="margin-top: -90px;">
-                            </a>
-                          </figure>
-                          <figure class="view overlay rounded z-depth-1" style="visibility: hidden;">
-                            <a href="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/12a.jpg"
-                              data-size="710x823">
-                              <img src="${detail.image2}" class="img-fluid z-depth-1">
-                            </a>
-                          </figure>
-                          <figure class="view overlay rounded z-depth-1" style="visibility: hidden;">
-                            <a href="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/13a.jpg"
-                              data-size="710x823">
-                              <img src="${detail.image3}" class="img-fluid z-depth-1">
-                            </a>
-                          </figure>
-                          <c:if test="${not empty detail.image4}">
-                            <figure class="view overlay rounded z-depth-1" style="visibility: hidden;">
-                              <a href="https://mdbootstrap.com/img/Photos/Horizontal/E-commerce/Vertical/14a.jpg"
-                                data-size="710x823">
-                                <img src="${detail.image4}" class="img-fluid z-depth-1">
-                              </a>
-                            </figure>
-                          </c:if>
+                     <div class="product-gallery-container">
+                        <div class="main-image-wrapper">
+                            <img id="mainProductImage" src="${detail.image}" alt="${detail.name}" class="main-image-display">
                         </div>
-                        <div class="col-12">
-                          <div class="row">
-                            <div class="col-3">
-                              <div class="view overlay rounded z-depth-1 gallery-item hoverable">
-                                <img src="${detail.image}" class="img-fluid">
-                                <div class="mask rgba-white-slight"></div>
-                              </div>
+                        <div class="thumbnail-list">
+                            <div class="thumbnail-item active">
+                                <img src="${detail.image}" alt="Thumbnail 1" class="thumbnail-img" onclick="changeMainImage(this)">
                             </div>
-                            <div class="col-3">
-                              <div class="view overlay rounded z-depth-1 gallery-item hoverable">
-                                <img src="${detail.image2}" class="img-fluid">
-                                <div class="mask rgba-white-slight"></div>
-                              </div>
+                            <div class="thumbnail-item">
+                                <img src="${detail.image2}" alt="Thumbnail 2" class="thumbnail-img" onclick="changeMainImage(this)">
                             </div>
-                            <div class="col-3">
-                              <div class="view overlay rounded z-depth-1 gallery-item hoverable">
-                                <img src="${detail.image3}" class="img-fluid">
-                                <div class="mask rgba-white-slight"></div>
-                              </div>
+                            <div class="thumbnail-item">
+                                <img src="${detail.image3}" alt="Thumbnail 3" class="thumbnail-img" onclick="changeMainImage(this)">
                             </div>
                             <c:if test="${not empty detail.image4}">
-                              <div class="col-3">
-                                <div class="view overlay rounded z-depth-1 gallery-item hoverable">
-                                  <img src="${detail.image4}" class="img-fluid">
-                                  <div class="mask rgba-white-slight"></div>
-                                </div>
-                              </div>
+                            <div class="thumbnail-item">
+                                <img src="${detail.image4}" alt="Thumbnail 4" class="thumbnail-img" onclick="changeMainImage(this)">
+                            </div>
                             </c:if>
-                          </div>
                         </div>
-                      </div>
-
                     </div>
-
                   </div>
                   <div class="col-md-6">
 
@@ -320,34 +336,33 @@
 
                   <c:forEach items="${listRelatedProduct}" var="o">
                     <!-- Grid column -->
-                    <div class="col-md-6 col-lg-3 mb-5">
+                    <div class="col-md-6 col-lg-3 mb-5 product-card-container">
 
                       <!-- Card -->
-                      <div class="">
+                      <div class="product-card h-100">
 
-                        <div class="view zoom overlay z-depth-2 rounded">
-                          <img class="img-fluid w-100" src="${o.image }" alt="Sample">
-
+                        <div class="product-image-container">
+                          <img class="product-image" src="${o.image }" alt="${o.name}">
                           <a href="detail?pid=${o.id}">
-                            <div class="mask">
-                              <img class="img-fluid w-100" src="${o.image }">
-                              <div class="mask rgba-black-slight"></div>
-                            </div>
+                              <div class="quick-view-overlay">
+                                  <button class="quick-view-btn" onclick="window.location.href='detail?pid=${o.id}'; event.preventDefault();">
+                                      <i class="fas fa-eye mr-2"></i>Xem chi tiết
+                                  </button>
+                              </div>
                           </a>
                         </div>
 
-                        <div class="pt-4">
-
-                          <h5>${o.name }</h5>
-                          <p>
-                            <span class="text-danger mr-1"><strong>
-                                <fmt:formatNumber value="${o.price}" pattern="#,###" var="relatedCurrentPrice" />
-                                ${fn:replace(relatedCurrentPrice, ',', '.')} VNĐ
-                              </strong></span>
-                          </p>
-
-
-
+                        <div class="product-card-body">
+                          <h4 class="product-title">
+                              <a href="detail?pid=${o.id}" title="View Product">${o.name}</a>
+                          </h4>
+                           <p class="product-description">${o.title}</p>
+                           <div class="product-price-section">
+                              <a href="detail?pid=${o.id}" class="product-price">
+                                  <fmt:formatNumber value="${o.price}" pattern="#,###" var="relatedCurrentPrice" />
+                                  ${fn:replace(relatedCurrentPrice, ',', '.')} VNĐ
+                              </a>
+                          </div>
                         </div>
 
                       </div>
@@ -402,6 +417,20 @@
                   //Do Something to handle error
                 }
               });
+            }
+
+            function changeMainImage(thumbnailElement) {
+                // Get the source of the clicked thumbnail
+                const newImageSrc = thumbnailElement.src;
+
+                // Set the main image source
+                document.getElementById('mainProductImage').src = newImageSrc;
+
+                // Update the active state for thumbnails
+                document.querySelectorAll('.thumbnail-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                thumbnailElement.parentElement.classList.add('active');
             }
 
             function checkQuantity() {

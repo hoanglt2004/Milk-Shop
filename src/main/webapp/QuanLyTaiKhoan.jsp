@@ -39,7 +39,7 @@
                       </div>
                       <div class="col-sm-6 text-right">
                         <button class="btn btn-success me-2" onclick="openModal('addEmployeeModal')">
-                          <i class="fas fa-plus"></i> Thêm Tài Khoản
+                          <i class="fas fa-plus"></i> Thêm TK
                         </button>
                         <form action="xuatExcelAccountControl" method="get" style="display:inline-block">
                           <button type="submit" class="btn btn-primary">
@@ -157,47 +157,20 @@
           <script>
             // Modal functions
             function openModal(modalId) {
-              console.log('Opening modal:', modalId);
-              const modal = document.getElementById(modalId);
-              if (modal) {
-                modal.classList.add('show');
-                modal.style.display = 'block';
-                console.log('Modal opened successfully');
-              } else {
-                console.error('Modal not found:', modalId);
-              }
+              document.getElementById(modalId).classList.add('show');
             }
 
             function closeModal(modalId) {
-              console.log('Closing modal:', modalId);
-              const modal = document.getElementById(modalId);
-              if (modal) {
-                modal.classList.remove('show');
-                modal.style.display = 'none';
-                console.log('Modal closed successfully');
-              } else {
-                console.error('Modal not found:', modalId);
-              }
+              document.getElementById(modalId).classList.remove('show');
             }
 
             // Close modal when clicking outside
             window.onclick = function (event) {
               if (event.target.classList.contains('modal')) {
                 event.target.classList.remove('show');
-                event.target.style.display = 'none';
               }
-            }
 
-            // Close modal when pressing Escape key
-            document.addEventListener('keydown', function (event) {
-              if (event.key === 'Escape') {
-                const modals = document.querySelectorAll('.modal.show');
-                modals.forEach(modal => {
-                  modal.classList.remove('show');
-                  modal.style.display = 'none';
-                });
-              }
-            });
+            }
 
             // Simple search functionality
             document.getElementById('searchInput').addEventListener('keyup', function () {
@@ -207,16 +180,6 @@
                 const text = row.textContent.toLowerCase();
                 row.style.display = text.includes(searchText) ? '' : 'none';
               });
-            });
-
-            // Debug: Check if modal exists on page load
-            document.addEventListener('DOMContentLoaded', function () {
-              const modal = document.getElementById('addEmployeeModal');
-              if (modal) {
-                console.log('Modal found on page load');
-              } else {
-                console.error('Modal not found on page load');
-              }
             });
           </script>
         </body>
