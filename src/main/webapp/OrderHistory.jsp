@@ -6,18 +6,19 @@
                 <html lang="vi">
 
                 <head>
-                    <meta charset="UTF-8">
-                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+                    <meta charset="utf-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
                     <title>Lịch sử mua hàng - Milk Shop</title>
-
-                    <!-- Bootstrap CSS -->
-                    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet">
-                    <!-- Font Awesome -->
-                    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-                    <!-- Custom styles -->
-                    <link rel="stylesheet" href="css/style.css">
+                    <!-- Bootstrap 4.6.0 -->
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                    <!-- Font Awesome 5.15.4 -->
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+                    <!-- Google Fonts Roboto -->
+                    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+                    <!-- MDBootstrap (nếu cần) -->
+                    <link rel="stylesheet" href="css/mdb.min.css"/>
+                    <!-- Custom CSS -->
+                    <link rel="stylesheet" href="css/style.css"/>
 
                     <style>
                         body {

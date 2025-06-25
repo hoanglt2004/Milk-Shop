@@ -6,45 +6,21 @@
                 <html>
 
                 <head>
-                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-                    <title>Home Page</title>
-                    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"
-                        id="bootstrap-css">
-                    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-                    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-                    <!------ Include the above in your HEAD tag ------>
-                    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-                        rel="stylesheet"
-                        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
-                        crossorigin="anonymous">
-                    <link href="css/style.css" rel="stylesheet" type="text/css" />
-                    <link href="css/categories.css" rel="stylesheet" type="text/css" />
-                    <link href="css/product-cards.css" rel="stylesheet" type="text/css" />
-
-                    <!-- Font Awesome -->
-                    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
-                    <!-- Google Fonts Roboto -->
-                    <link rel="stylesheet"
-                        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
-                    <!-- MDB -->
-                    <link rel="stylesheet" href="css/mdb.min.css" />
-                    <!-- Custom styles -->
-                    <link rel="stylesheet" href="css/style.css" />
-
-                    <!-- Roboto Font -->
-                    <link rel="stylesheet"
-                        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700&display=swap">
-                    <!-- Font Awesome -->
-                    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-                    <!-- Bootstrap core CSS -->
-                    <link rel="stylesheet" href="https://mdbootstrap.com/previews/ecommerce-demo/css/bootstrap.min.css">
-                    <!-- Material Design Bootstrap -->
-                    <link rel="stylesheet" href="https://mdbootstrap.com/previews/ecommerce-demo/css/mdb-pro.min.css">
-                    <!-- Material Design Bootstrap Ecommerce -->
-                    <link rel="stylesheet"
-                        href="https://mdbootstrap.com/previews/ecommerce-demo/css/mdb.ecommerce.min.css">
-                    <!-- Your custom styles (optional) -->
+                    <meta charset="utf-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                    <title>Home Page</title>
+                    <!-- Bootstrap 4.6.0 -->
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                    <!-- Font Awesome 5.15.4 -->
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+                    <!-- Google Fonts Roboto -->
+                    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+                    <!-- MDBootstrap (nếu cần) -->
+                    <link rel="stylesheet" href="css/mdb.min.css"/>
+                    <!-- Custom CSS -->
+                    <link rel="stylesheet" href="css/style.css"/>
+                    <link rel="stylesheet" href="css/categories.css"/>
+                    <link rel="stylesheet" href="css/product-cards.css"/>
 
                     <style>
                         /* Carousel styling */
