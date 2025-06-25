@@ -145,6 +145,124 @@
             .breadcrumb-item+.breadcrumb-item::before {
                 color: #6c757d;
             }
+
+            /* Product Form Styles */
+            .product-form {
+                padding: 20px 0;
+            }
+
+            .quantity-label {
+                font-weight: 500;
+                color: #333;
+                font-size: 1rem;
+            }
+
+            .quantity-control {
+                margin: 15px 0;
+            }
+
+            /* Quantity Input Styles */
+            .def-number-input {
+                border: 1px solid #e0e0e0;
+                border-radius: 8px;
+                overflow: hidden;
+                width: fit-content;
+                background: #fff;
+            }
+
+            .def-number-input .quantity {
+                width: 80px;
+                min-width: 80px;
+                border: none;
+                text-align: center;
+                font-size: 1rem;
+                padding: 8px;
+                color: #333;
+                -moz-appearance: textfield;
+            }
+
+            .def-number-input .quantity::-webkit-outer-spin-button,
+            .def-number-input .quantity::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            .quantity-btn {
+                width: 40px;
+                height: 40px;
+                background-color: #f8f9fa;
+                border: none;
+                color: #333;
+                font-size: 1.2rem;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+
+            .quantity-btn:hover {
+                background-color: #e9ecef;
+            }
+
+            .quantity-btn.minus::before {
+                content: "-";
+            }
+
+            .quantity-btn.plus::before {
+                content: "+";
+            }
+
+            /* Action Buttons */
+            .action-buttons {
+                display: flex;
+                gap: 15px;
+                flex-wrap: wrap;
+            }
+
+            .buy-now-btn {
+                min-width: 160px;
+                background-color: #c41e3a;
+                border: none;
+                text-transform: uppercase;
+                font-weight: 500;
+                letter-spacing: 0.5px;
+                transition: all 0.3s ease;
+            }
+
+            .buy-now-btn:hover {
+                background-color: #a01830;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+
+            .add-to-cart-btn {
+                min-width: 160px;
+                background-color: #fff;
+                border: 2px solid #c41e3a;
+                color: #c41e3a;
+                text-transform: uppercase;
+                font-weight: 500;
+                letter-spacing: 0.5px;
+                transition: all 0.3s ease;
+            }
+
+            .add-to-cart-btn:hover {
+                background-color: #f8f9fa;
+                color: #a01830;
+                border-color: #a01830;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+
+            /* Responsive adjustments */
+            @media (max-width: 576px) {
+                .action-buttons {
+                    flex-direction: column;
+                }
+                
+                .buy-now-btn,
+                .add-to-cart-btn {
+                    width: 100%;
+                }
+            }
           </style>
         </head>
 
@@ -232,35 +350,37 @@
                     </div>
                     <hr>
 
-                    <form action="addCart?pid=${detail.id }" method="post">
+                    <form action="addCart?pid=${detail.id }" method="post" class="product-form">
                       <div class="table-responsive mb-2">
                         <table class="table table-sm table-borderless">
                           <tbody>
                             <tr>
                               <td class="pl-0 pb-0 w-25">
-                                Quantity
-                                <c:if test="${remainingQuantity > 0}">
-                                  <span class="text-success">(<span id="stock-available">${remainingQuantity}</span> sản
-                                    phẩm có sẵn)</span>
-                                </c:if>
-                                <c:if test="${remainingQuantity == 0}">
-                                  <span class="text-danger">(Hết hàng)</span>
-                                </c:if>
+                                <label class="quantity-label">
+                                  Quantity
+                                  <c:if test="${remainingQuantity > 0}">
+                                    <span class="text-success">(<span id="stock-available">${remainingQuantity}</span> sản
+                                      phẩm có sẵn)</span>
+                                  </c:if>
+                                  <c:if test="${remainingQuantity == 0}">
+                                    <span class="text-danger">(Hết hàng)</span>
+                                  </c:if>
+                                </label>
                               </td>
                             </tr>
                             <tr>
                               <td class="pl-0">
-                                <div class="mt-1">
-                                  <div class="def-number-input number-input safari_only mb-0"
+                                <div class="quantity-control mt-1">
+                                  <div class="def-number-input number-input safari_only"
                                     style="display: flex; align-items: center;">
                                     <button type="button"
                                       onclick="this.parentNode.querySelector('input[type=number]').stepDown(); checkQuantity();"
-                                      class="minus"></button>
+                                      class="minus quantity-btn"></button>
                                     <input class="quantity" min="0" name="quantity" value="1" type="number"
                                       onchange="checkQuantity();" oninput="checkQuantity();">
                                     <button type="button"
                                       onclick="this.parentNode.querySelector('input[type=number]').stepUp(); checkQuantity();"
-                                      class="plus"></button>
+                                      class="plus quantity-btn"></button>
                                   </div>
                                   <div id="quantity-warning"
                                     style="color: red; font-size: 0.9em; margin-top: 5px; display: none;">
@@ -272,11 +392,13 @@
                           </tbody>
                         </table>
                       </div>
-                      <div class="mt-1">
-                        <button type="submit" class="btn btn-primary btn-md mr-1 mb-2">Buy now</button>
-                        <button type="submit" class="btn btn-light btn-md mr-1 mb-2"><i
-                            class="fas fa-shopping-cart pr-2"></i>Add to
-                          cart</button>
+                      <div class="action-buttons mt-3">
+                        <button type="submit" class="btn btn-primary btn-lg buy-now-btn">
+                          <i class="fas fa-bolt me-2"></i>Mua ngay
+                        </button>
+                        <button type="submit" class="btn btn-light btn-lg add-to-cart-btn">
+                          <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
+                        </button>
                       </div>
                     </form>
 
@@ -371,47 +493,61 @@
                   <c:forEach items="${listRelatedProduct}" var="o">
                     <!-- Grid column -->
                     <div class="col-md-6 col-lg-3 mb-4">
-
-                      <!-- Card -->
-                      <div class="card h-100 product-card">
-
+                      <div class="card h-100 product-card d-flex flex-column">
                         <div class="bg-image hover-overlay ripple product-image-container" data-mdb-ripple-color="light">
-                          <img class="img-fluid w-100 product-image" src="${o.image }" alt="${o.name}">
+                          <img class="img-fluid w-100 product-image" src="${o.image}" alt="${o.name}">
                           <a href="detail?pid=${o.id}">
-                              <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                            <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
                           </a>
+                          <c:if test="${o.discountPercent > 0}">
+                            <div class="product-badge sale-badge">-${o.discountPercent}%</div>
+                          </c:if>
                         </div>
 
-                        <div class="card-body product-card-body">
-                          <h5 class="card-title product-title">
+                        <div class="card-body product-card-body d-flex flex-column">
+                          <div class="flex-grow-1">
+                            <h5 class="card-title product-title" style="min-height: 48px;">
                               <a href="detail?pid=${o.id}" title="View Product">${o.name}</a>
-                          </h5>
-                           <p class="text-muted product-description">${o.brand}</p>
-                           <div class="product-price-section" style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-                              <c:choose>
-                                <c:when test="${o.discountPercent > 0}">
+                            </h5>
+                            <p class="text-muted product-description" style="min-height: 24px;">${o.brand}</p>
+                            <div class="product-rating">
+                              <div class="stars text-warning">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                              </div>
+                              <span class="rating-text">(5.0)</span>
+                            </div>
+                          </div>
+
+                          <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center">
+                              <div class="product-price">
+                                <c:choose>
+                                  <c:when test="${o.discountPercent > 0}">
                                     <p class="text-muted mb-0" style="text-decoration: line-through;">
-                                        <fmt:formatNumber value="${o.price}" pattern="#,##0" /> VNĐ
+                                      <fmt:formatNumber value="${o.price}" pattern="#,##0' VNĐ'" />
                                     </p>
                                     <h6 class="mb-0 font-weight-bold text-danger">
-                                        <fmt:formatNumber value="${o.salePrice}" pattern="#,##0" /> VNĐ
+                                      <fmt:formatNumber value="${o.salePrice}" pattern="#,##0' VNĐ'" />
                                     </h6>
-                                </c:when>
-                                <c:otherwise>
-                                     <h6 class="mb-0 font-weight-bold text-danger">
-                                          <fmt:formatNumber value="${o.price}" pattern="#,###"/> VNĐ
-                                        </h6>
-                                </c:otherwise>
-                            </c:choose>
-                          </div>
-                           <div class="d-flex justify-content-center mt-3">
-                               <a href="detail?pid=${o.id}" class="btn btn-primary btn-rounded btn-sm"><i class="fas fa-eye me-2"></i>Xem</a>
+                                  </c:when>
+                                  <c:otherwise>
+                                    <h6 class="mb-0 font-weight-bold text-danger">
+                                      <fmt:formatNumber value="${o.price}" pattern="#,##0' VNĐ'" />
+                                    </h6>
+                                  </c:otherwise>
+                                </c:choose>
+                              </div>
+                              <a href="detail?pid=${o.id}" class="btn btn-primary btn-rounded btn-sm">
+                                <i class="fas fa-eye me-2"></i>Xem
+                              </a>
+                            </div>
                           </div>
                         </div>
-
                       </div>
-                      <!-- Card -->
-
                     </div>
                     <!-- Grid column -->
                   </c:forEach>

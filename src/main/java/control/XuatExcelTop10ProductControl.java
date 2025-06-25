@@ -6,35 +6,21 @@
 package control;
 
 import dao.DAO;
-
-import entity.Account;
-import entity.Category;
-import entity.Invoice;
 import entity.Product;
 import entity.SoLuongDaBan;
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
-import java.util.Random;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-
-
-
 
 @WebServlet(name = "XuatExcelTop10ProductControl", urlPatterns = {"/xuatExcelTop10ProductControl"})
 public class XuatExcelTop10ProductControl extends HttpServlet {
@@ -50,114 +36,66 @@ public class XuatExcelTop10ProductControl extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-      
-        DAO dao = new DAO();
-        List<Product> listAllProduct = dao.getAllProduct();
-        List<SoLuongDaBan> listTop10Product = dao.getTop10SanPhamBanChay();
-        
-  
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=top-10-san-pham-ban-chay.xlsx");
 
-        int maximum=2147483647;
-        int minimum=1;
-        
-        Random rn = new Random();
-        int range = maximum - minimum + 1;
-        int randomNum =  rn.nextInt(range) + minimum;
+        try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+            XSSFSheet sheet = workbook.createSheet("Top 10 sản phẩm bán chạy");
+            
+            // Create header style
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+            
+            // Create header row
+            XSSFRow headerRow = sheet.createRow(0);
+            String[] headers = {"ID", "Tên sản phẩm", "Hình ảnh", "Giá", "Tiêu đề", "Mô tả", "Model", "Màu sắc", "Vận chuyển", "Hình ảnh 2", "Hình ảnh 3", "Số lượng đã bán"};
+            
+            for (int i = 0; i < headers.length; i++) {
+                XSSFCell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+                sheet.autoSizeColumn(i);
+            }
 
-        
-        // Tạo thư mục nếu chưa tồn tại
-File directory = new File("C:\\Users\\ADMIN\\Documents\\ExcelWebBanSua");
-if (!directory.exists()) {
-    directory.mkdirs();
-}
+            // Get data from database
+            DAO dao = new DAO();
+            List<Product> listAllProduct = dao.getAllProduct();
+            List<SoLuongDaBan> listTop10Product = dao.getTop10SanPhamBanChay();
 
-FileOutputStream file=new FileOutputStream("C:\\Users\\ADMIN\\Documents\\ExcelWebBanSua\\"+"top-10-san-pham-ban-chay-"+Integer.toString(randomNum)+".xlsx");
-        XSSFWorkbook workbook=new XSSFWorkbook();
-        XSSFSheet workSheet=workbook.createSheet("1");
-        XSSFRow row;
-        XSSFCell cell0;
-        XSSFCell cell1;
-        XSSFCell cell2;
-        XSSFCell cell3;
-        XSSFCell cell4;
-        XSSFCell cell5;
-        XSSFCell cell6;
-        XSSFCell cell7;
-        XSSFCell cell8;
-        XSSFCell cell9;
-        XSSFCell cell10;
-        XSSFCell cell11;
-        
-        row=workSheet.createRow(0);
-        cell0=row.createCell(0);
-        cell0.setCellValue("ID");
-        cell1=row.createCell(1);
-        cell1.setCellValue("Name");
-        cell2=row.createCell(2);
-        cell2.setCellValue("Image");
-        cell3=row.createCell(3);
-                        cell3.setCellValue("Giá (VNĐ)");
-        cell4=row.createCell(4);
-        cell4.setCellValue("Title");
-        cell5=row.createCell(5);
-        cell5.setCellValue("Description");
-        cell5=row.createCell(6);
-        cell5.setCellValue("Model");
-        cell5=row.createCell(7);
-        cell5.setCellValue("Color");
-        cell5=row.createCell(8);
-        cell5.setCellValue("Delivery");
-        cell5=row.createCell(9);
-        cell5.setCellValue("Image");
-        cell5=row.createCell(10);
-        cell5.setCellValue("Image");
-        cell5=row.createCell(11);
-        cell5.setCellValue("Số lượng đã bán");
-        
-        int i=0;
-        
-        
-        for (SoLuongDaBan soluong : listTop10Product) {
-        	   for (Product pro : listAllProduct) {
-        		   if(soluong.getProductID() == pro.getId()) {
-        			   	i=i+1;
-             			 row=workSheet.createRow(i);
-             			 cell0=row.createCell(0);
-             		     cell0.setCellValue(pro.getId());
-             		     cell1=row.createCell(1);
-             		     cell1.setCellValue(pro.getName());
-             		     cell2=row.createCell(2);
-             		     cell2.setCellValue(pro.getImage());
-             		     cell3=row.createCell(3);
-             		     cell3.setCellValue(pro.getPrice());	
-             		     cell4=row.createCell(4);
-             		     cell4.setCellValue(pro.getTitle());	
-             		     cell4=row.createCell(5);
-             		     cell4.setCellValue(pro.getDescription());	
-             		     cell4=row.createCell(6);
-             		     cell4.setCellValue(pro.getModel());	
-             		     cell4=row.createCell(7);
-             		     cell4.setCellValue(pro.getColor());	
-             		     cell4=row.createCell(8);
-             		     cell4.setCellValue(pro.getDelivery());	
-             		     cell4=row.createCell(9);
-             		     cell4.setCellValue(pro.getImage2());	
-             		     cell4=row.createCell(10);
-             		     cell4.setCellValue(pro.getImage3());	
-             		     cell4=row.createCell(11);
-             		     cell4.setCellValue(soluong.getSoLuongDaBan());	
-        		   }	
-               }
+            // Fill data rows
+            int rowNum = 1;
+            for (SoLuongDaBan soluong : listTop10Product) {
+                for (Product pro : listAllProduct) {
+                    if (soluong.getProductID() == pro.getId()) {
+                        XSSFRow row = sheet.createRow(rowNum++);
+                        row.createCell(0).setCellValue(pro.getId());
+                        row.createCell(1).setCellValue(pro.getName());
+                        row.createCell(2).setCellValue(pro.getImage());
+                        row.createCell(3).setCellValue(pro.getPrice());
+                        row.createCell(4).setCellValue(pro.getTitle());
+                        row.createCell(5).setCellValue(pro.getDescription());
+                        row.createCell(6).setCellValue(pro.getModel());
+                        row.createCell(7).setCellValue(pro.getColor());
+                        row.createCell(8).setCellValue(pro.getDelivery());
+                        row.createCell(9).setCellValue(pro.getImage2());
+                        row.createCell(10).setCellValue(pro.getImage3());
+                        row.createCell(11).setCellValue(soluong.getSoLuongDaBan());
+                    }
+                }
+            }
+
+            // Auto-size columns
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            // Write to response output stream
+            workbook.write(response.getOutputStream());
+        } catch (Exception e) {
+            response.getWriter().println("Error exporting Excel: " + e.getMessage());
         }
-        
-   
-        workbook.write(file);
-        workbook.close();
-        file.close();
-        
-        request.setAttribute("mess", "Đã xuất file Excel thành công!");
-        request.getRequestDispatcher("top10").forward(request, response); 
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

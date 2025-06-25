@@ -3,10 +3,11 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi">
 
 <head>
   
+   <meta charset="UTF-8">
    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
@@ -126,7 +127,9 @@ input[type="radio"]:checked + .sort-label {
 
               <div class="text-muted small text-uppercase mb-5">
 			<c:forEach items="${listCC}" var="o">
-                <p class="mb-3"><a href="#" onclick="load('${o.cid}'); return false;" class="card-link-secondary">${o.cname}</a></p>
+                    <p class="mb-3">
+                        <a href="#!" class="card-link-secondary category-link" data-category="${o.cid}" onclick="loadCategory(${o.cid}); return false;">${o.cname}</a>
+                    </p>
               </c:forEach>
               </div>
 
@@ -364,24 +367,46 @@ input[type="radio"]:checked + .sort-label {
   
 
    <jsp:include page="Footer.jsp"></jsp:include>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <!-- Footer -->
-
-
-
-  <!-- SCRIPTS -->
+  
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <!-- Bootstrap core JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
   <!-- MDB -->
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.js"></script>
   <!-- Custom scripts -->
+  <script type="text/javascript" src="js/script.js"></script>
+
+  <!-- Shop page specific scripts -->
   <script>
     let filterTimeout;
+
+    // Initialize shop page and handle category filtering
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryId = urlParams.get('cid');
+        
+        if (categoryId) {
+            // If category ID is present in URL, load that category
+            loadCategory(categoryId);
+            
+            // Highlight the active category in sidebar
+            const categoryLink = document.querySelector(`.category-link[data-category="${categoryId}"]`);
+            if (categoryLink) {
+                categoryLink.classList.add('active');
+            }
+        } else {
+            // If no category is selected, initialize page normally
+            initializeShopPage();
+        }
+    });
 
     function applyFilters(useTimeout = true) {
         if (useTimeout) {
             clearTimeout(filterTimeout);
             filterTimeout = setTimeout(() => {
                 performAjaxFilter();
-            }, 500); // Wait 500ms before sending request
+            }, 500);
         } else {
             performAjaxFilter();
         }
@@ -398,7 +423,6 @@ input[type="radio"]:checked + .sort-label {
         if (!sortType) {
             sortType = document.querySelector('input[name="sortOption"]:checked')?.value || 'default';
         }
-
 
         $.ajax({
             url: "shop", // All requests go to ShopControl
@@ -470,9 +494,66 @@ input[type="radio"]:checked + .sort-label {
             loadAllProducts();
         }
     }         
+
+    function loadCategory(categoryId) {
+        // Clear search input and other filters
+        document.getElementById('searchInput').value = '';
+        document.querySelectorAll('input[name="priceSort"]').forEach(input => input.checked = false);
+        document.getElementById('priceMin').value = '';
+        document.getElementById('priceMax').value = '';
+        
+        // Highlight active category
+        document.querySelectorAll('.category-link').forEach(link => {
+            if (link.dataset.category == categoryId) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+
+        // Load products by category
+        $.ajax({
+            url: "category",
+            type: "get",
+            data: {
+                cid: categoryId
+            },
+            success: function (responseData) {
+                document.getElementById("content").innerHTML = responseData;
+                
+                // Update URL
+                const currentUrl = new URL(window.location.href);
+                currentUrl.searchParams.set('cid', categoryId);
+                window.history.pushState({}, '', currentUrl);
+            },
+            error: function(xhr) {
+                console.error('Error loading category:', xhr);
+            }
+        });
+    }
+
+    // Add styles for active category
+    const style = document.createElement('style');
+    style.textContent = `
+        .category-link {
+            color: #666;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .category-link:hover {
+            color: #da1919;
+            text-decoration: none;
+            transform: translateX(5px);
+        }
+        .category-link.active {
+            color: #da1919;
+            font-weight: bold;
+        }
+    `;
+    document.head.appendChild(style);
   </script>
-    <!-- Custom scripts -->
-    <script type="text/javascript" src="js/script.js"></script>
+
 </body>
 
 </html>

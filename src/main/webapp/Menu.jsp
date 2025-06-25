@@ -191,9 +191,10 @@
                                         </c:if>
 
                             <!-- User Dropdown Menu -->
-                                        <c:if test="${sessionScope.acc != null}">
+                            <c:if test="${sessionScope.acc != null}">
                                 <li class="nav-item dropdown">
-                                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" 
+                                       data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                         <i class="fas fa-user-circle"></i>Xin chào, ${sessionScope.acc.user}
                                     </a>
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
@@ -206,7 +207,7 @@
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="logout"><i class="fas fa-sign-out-alt"></i>Đăng xuất</a>
                                     </div>
-                                            </li>
+                                </li>
                             </c:if>
                         </ul>
 

@@ -1950,6 +1950,26 @@ public class DAO {
 
     public List<Product> getFilteredAndSortedProducts(String cid, String searchKeyword, String sortType, String priceMinStr, String priceMaxStr) {
         List<Product> list = new ArrayList<>();
+        
+        // First check if the category exists and has products
+        if (cid != null && !cid.isEmpty()) {
+            try {
+                String checkQuery = "SELECT COUNT(*) FROM Product WHERE cateID = ?";
+                try (Connection checkConn = new DBContext().getConnection();
+                     PreparedStatement checkPs = checkConn.prepareStatement(checkQuery)) {
+                    checkPs.setInt(1, Integer.parseInt(cid));
+                    ResultSet checkRs = checkPs.executeQuery();
+                    if (checkRs.next() && checkRs.getInt(1) == 0) {
+                        // If no products in this category, return empty list
+                        return list;
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return list;
+            }
+        }
+
         StringBuilder query = new StringBuilder("SELECT p.*, d.percentOff as discountPercent, (p.price * (100 - ISNULL(d.percentOff, 0)) / 100) as salePrice FROM Product p LEFT JOIN Discount d ON p.id = d.productID AND d.isActive = 1 AND GETDATE() BETWEEN d.startDate AND d.endDate WHERE 1=1");
 
         if (cid != null && !cid.isEmpty()) {

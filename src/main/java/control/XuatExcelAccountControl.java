@@ -6,34 +6,20 @@
 package control;
 
 import dao.DAO;
-
 import entity.Account;
-import entity.Category;
-import entity.Invoice;
-import entity.Product;
-
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
-import java.util.Random;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-
-
-
 
 @WebServlet(name = "XuatExcelAccountControl", urlPatterns = {"/xuatExcelAccountControl"})
 public class XuatExcelAccountControl extends HttpServlet {
@@ -49,70 +35,54 @@ public class XuatExcelAccountControl extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-      
-        DAO dao = new DAO();
-        List<Account> list = dao.getAllAccount();
-        
-        int maximum=2147483647;
-        int minimum=1;
-        
-        Random rn = new Random();
-        int range = maximum - minimum + 1;
-        int randomNum =  rn.nextInt(range) + minimum;
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=danh-sach-tai-khoan.xlsx");
 
-        
-        // Tạo thư mục nếu chưa tồn tại
-File directory = new File("C:\\Users\\ADMIN\\Documents\\ExcelWebBanSua");
-if (!directory.exists()) {
-    directory.mkdirs();
-}
+        try (XSSFWorkbook workbook = new XSSFWorkbook()) {
+            XSSFSheet sheet = workbook.createSheet("Danh sách tài khoản");
+            
+            // Create header style
+            CellStyle headerStyle = workbook.createCellStyle();
+            Font headerFont = workbook.createFont();
+            headerFont.setBold(true);
+            headerStyle.setFont(headerFont);
+            
+            // Create header row
+            XSSFRow headerRow = sheet.createRow(0);
+            String[] headers = {"ID", "Tên đăng nhập", "Là người bán hàng", "Là Admin", "Email"};
+            
+            for (int i = 0; i < headers.length; i++) {
+                XSSFCell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+                cell.setCellStyle(headerStyle);
+                sheet.autoSizeColumn(i);
+            }
 
-FileOutputStream file=new FileOutputStream("C:\\Users\\ADMIN\\Documents\\ExcelWebBanSua\\"+"tai-khoan-"+Integer.toString(randomNum)+".xlsx");
-        XSSFWorkbook workbook=new XSSFWorkbook();
-        XSSFSheet workSheet=workbook.createSheet("1");
-        XSSFRow row;
-        XSSFCell cell0;
-        XSSFCell cell1;
-        XSSFCell cell2;
-        XSSFCell cell3;
-        XSSFCell cell4;
-        
-        row=workSheet.createRow(0);
-        cell0=row.createCell(0);
-        cell0.setCellValue("ID");
-        cell1=row.createCell(1);
-        cell1.setCellValue("Username");
-        cell2=row.createCell(2);
-        cell2.setCellValue("Là người bán hàng");
-        cell3=row.createCell(3);
-        cell3.setCellValue("Là Admin");
-        cell4=row.createCell(4);
-        cell4.setCellValue("Email");
-        
-        int i=0;
-        
-        for (Account acc : list) {
-        	i=i+1;
-        			 row=workSheet.createRow(i);
-        			 cell0=row.createCell(0);
-        		     cell0.setCellValue(acc.getId());
-        		     cell1=row.createCell(1);
-        		     cell1.setCellValue(acc.getUser());
-        		     cell2=row.createCell(2);
-        		     cell2.setCellValue(acc.getIsSell());
-        		     cell3=row.createCell(3);
-        		     cell3.setCellValue(acc.getIsAdmin());	
-        		     cell4=row.createCell(4);
-        		     cell4.setCellValue(acc.getEmail());	
+            // Get data from database
+            DAO dao = new DAO();
+            List<Account> list = dao.getAllAccount();
+
+            // Fill data rows
+            int rowNum = 1;
+            for (Account acc : list) {
+                XSSFRow row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(acc.getId());
+                row.createCell(1).setCellValue(acc.getUser());
+                row.createCell(2).setCellValue(acc.getIsSell());
+                row.createCell(3).setCellValue(acc.getIsAdmin());
+                row.createCell(4).setCellValue(acc.getEmail());
+            }
+
+            // Auto-size columns
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+
+            // Write to response output stream
+            workbook.write(response.getOutputStream());
+        } catch (Exception e) {
+            response.getWriter().println("Error exporting Excel: " + e.getMessage());
         }
-               
-        workbook.write(file);
-        workbook.close();
-        file.close();
-        
-        request.setAttribute("mess", "Đã xuất file Excel thành công!");
-        request.getRequestDispatcher("managerAccount").forward(request, response); 
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

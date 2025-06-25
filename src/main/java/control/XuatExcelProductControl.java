@@ -6,19 +6,14 @@
 package control;
 
 import dao.DAO;
-
 import entity.Account;
 import entity.Category;
 import entity.Invoice;
 import entity.Product;
 
-import java.io.File;
-import java.io.FileOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
-import java.util.Random;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -30,12 +25,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-
-
-
-
-
-
 
 @WebServlet(name = "XuatExcelProductControl", urlPatterns = {"/xuatExcelProductControl"})
 public class XuatExcelProductControl extends HttpServlet {
@@ -51,110 +40,62 @@ public class XuatExcelProductControl extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");
-      
-        DAO dao = new DAO();
-        List<Product> list = dao.getAllProduct();
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=danh-sach-san-pham.xlsx");
         
-        System.out.print(list.get(0));
-
-      
-
-        
-        int maximum=2147483647;
-        int minimum=1;
-        
-        Random rn = new Random();
-        int range = maximum - minimum + 1;
-        int randomNum =  rn.nextInt(range) + minimum;
-
-        
-        // Tạo thư mục nếu chưa tồn tại
-File directory = new File("C:\\Users\\ADMIN\\Documents\\ExcelWebBanSua");
-if (!directory.exists()) {
-    directory.mkdirs();
-}
-
-FileOutputStream file=new FileOutputStream("C:\\Users\\ADMIN\\Documents\\ExcelWebBanSua\\"+"san-pham"+Integer.toString(randomNum)+".xlsx");
-        XSSFWorkbook workbook=new XSSFWorkbook();
-        XSSFSheet workSheet=workbook.createSheet("1");
-        XSSFRow row;
-        XSSFCell cell0;
-        XSSFCell cell1;
-        XSSFCell cell2;
-        XSSFCell cell3;
-        XSSFCell cell4;
-        XSSFCell cell5;
-        XSSFCell cell6;
-        XSSFCell cell7;
-        XSSFCell cell8;
-        XSSFCell cell9;
-        XSSFCell cell10;
-        XSSFCell cell11;
-        
-        row=workSheet.createRow(0);
-        cell0=row.createCell(0);
-        cell0.setCellValue("ID");
-        cell1=row.createCell(1);
-        cell1.setCellValue("Name");
-        cell2=row.createCell(2);
-        cell2.setCellValue("Image");
-        cell3=row.createCell(3);
-                        cell3.setCellValue("Giá (VNĐ)");
-        cell4=row.createCell(4);
-        cell4.setCellValue("Title");
-        cell5=row.createCell(5);
-        cell5.setCellValue("Description");
-        cell5=row.createCell(6);
-        cell5.setCellValue("Model");
-        cell5=row.createCell(7);
-        cell5.setCellValue("Color");
-        cell5=row.createCell(8);
-        cell5.setCellValue("Delivery");
-        cell5=row.createCell(9);
-        cell5.setCellValue("Image");
-        cell5=row.createCell(10);
-        cell5.setCellValue("Image");
-        cell5=row.createCell(11);
-        cell5.setCellValue("Image");
-        
-        int i=0;
-        
-        for (Product pro : list) {
-        	i=i+1;
-        			 row=workSheet.createRow(i);
-        			 cell0=row.createCell(0);
-        		     cell0.setCellValue(pro.getId());
-        		     cell1=row.createCell(1);
-        		     cell1.setCellValue(pro.getName());
-        		     cell2=row.createCell(2);
-        		     cell2.setCellValue(pro.getImage());
-        		     cell3=row.createCell(3);
-        		     cell3.setCellValue(pro.getPrice());	
-        		     cell4=row.createCell(4);
-        		     cell4.setCellValue(pro.getTitle());	
-        		     cell4=row.createCell(5);
-        		     cell4.setCellValue(pro.getDescription());	
-        		     cell4=row.createCell(6);
-        		     cell4.setCellValue(pro.getModel());	
-        		     cell4=row.createCell(7);
-        		     cell4.setCellValue(pro.getColor());	
-        		     cell4=row.createCell(8);
-        		     cell4.setCellValue(pro.getDelivery());	
-        		     cell4=row.createCell(9);
-        		     cell4.setCellValue(pro.getImage2());	
-        		     cell4=row.createCell(10);
-        		     cell4.setCellValue(pro.getImage3());	
-        		     cell4=row.createCell(11);
-        		     cell4.setCellValue(pro.getImage4());	
+        try {
+            DAO dao = new DAO();
+            List<Product> list = dao.getAllProduct();
+            
+            XSSFWorkbook workbook = new XSSFWorkbook();
+            XSSFSheet sheet = workbook.createSheet("Danh sách sản phẩm");
+            
+            // Create header row
+            XSSFRow headerRow = sheet.createRow(0);
+            String[] headers = {"ID", "Tên sản phẩm", "Hình ảnh", "Giá (VNĐ)", "Thương hiệu", "Mô tả", "Danh mục", "Giao hàng", "Hình ảnh 2", "Hình ảnh 3", "Hình ảnh 4"};
+            
+            for (int i = 0; i < headers.length; i++) {
+                XSSFCell cell = headerRow.createCell(i);
+                cell.setCellValue(headers[i]);
+            }
+            
+            // Create data rows
+            int rowNum = 1;
+            for (Product product : list) {
+                XSSFRow row = sheet.createRow(rowNum++);
+                
+                row.createCell(0).setCellValue(product.getId());
+                row.createCell(1).setCellValue(product.getName());
+                row.createCell(2).setCellValue(product.getImage());
+                row.createCell(3).setCellValue(product.getPrice());
+                row.createCell(4).setCellValue(product.getBrand());
+                row.createCell(5).setCellValue(product.getDescription());
+                row.createCell(6).setCellValue(product.getCateID());
+                row.createCell(7).setCellValue(product.getDelivery());
+                row.createCell(8).setCellValue(product.getImage2());
+                row.createCell(9).setCellValue(product.getImage3());
+                row.createCell(10).setCellValue(product.getImage4());
+            }
+            
+            // Auto-size columns
+            for (int i = 0; i < headers.length; i++) {
+                sheet.autoSizeColumn(i);
+            }
+            
+            // Write to response output stream
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            workbook.write(outputStream);
+            response.getOutputStream().write(outputStream.toByteArray());
+            
+            outputStream.close();
+            workbook.close();
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+            response.setContentType("text/html;charset=UTF-8");
+            request.setAttribute("error", "Có lỗi xảy ra khi xuất file Excel!");
+            request.getRequestDispatcher("manager").forward(request, response);
         }
-               
-        workbook.write(file);
-        workbook.close();
-        file.close();
-        
-        request.setAttribute("mess", "Đã xuất file Excel thành công!");
-        request.getRequestDispatcher("managerAccount").forward(request, response); 
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
