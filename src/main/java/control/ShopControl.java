@@ -35,56 +35,33 @@ public class ShopControl extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        //b1: get data from dao
+        
+        String cid = request.getParameter("cid");
+        String searchKeyword = request.getParameter("search");
+        String sortType = request.getParameter("sort");
+        String priceMinStr = request.getParameter("priceMin");
+        String priceMaxStr = request.getParameter("priceMax");
+
         DAO dao = new DAO();
+        
+        List<Product> listP = dao.getFilteredAndSortedProducts(cid, searchKeyword, sortType, priceMinStr, priceMaxStr);
         List<Category> listC = dao.getAllCategory();
         
-        // Check if category ID is provided
-        String cid = request.getParameter("cid");
-        String index = request.getParameter("index");
-        
-        List<Product> list;
-        int allProduct;
-        int endPage;
-        
-        if(cid != null && !cid.isEmpty()) {
-            // Get products by category
-            list = dao.getProductByCID(cid);
-            allProduct = list.size();
-            endPage = allProduct/9;
-            if(allProduct % 9 != 0) {
-                endPage++;
-            }
-            // Set selected category for JSP
-            request.setAttribute("selectedCid", cid);
-        } else if(index != null && !index.isEmpty()) {
-            // Get products with pagination
-            int indexPage = Integer.parseInt(index);
-            list = dao.getProductByIndex(indexPage);
-            allProduct = dao.countAllProduct();
-            endPage = allProduct/9;
-            if(allProduct % 9 != 0) {
-                endPage++;
-            }
-            request.setAttribute("tag", indexPage);
-        } else {
-            // Default: Show all products when accessing /shop directly
-            list = dao.getAllProduct();
-            allProduct = list.size();
-            endPage = allProduct/9;
-            if(allProduct % 9 != 0) {
-                endPage++;
-            }
-            request.setAttribute("tag", 1);
-        }
-        
-        request.setAttribute("endPage", endPage);
+        request.setAttribute("listP", listP);
         request.setAttribute("listCC", listC);
-        request.setAttribute("listP", list);
-
-        request.getRequestDispatcher("Shop.jsp").forward(request, response);
-        //404 -> url
-        //500 -> jsp properties
+        request.setAttribute("selectedCid", cid);
+        request.setAttribute("searchKeyword", searchKeyword);
+        request.setAttribute("sortType", sortType);
+        request.setAttribute("priceMin", priceMinStr);
+        request.setAttribute("priceMax", priceMaxStr);
+        
+        // Check if the request is an AJAX request
+        String requestedWith = request.getHeader("X-Requested-With");
+        if ("XMLHttpRequest".equals(requestedWith)) {
+            request.getRequestDispatcher("ProductGrid.jsp").forward(request, response);
+        } else {
+            request.getRequestDispatcher("Shop.jsp").forward(request, response);
+        }
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

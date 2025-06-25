@@ -22,6 +22,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.sql.SQLException;
+import java.util.StringBuilder;
 
 
 public class DAO {
@@ -1944,6 +1946,87 @@ public class DAO {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public List<Product> getFilteredAndSortedProducts(String cid, String searchKeyword, String sortType, String priceMinStr, String priceMaxStr) {
+        List<Product> list = new ArrayList<>();
+        StringBuilder query = new StringBuilder("SELECT p.*, d.percentOff as discountPercent, (p.price * (100 - ISNULL(d.percentOff, 0)) / 100) as salePrice FROM Product p LEFT JOIN Discount d ON p.id = d.productID AND d.isActive = 1 AND GETDATE() BETWEEN d.startDate AND d.endDate WHERE 1=1");
+
+        if (cid != null && !cid.isEmpty()) {
+            query.append(" AND p.cateID = ?");
+        }
+        if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+            query.append(" AND p.name LIKE ?");
+        }
+        if (priceMinStr != null && !priceMinStr.isEmpty()) {
+            query.append(" AND (p.price * (100 - ISNULL(d.percentOff, 0)) / 100) >= ?");
+        }
+        if (priceMaxStr != null && !priceMaxStr.isEmpty()) {
+            query.append(" AND (p.price * (100 - ISNULL(d.percentOff, 0)) / 100) <= ?");
+        }
+
+        if (sortType != null && !sortType.isEmpty()) {
+            switch (sortType) {
+                case "az":
+                    query.append(" ORDER BY p.name ASC");
+                    break;
+                case "za":
+                    query.append(" ORDER BY p.name DESC");
+                    break;
+                case "price_asc":
+                    query.append(" ORDER BY salePrice ASC");
+                    break;
+                case "price_desc":
+                    query.append(" ORDER BY salePrice DESC");
+                    break;
+                case "new":
+                    query.append(" ORDER BY p.id DESC");
+                    break;
+                default:
+                     query.append(" ORDER BY p.id ASC");
+                    break;
+            }
+        } else {
+            query.append(" ORDER BY p.id ASC");
+        }
+
+        try (Connection conn = new DBContext().getConnection();
+             PreparedStatement ps = conn.prepareStatement(query.toString())) {
+            int paramIndex = 1;
+            if (cid != null && !cid.isEmpty()) {
+                ps.setInt(paramIndex++, Integer.parseInt(cid));
+            }
+            if (searchKeyword != null && !searchKeyword.trim().isEmpty()) {
+                ps.setString(paramIndex++, "%" + searchKeyword + "%");
+            }
+            if (priceMinStr != null && !priceMinStr.isEmpty()) {
+                ps.setDouble(paramIndex++, Double.parseDouble(priceMinStr));
+            }
+            if (priceMaxStr != null && !priceMaxStr.isEmpty()) {
+                ps.setDouble(paramIndex++, Double.parseDouble(priceMaxStr));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Product(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("image"),
+                        rs.getDouble("price"),
+                        rs.getString("brand"),
+                        rs.getString("description"),
+                        rs.getInt("cateID"),
+                        rs.getString("delivery"),
+                        rs.getString("image2"),
+                        rs.getString("image3"),
+                        rs.getInt("discountPercent"),
+                        rs.getDouble("salePrice")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 }

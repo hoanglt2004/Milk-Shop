@@ -8,44 +8,20 @@
                 <head>
                     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
                     <title>Home Page</title>
-                    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"
-                        id="bootstrap-css">
-                    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-                    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-                    <!------ Include the above in your HEAD tag ------>
-                    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-                        rel="stylesheet"
-                        integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
-                        crossorigin="anonymous">
+                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+                    <!-- Font Awesome -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+                    <!-- Google Fonts Roboto -->
+                    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+                    <!-- MDB -->
+                    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.css" />
+
+                    <!-- Custom styles -->
                     <link href="css/style.css" rel="stylesheet" type="text/css" />
                     <link href="css/categories.css" rel="stylesheet" type="text/css" />
                     <link href="css/product-cards.css" rel="stylesheet" type="text/css" />
-
-                    <!-- Font Awesome -->
-                    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css" />
-                    <!-- Google Fonts Roboto -->
-                    <link rel="stylesheet"
-                        href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" />
-                    <!-- MDB -->
-                    <link rel="stylesheet" href="css/mdb.min.css" />
-                    <!-- Custom styles -->
-                    <link rel="stylesheet" href="css/style.css" />
-
-                    <!-- Roboto Font -->
-                    <link rel="stylesheet"
-                        href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700&display=swap">
-                    <!-- Font Awesome -->
-                    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-                    <!-- Bootstrap core CSS -->
-                    <link rel="stylesheet" href="https://mdbootstrap.com/previews/ecommerce-demo/css/bootstrap.min.css">
-                    <!-- Material Design Bootstrap -->
-                    <link rel="stylesheet" href="https://mdbootstrap.com/previews/ecommerce-demo/css/mdb-pro.min.css">
-                    <!-- Material Design Bootstrap Ecommerce -->
-                    <link rel="stylesheet"
-                        href="https://mdbootstrap.com/previews/ecommerce-demo/css/mdb.ecommerce.min.css">
-                    <!-- Your custom styles (optional) -->
-                    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
+                    
                     <style>
                         /* Carousel styling */
                         .carousel-container {
@@ -296,29 +272,27 @@
                                 </div>
                                 <div id="contentMoiNhat" class="row">
                                     <c:forEach items="${list8Last}" var="o">
-                                        <div class="col-12 col-md-6 col-lg-3 product-card-container">
-                                            <div class="product-card">
-                                                <div class="product-image-container">
-                                                    <img class="product-image" src="${o.image}" alt="${o.name}">
+                                        <div class="col-12 col-md-6 col-lg-3 mb-4">
+                                            <div class="card h-100 product-card">
+                                                <div class="bg-image hover-overlay ripple product-image-container" data-mdb-ripple-color="light">
+                                                    <img class="img-fluid w-100 product-image" src="${o.image}" alt="${o.name}">
+                                                    <a href="detail?pid=${o.id}">
+                                                        <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
+                                                    </a>
                                                     <c:if test="${o.discountPercent > 0}">
                                                         <div class="product-badge sale-badge">-${o.discountPercent}%
                                                         </div>
                                                     </c:if>
                                                     <div class="product-badge new-badge">Mới</div>
-                                                    <div class="quick-view-overlay">
-                                                        <button class="quick-view-btn"
-                                                            onclick="window.location.href='detail?pid=${o.id}'">
-                                                            <i class="fas fa-eye mr-2"></i>Xem chi tiết
-                                                        </button>
-                                                    </div>
                                                 </div>
-                                                <div class="product-card-body">
-                                                    <h4 class="product-title">
+
+                                                <div class="card-body product-card-body">
+                                                    <h5 class="card-title product-title">
                                                         <a href="detail?pid=${o.id}" title="View Product">${o.name}</a>
-                                                    </h4>
-                                                    <p class="product-description">${o.brand}</p>
+                                                    </h5>
+                                                    <p class="text-muted product-description">${o.brand}</p>
                                                     <div class="product-rating">
-                                                        <div class="stars">
+                                                        <div class="stars text-warning">
                                                             <i class="fas fa-star"></i>
                                                             <i class="fas fa-star"></i>
                                                             <i class="fas fa-star"></i>
@@ -331,29 +305,25 @@
                                                         style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80px; gap: 5px; margin-top: 10px;">
                                                         <c:choose>
                                                             <c:when test="${o.discountPercent > 0}">
-                                                                <div class="price-pill"
-                                                                    style="background-color: #c41e3a; color: white; padding: 4px 15px; border-radius: 20px; font-size: 0.9em; text-decoration: line-through; opacity: 0.9;">
+                                                                <p class="text-muted mb-0" style="text-decoration: line-through;">
                                                                     <fmt:formatNumber value="${o.price}"
                                                                         pattern="#,##0' VNĐ'" />
-                                                                </div>
-                                                                <div class="price-pill"
-                                                                    style="background-color: #c41e3a; color: white; padding: 6px 20px; border-radius: 20px; font-size: 1.1em; font-weight: bold;">
+                                                                </p>
+                                                                <h6 class="mb-0 font-weight-bold text-danger">
                                                                     <fmt:formatNumber value="${o.salePrice}"
                                                                         pattern="#,##0' VNĐ'" />
-                                                                </div>
+                                                                </h6>
                                                             </c:when>
                                                             <c:otherwise>
-                                                                <!-- Placeholder to align prices -->
-                                                                <div
-                                                                    style="padding: 4px 15px; font-size: 0.9em; visibility: hidden;">
-                                                                    &nbsp;</div>
-                                                                <div class="price-pill"
-                                                                    style="background-color: #c41e3a; color: white; padding: 6px 20px; border-radius: 20px; font-size: 1.1em; font-weight: bold;">
+                                                                <h6 class="mb-0 font-weight-bold text-danger">
                                                                     <fmt:formatNumber value="${o.price}"
                                                                         pattern="#,##0' VNĐ'" />
-                                                                </div>
+                                                                </h6>
                                                             </c:otherwise>
                                                         </c:choose>
+                                                    </div>
+                                                     <div class="d-flex justify-content-center mt-3">
+                                                         <a href="detail?pid=${o.id}" class="btn btn-primary btn-rounded btn-sm"><i class="fas fa-eye me-2"></i>Xem</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -479,27 +449,12 @@
 
 
                     <!-- MDB -->
-                    <script type="text/javascript" src="js/mdb.min.js"></script>
+                    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.js"></script>
                     <!-- Custom scripts -->
                     <script type="text/javascript" src="js/script.js"></script>
                     <!-- Product Cards Enhancement -->
                     <script type="text/javascript" src="js/product-cards.js"></script>
 
-                    <!-- SCRIPTS -->
-                    <!-- JQuery -->
-                    <script src="https://mdbootstrap.com/previews/ecommerce-demo/js/jquery-3.4.1.min.js"></script>
-                    <!-- Bootstrap tooltips -->
-                    <script type="text/javascript"
-                        src="https://mdbootstrap.com/previews/ecommerce-demo/js/popper.min.js"></script>
-                    <!-- Bootstrap core JavaScript -->
-                    <script type="text/javascript"
-                        src="https://mdbootstrap.com/previews/ecommerce-demo/js/bootstrap.js"></script>
-                    <!-- MDB core JavaScript -->
-                    <script type="text/javascript"
-                        src="https://mdbootstrap.com/previews/ecommerce-demo/js/mdb.min.js"></script>
-                    <!-- MDB Ecommerce JavaScript -->
-                    <script type="text/javascript"
-                        src="https://mdbootstrap.com/previews/ecommerce-demo/js/mdb.ecommerce.min.js"></script>
                 </body>
 
                 </html>

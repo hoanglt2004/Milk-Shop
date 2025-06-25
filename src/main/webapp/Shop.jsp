@@ -10,25 +10,18 @@
    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
-  <title>Material Design Bootstrap</title>
-  <!-- Roboto Font -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700&display=swap">
+  <title>Shop Page</title>
+
   <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-  <!-- Bootstrap core CSS -->
-  <link rel="stylesheet" href="https://mdbootstrap.com/previews/ecommerce-demo/css/bootstrap.min.css">
-  <!-- Material Design Bootstrap -->
-  <link rel="stylesheet" href="https://mdbootstrap.com/previews/ecommerce-demo/css/mdb-pro.min.css">
-  <!-- Material Design Bootstrap Ecommerce -->
-  <link rel="stylesheet" href="https://mdbootstrap.com/previews/ecommerce-demo/css/mdb.ecommerce.min.css">
-  <!-- Your custom styles (optional) -->
-   <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-        <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <!------ Include the above in your HEAD tag ------>
-       <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-        <link href="css/style.css" rel="stylesheet" type="text/css"/> 
-        <link href="css/product-cards.css" rel="stylesheet" type="text/css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <!-- Google Fonts Roboto -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+  <!-- MDB -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.css" />
+  
+  <!-- Custom styles -->
+  <link href="css/style.css" rel="stylesheet" type="text/css"/> 
+  <link href="css/product-cards.css" rel="stylesheet" type="text/css"/>
 
 <style>
 .sort-option {
@@ -159,8 +152,7 @@ input[type="radio"]:checked + .sort-label {
 
                 <!-- Hiển thị từ khóa trong ô search -->
                 <div class="form-group">
-                  <input type="text" class="form-control" id="searchInput" name="txt" placeholder="Enter keyword..." value="<%= searchKeyword %>" onkeyup="searchByName(this)">
-                  <div id="searchSuggestions" class="dropdown-menu" style="width: 100%; max-height: 200px; overflow-y: auto;"></div>
+                  <input type="text" class="form-control" id="searchInput" name="txt" placeholder="Enter keyword..." value="${searchKeyword}" oninput="applyFilters()">
                 </div>
 
                 <script>
@@ -263,25 +255,30 @@ input[type="radio"]:checked + .sort-label {
                 <h6 class="font-weight-bold mb-3">Giá</h6>
 
                 <div class="form-check pl-0 mb-3">
-                  <input onchange="searchByPriceAsc()" type="radio" class="form-check-input" id="priceAsc" name="materialExampleRadios">
+                  <input onchange="applyFilters(false)" type="radio" class="form-check-input" id="priceDefault" name="priceSort" value="" <c:if test="${empty sortType || sortType == 'default' || sortType == 'az' || sortType == 'za' || sortType == 'new'}">checked</c:if>>
+                  <label class="form-check-label small text-uppercase card-link-secondary" for="priceDefault">Mặc định</label>
+                </div>
+                <div class="form-check pl-0 mb-3">
+                  <input onchange="applyFilters(false)" type="radio" class="form-check-input" id="priceAsc" name="priceSort" value="price_asc" <c:if test="${sortType == 'price_asc'}">checked</c:if>>
                   <label class="form-check-label small text-uppercase card-link-secondary" for="priceAsc">Giá: Thấp đến Cao</label>
                 </div>
                 <div class="form-check pl-0 mb-3">
-                  <input onchange="searchByPriceDesc()" type="radio" class="form-check-input" id="priceDesc" name="materialExampleRadios">
+                  <input onchange="applyFilters(false)" type="radio" class="form-check-input" id="priceDesc" name="priceSort" value="price_desc" <c:if test="${sortType == 'price_desc'}">checked</c:if>>
                   <label class="form-check-label small text-uppercase card-link-secondary" for="priceDesc">Giá: Cao đến Thấp</label>
                 </div>
-                <form>
+                <form onsubmit="event.preventDefault(); applyFilters();">
                   <div class="d-flex align-items-center mt-4 pb-1">
                     <div class="md-form md-outline my-0">
-                      <input oninput="searchByPriceMinToMax()" id="priceMin" type="text" class="form-control mb-0">
+                      <input id="priceMin" type="number" class="form-control mb-0" value="${priceMin}">
                       <label for="priceMin">VNĐ Thấp nhất</label>
                     </div>
                     <p class="px-2 mb-0 text-muted"> - </p>
                     <div class="md-form md-outline my-0">
-                      <input oninput="searchByPriceMinToMax()" id="priceMax" type="text" class="form-control mb-0">
+                      <input id="priceMax" type="number" class="form-control mb-0" value="${priceMax}">
                       <label for="priceMax">VNĐ Cao nhất</label>
                     </div>
                   </div>
+                   <button type="submit" class="btn btn-primary btn-sm btn-block mt-2">Lọc theo giá</button>
                 </form>
 
               </section>
@@ -306,13 +303,13 @@ input[type="radio"]:checked + .sort-label {
               <div class="col-12 col-md-8 text-center text-md-left">
                 <form id="sortForm" class="d-flex align-items-center">
                   <label class="mr-2 font-weight-bold">Xếp theo:</label>
-                  <input type="radio" id="sortDefault" name="sortOption" value="default" checked class="ml-2 mr-1" onclick="sortProducts('default')">
+                  <input type="radio" id="sortDefault" name="sortOption" value="default" <c:if test="${empty sortType || sortType == 'default'}">checked</c:if> class="ml-2 mr-1" onclick="applyFilters()">
                   <label for="sortDefault" class="mr-3 sort-label">Mặc định</label>
-                  <input type="radio" id="sortAZ" name="sortOption" value="az" class="mr-1" onclick="sortProducts('az')">
+                  <input type="radio" id="sortAZ" name="sortOption" value="az" <c:if test="${sortType == 'az'}">checked</c:if> class="mr-1" onclick="applyFilters()">
                   <label for="sortAZ" class="mr-3 sort-label">Tên A-Z</label>
-                  <input type="radio" id="sortZA" name="sortOption" value="za" class="mr-1" onclick="sortProducts('za')">
+                  <input type="radio" id="sortZA" name="sortOption" value="za" <c:if test="${sortType == 'za'}">checked</c:if> class="mr-1" onclick="applyFilters()">
                   <label for="sortZA" class="mr-3 sort-label">Tên Z-A</label>
-                  <input type="radio" id="sortNew" name="sortOption" value="new" class="mr-1" onclick="sortProducts('new')">
+                  <input type="radio" id="sortNew" name="sortOption" value="new" <c:if test="${sortType == 'new'}">checked</c:if> class="mr-1" onclick="applyFilters()">
                   <label for="sortNew" class="sort-label">Hàng mới</label>
                 </form>
               </div>
@@ -353,74 +350,7 @@ input[type="radio"]:checked + .sort-label {
 
             <!-- Grid row -->
             <div class="row" id="content">
-
-
-<c:forEach items="${listP}" var="o">
-              <!-- Grid column -->
-              <div class="col-md-4 mb-5 product-card-container">
-
-                <!-- Card -->
-                <div class="product-card h-100">
-
-                  <div class="product-image-container">
-                    <img class="product-image"
-                      src="${o.image }" alt="${o.name}">
-                    <a href="detail?pid=${o.id}">
-                      <div class="quick-view-overlay">
-                        <button class="quick-view-btn" onclick="window.location.href='detail?pid=${o.id}'; event.preventDefault();">
-                            <i class="fas fa-eye mr-2"></i>Xem chi tiết
-                        </button>
-                      </div>
-                    </a>
-                    <c:if test="${o.discountPercent > 0}">
-                        <div class="product-badge sale-badge">-${o.discountPercent}%</div>
-                    </c:if>
-                  </div>
-
-                  <div class="product-card-body">
-                    <h4 class="product-title">
-                        <a href="detail?pid=${o.id}" title="View Product">${o.name}</a>
-                    </h4>
-                    <p class="product-description">${o.title}</p>
-                    <div class="product-rating">
-                        <div class="stars">
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star"></i>
-                            <i class="fas fa-star-half-alt"></i>
-                        </div>
-                        <span class="rating-text">(4.5)</span>
-                    </div>
-                     <div class="product-price-section" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 80px; gap: 5px; margin-top: 10px;">
-                        <c:choose>
-                            <c:when test="${o.discountPercent > 0}">
-                                <div class="price-pill" style="background-color: #c41e3a; color: white; padding: 4px 15px; border-radius: 20px; font-size: 0.9em; text-decoration: line-through; opacity: 0.9;">
-                                    <fmt:formatNumber value="${o.price}" pattern="#,##0' VNĐ'"/>
-                                </div>
-                                <div class="price-pill" style="background-color: #c41e3a; color: white; padding: 6px 20px; border-radius: 20px; font-size: 1.1em; font-weight: bold;">
-                                    <fmt:formatNumber value="${o.salePrice}" pattern="#,##0' VNĐ'"/>
-                                </div>
-                            </c:when>
-                            <c:otherwise>
-                                <!-- Placeholder to align prices -->
-                                <div style="padding: 4px 15px; font-size: 0.9em; visibility: hidden;">&nbsp;</div>
-                                <div class="price-pill" style="background-color: #c41e3a; color: white; padding: 6px 20px; border-radius: 20px; font-size: 1.1em; font-weight: bold;">
-                                    <fmt:formatNumber value="${o.price}" pattern="#,##0' VNĐ'"/>
-                                </div>
-                            </c:otherwise>
-                        </c:choose>
-                    </div>
-
-                  </div>
-
-                </div>
-                <!-- Card -->
-
-              </div>
-              <!-- Grid column -->
-   </c:forEach>     
-              
+				<jsp:include page="ProductGrid.jsp" />
             </div>
             <!-- Grid row -->
           </section>
@@ -440,101 +370,82 @@ input[type="radio"]:checked + .sort-label {
 
 
   <!-- SCRIPTS -->
-  <!-- JQuery -->
-  <script src="https://mdbootstrap.com/previews/ecommerce-demo/js/jquery-3.4.1.min.js"></script>
-  <!-- Bootstrap tooltips -->
-  <script type="text/javascript" src="https://mdbootstrap.com/previews/ecommerce-demo/js/popper.min.js"></script>
-  <!-- Bootstrap core JavaScript -->
-  <script type="text/javascript" src="https://mdbootstrap.com/previews/ecommerce-demo/js/bootstrap.js"></script>
-  <!-- MDB core JavaScript -->
-  <script type="text/javascript" src="https://mdbootstrap.com/previews/ecommerce-demo/js/mdb.min.js"></script>
-    <!-- MDB Ecommerce JavaScript -->
-    <script type="text/javascript" src="https://mdbootstrap.com/previews/ecommerce-demo/js/mdb.ecommerce.min.js"></script>
+  <!-- MDB -->
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.js"></script>
+  <!-- Custom scripts -->
   <script>
-    // Gán biến toàn cục để lưu mã danh mục hiện tại
-    window.currentCategoryId = null;
+    let filterTimeout;
 
-    $('#multi').mdbRange({
-      single: {
-        active: true,
-        multi: {
-          active: true,
-          rangeLength: 1
-        },
-      }
+    function applyFilters(useTimeout = true) {
+        if (useTimeout) {
+            clearTimeout(filterTimeout);
+            filterTimeout = setTimeout(() => {
+                performAjaxFilter();
+            }, 500); // Wait 500ms before sending request
+        } else {
+            performAjaxFilter();
+        }
+    }
+
+    function performAjaxFilter() {
+        var cid = document.querySelector('.category-link.active')?.dataset.cid || '${selectedCid}' || '';
+        var searchKeyword = document.getElementById('searchInput').value;
+        var priceMin = document.getElementById('priceMin').value;
+        var priceMax = document.getElementById('priceMax').value;
+        
+        // Determine sort type from both radio groups
+        var sortType = document.querySelector('input[name="priceSort"]:checked')?.value || '';
+        if (!sortType) {
+            sortType = document.querySelector('input[name="sortOption"]:checked')?.value || 'default';
+        }
+
+
+        $.ajax({
+            url: "shop", // All requests go to ShopControl
+            type: "get",
+            data: {
+                cid: cid,
+                search: searchKeyword,
+                sort: sortType,
+                priceMin: priceMin,
+                priceMax: priceMax
+            },
+            beforeSend: function(xhr) {
+                // Set header for AJAX request detection in servlet
+                xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+            },
+            success: function(data) {
+                document.getElementById("content").innerHTML = data;
+                // Update URL without reloading page
+                updateUrl(cid, searchKeyword, sortType, priceMin, priceMax);
+            },
+            error: function(xhr) {
+                console.error("An error occurred during filtering: ", xhr);
+            }
+        });
+    }
+
+    function updateUrl(cid, search, sort, priceMin, priceMax) {
+        var newUrl = window.location.pathname + '?';
+        var params = [];
+        if (cid) params.push('cid=' + cid);
+        if (search) params.push('search=' + search);
+        if (sort && sort !== 'default') params.push('sort=' + sort);
+        if (priceMin) params.push('priceMin=' + priceMin);
+        if (priceMax) params.push('priceMax=' + priceMax);
+
+        history.pushState(null, '', newUrl + params.join('&'));
+    }
+
+    document.querySelectorAll('.category-link').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.querySelectorAll('.category-link').forEach(el => el.classList.remove('active'));
+            this.classList.add('active');
+            applyFilters(false);
+        });
     });
 
-    $(document).ready(function () {
-      $('.mdb-select').materialSelect();
-      $('.select-wrapper.md-form.md-outline input.select-dropdown').bind('focus blur', function () {
-        $(this).closest('.select-outline').find('label').toggleClass('active');
-        $(this).closest('.select-outline').find('.caret').toggleClass('active');
-      });
-    });
-    function load(cateid){
-        window.currentCategoryId = cateid;
-        $.ajax({
-            url: "/WebsiteBanSua/categoryShop",
-            type: "get",
-            data: {
-                cid: cateid
-            },
-            success: function (responseData) {
-                document.getElementById("content").innerHTML = responseData;
-            }
-        });
-    }  
-    function searchByPriceMinToMax(){
-        var numMin = document.getElementById("priceMin").value;
-        var numMax = document.getElementById("priceMax").value;
-        $.ajax({
-            url: "/WebsiteBanSua/searchAjaxPriceMinToMax",
-            type: "get", //send it through get method
-            data: {
-                priceMin: numMin,
-                priceMax: numMax
-            },
-            success: function (data) {
-                var row = document.getElementById("content");
-                row.innerHTML = data;
-            },
-            error: function (xhr) {
-                //Do Something to handle error
-            }
-        });
-    }
-    function searchByPriceAsc(){
-        var searchText = document.getElementById('searchInput').value;
-        var cid = window.currentCategoryId;
-        $.ajax({
-            url: "/WebsiteBanSua/searchAjaxPriceAsc",
-            type: "get",
-            data: {
-                txt: searchText,
-                cid: cid
-            },
-            success: function (data) {
-                var row = document.getElementById("content");
-                row.innerHTML = data;
-            }
-        });
-    }
-    function searchByPriceDesc(){
-        var searchText = document.getElementById('searchInput').value;
-        var cid = window.currentCategoryId;
-        $.ajax({
-            url: "/WebsiteBanSua/searchAjaxPriceDesc",
-            type: "get",
-            data: {
-                txt: searchText,
-                cid: cid
-            },
-            success: function (data) {
-                var row = document.getElementById("content");
-                row.innerHTML = data;
-            }
-        });
-    }
     function loadAmountCart(){
     	 $.ajax({
              url: "/WebsiteBanSua/loadAllAmountCart",
@@ -560,8 +471,6 @@ input[type="radio"]:checked + .sort-label {
         }
     }         
   </script>
-  	 <!-- MDB -->
-    <script type="text/javascript" src="js/mdb.min.js"></script>
     <!-- Custom scripts -->
     <script type="text/javascript" src="js/script.js"></script>
 </body>

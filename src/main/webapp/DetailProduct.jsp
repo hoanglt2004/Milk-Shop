@@ -10,22 +10,15 @@
           <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
           <meta http-equiv="x-ua-compatible" content="ie=edge">
           <title>Detail Product</title>
-          <!-- Roboto Font -->
-          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700&display=swap">
+          
           <!-- Font Awesome -->
-          <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
-          <!-- Bootstrap core CSS -->
-          <link rel="stylesheet" href="https://mdbootstrap.com/previews/ecommerce-demo/css/bootstrap.min.css">
-          <!-- Material Design Bootstrap -->
-          <link rel="stylesheet" href="https://mdbootstrap.com/previews/ecommerce-demo/css/mdb-pro.min.css">
-          <!-- Material Design Bootstrap Ecommerce -->
-          <link rel="stylesheet" href="https://mdbootstrap.com/previews/ecommerce-demo/css/mdb.ecommerce.min.css">
-          <!-- Your custom styles (optional) -->
-
-          <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet"
-            id="bootstrap-css">
-          <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-          <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+          <!-- Google Fonts Roboto -->
+          <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
+          <!-- MDB -->
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.css" />
+          
+          <!-- Custom styles -->
           <link href="css/style.css" rel="stylesheet" type="text/css" />
           <link href="css/product-cards.css" rel="stylesheet" type="text/css"/>
 
@@ -377,49 +370,42 @@
 
                   <c:forEach items="${listRelatedProduct}" var="o">
                     <!-- Grid column -->
-                    <div class="col-md-6 col-lg-3 mb-5 product-card-container">
+                    <div class="col-md-6 col-lg-3 mb-4">
 
                       <!-- Card -->
-                      <div class="product-card h-100">
+                      <div class="card h-100 product-card">
 
-                        <div class="product-image-container">
-                          <img class="product-image" src="${o.image }" alt="${o.name}">
+                        <div class="bg-image hover-overlay ripple product-image-container" data-mdb-ripple-color="light">
+                          <img class="img-fluid w-100 product-image" src="${o.image }" alt="${o.name}">
                           <a href="detail?pid=${o.id}">
-                              <div class="quick-view-overlay">
-                                  <button class="quick-view-btn" onclick="window.location.href='detail?pid=${o.id}'; event.preventDefault();">
-                                      <i class="fas fa-eye mr-2"></i>Xem chi tiết
-                                  </button>
-                              </div>
+                              <div class="mask" style="background-color: rgba(251, 251, 251, 0.15);"></div>
                           </a>
                         </div>
 
-                        <div class="product-card-body">
-                          <h4 class="product-title">
+                        <div class="card-body product-card-body">
+                          <h5 class="card-title product-title">
                               <a href="detail?pid=${o.id}" title="View Product">${o.name}</a>
-                          </h4>
-                           <p class="product-description">${o.brand}</p>
+                          </h5>
+                           <p class="text-muted product-description">${o.brand}</p>
                            <div class="product-price-section" style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
                               <c:choose>
                                 <c:when test="${o.discountPercent > 0}">
-                                    <div class="original-price-wrapper">
-                                        <span class="product-price original-price" style="color: rgba(255, 255, 255, 0.75); font-size: 0.9em; text-decoration: line-through;">
-                                            <fmt:formatNumber value="${o.price}" pattern="#,##0" /> VNĐ
-                                        </span>
-                                    </div>
-                                    <div class="sale-price-wrapper">
-                                        <span class="product-price sale-price" style="color: white; font-weight: bold; font-size: 1.1em;">
-                                            <fmt:formatNumber value="${o.salePrice}" pattern="#,##0" /> VNĐ
-                                        </span>
-                                    </div>
+                                    <p class="text-muted mb-0" style="text-decoration: line-through;">
+                                        <fmt:formatNumber value="${o.price}" pattern="#,##0" /> VNĐ
+                                    </p>
+                                    <h6 class="mb-0 font-weight-bold text-danger">
+                                        <fmt:formatNumber value="${o.salePrice}" pattern="#,##0" /> VNĐ
+                                    </h6>
                                 </c:when>
                                 <c:otherwise>
-                                    <div class="price-wrapper">
-                                        <span class="product-price" style="color: white; font-weight: bold; font-size: 1.1em;">
+                                     <h6 class="mb-0 font-weight-bold text-danger">
                                           <fmt:formatNumber value="${o.price}" pattern="#,###"/> VNĐ
-                                        </span>
-                                    </div>
+                                        </h6>
                                 </c:otherwise>
                             </c:choose>
+                          </div>
+                           <div class="d-flex justify-content-center mt-3">
+                               <a href="detail?pid=${o.id}" class="btn btn-primary btn-rounded btn-sm"><i class="fas fa-eye me-2"></i>Xem</a>
                           </div>
                         </div>
 
@@ -518,18 +504,8 @@
             });
           </script>
           <!-- SCRIPTS -->
-          <!-- JQuery -->
-          <script src="../../../js/jquery-3.4.1.min.js"></script>
-          <!-- Bootstrap tooltips -->
-          <script type="text/javascript"
-            src="https://mdbootstrap.com/previews/ecommerce-demo/js/popper.min.js"></script>
-          <!-- Bootstrap core JavaScript -->
-          <script type="text/javascript" src="https://mdbootstrap.com/previews/ecommerce-demo/js/bootstrap.js"></script>
-          <!-- MDB core JavaScript -->
-          <script type="text/javascript" src="https://mdbootstrap.com/previews/ecommerce-demo/js/mdb.min.js"></script>
-          <!-- MDB Ecommerce JavaScript -->
-          <script type="text/javascript"
-            src="https://mdbootstrap.com/previews/ecommerce-demo/js/mdb.ecommerce.min.js"></script>
+          <!-- MDB -->
+          <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/7.2.0/mdb.min.js"></script>
           <script>
             $(document).ready(function () {
               // MDB Lightbox Init

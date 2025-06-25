@@ -20,10 +20,8 @@ public class Product {
     private String delivery;
     private String image2;
     private String image3;
-    
-    // Fields for discount
-    private double salePrice;
     private int discountPercent;
+    private double salePrice;
 
 	public Product(int id, String name, String image, double price, String brand, String description, int cateID,
 			String delivery, String image2, String image3) {
@@ -38,8 +36,8 @@ public class Product {
 		this.delivery = delivery;
 		this.image2 = image2;
 		this.image3 = image3;
-		this.salePrice = 0; // Default to 0
-        this.discountPercent = 0; // Default to 0
+		this.discountPercent = 0; // Default to 0
+        this.salePrice = 0; // Default to 0
 	}
 	
 	// Constructor tương thích ngược với code cũ
@@ -57,14 +55,30 @@ public class Product {
 		this.image2 = image2;
 		this.image3 = image3;
 		// Bỏ qua model, color, image4 vì không còn trong schema mới
-		this.salePrice = 0; // Default to 0
-        this.discountPercent = 0; // Default to 0
+		this.discountPercent = 0; // Default to 0
+        this.salePrice = 0; // Default to 0
 	}
 	
 	public Product() {
-		this.salePrice = 0; // Default to 0
-        this.discountPercent = 0; // Default to 0
+		this.discountPercent = 0; // Default to 0
+        this.salePrice = 0; // Default to 0
 	}
+	
+	public Product(int id, String name, String image, double price, String brand, String description, int cateID, String delivery, String image2, String image3, int discountPercent, double salePrice) {
+        this.id = id;
+        this.name = name;
+        this.image = image;
+        this.price = price;
+        this.brand = brand;
+        this.description = description;
+        this.cateID = cateID;
+        this.delivery = delivery;
+        this.image2 = image2;
+        this.image3 = image3;
+        this.discountPercent = discountPercent;
+        this.salePrice = salePrice;
+    }
+
 	@Override
 	public String toString() {
 		return "Product [id=" + id + ", name=" + name + ", image=" + image + ", price=" + price + ", brand=" + brand
