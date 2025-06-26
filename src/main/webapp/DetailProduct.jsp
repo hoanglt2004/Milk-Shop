@@ -350,7 +350,7 @@
                     </div>
                     <hr>
 
-                    <form action="addCart?pid=${detail.id }" method="post" class="product-form">
+                    <form id="productForm" class="product-form">
                       <div class="table-responsive mb-2">
                         <table class="table table-sm table-borderless">
                           <tbody>
@@ -393,10 +393,10 @@
                         </table>
                       </div>
                       <div class="action-buttons mt-3">
-                        <button type="submit" class="btn btn-primary btn-lg buy-now-btn">
+                        <button type="button" class="btn btn-primary btn-lg buy-now-btn" onclick="addToCartAndRedirect('buy')">
                           <i class="fas fa-bolt me-2"></i>Mua ngay
                         </button>
-                        <button type="submit" class="btn btn-light btn-lg add-to-cart-btn">
+                        <button type="button" class="btn btn-light btn-lg add-to-cart-btn" onclick="addToCartAndRedirect('cart')">
                           <i class="fas fa-shopping-cart me-2"></i>Thêm vào giỏ
                         </button>
                       </div>
@@ -566,6 +566,10 @@
 
 
           <jsp:include page="Footer.jsp"></jsp:include>
+          
+          <!-- jQuery -->
+          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+          
           <script>
             window.addEventListener("load", function loadAmountCart() {
               $.ajax({
@@ -579,6 +583,67 @@
                 }
               });
             }, false);
+
+            function addToCartAndRedirect(action) {
+              console.log('addToCartAndRedirect called with action:', action);
+              
+              // Prevent multiple clicks
+              const buttons = document.querySelectorAll('.buy-now-btn, .add-to-cart-btn');
+              buttons.forEach(button => button.disabled = true);
+              
+              // Get quantity
+              const quantity = document.querySelector('input[name="quantity"]').value;
+              console.log('Quantity:', quantity, 'Product ID:', '${detail.id}');
+              
+              // Add to cart via AJAX
+              $.ajax({
+                url: "/WebsiteBanSua/addCart",
+                type: "post",
+                data: {
+                  pid: '${detail.id}',
+                  quantity: quantity
+                },
+                success: function(response) {
+                  console.log('Cart added successfully:', response);
+                  
+                  // Try to parse as JSON first, if it fails, treat as plain text
+                  let success = true;
+                  try {
+                    const jsonResponse = JSON.parse(response);
+                    success = jsonResponse.success;
+                    console.log('Parsed JSON response:', jsonResponse);
+                  } catch (e) {
+                    // If not JSON, assume success
+                    success = true;
+                    console.log('Response is not JSON, treating as success');
+                  }
+                  
+                  if (success) {
+                    console.log('Updating cart count...');
+                    // Update cart count first with a small delay
+                    setTimeout(function() {
+                      loadAmountCart();
+                    }, 100);
+                    
+                    // Redirect to cart page after a short delay
+                    console.log('Redirecting to cart page...');
+                    setTimeout(function() {
+                      window.location.href = "/WebsiteBanSua/managerCart";
+                    }, 300);
+                  } else {
+                    alert('Có lỗi xảy ra khi thêm vào giỏ hàng. Vui lòng thử lại!');
+                    buttons.forEach(button => button.disabled = false);
+                  }
+                },
+                error: function(xhr, status, error) {
+                  console.error('Error adding to cart:', xhr, status, error);
+                  alert('Có lỗi xảy ra khi thêm vào giỏ hàng. Vui lòng thử lại!');
+                  
+                  // Re-enable buttons on error
+                  buttons.forEach(button => button.disabled = false);
+                }
+              });
+            }
 
             function addReview(pID) {
               var cntReview = document.getElementById("form76").value;
@@ -617,7 +682,7 @@
               var maxQty = parseInt(document.getElementById("stock-available") ? document.getElementById("stock-available").textContent : "0");
               var currentQty = parseInt(document.querySelector("input[name='quantity']").value);
               var warningElement = document.getElementById("quantity-warning");
-              var buyButtons = document.querySelectorAll("button[type='submit']");
+              var buyButtons = document.querySelectorAll('.buy-now-btn, .add-to-cart-btn');
 
               if (currentQty > maxQty && maxQty > 0) {
                 warningElement.style.display = "block";
