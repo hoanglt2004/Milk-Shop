@@ -601,9 +601,9 @@
                                                                         <i class="fas fa-eye"></i>Xem chi tiết
                                                                     </button>
                                                                     <c:if test="${invoice.status == 'Hoàn thành'}">
-                                                                        <a href="#" class="btn-action btn-reorder">
+                                                                        <button class="btn-action btn-reorder" onclick="reorderProducts(${invoice.maHD})">
                                                                             <i class="fas fa-redo"></i>Mua lại
-                                                                        </a>
+                                                                        </button>
                                                                     </c:if>
                                                                     <c:if test="${invoice.status == 'Chờ xác nhận'}">
                                                                         <button class="btn-action btn-cancel"
@@ -698,6 +698,33 @@
                                     },
                                     error: function () {
                                         alert('Có lỗi khi hủy đơn hàng. Vui lòng thử lại.');
+                                    }
+                                });
+                            }
+                        }
+
+                        function reorderProducts(invoiceId) {
+                            if (confirm('Bạn có muốn thêm tất cả sản phẩm từ đơn hàng này vào giỏ hàng?')) {
+                                $.ajax({
+                                    url: 'reorder',
+                                    type: 'POST',
+                                    data: {
+                                        invoiceId: invoiceId
+                                    },
+                                    success: function (response) {
+                                        try {
+                                            const result = JSON.parse(response);
+                                            alert(result.message);
+                                            if (result.success) {
+                                                // Cập nhật số lượng giỏ hàng
+                                                loadAmountCart();
+                                            }
+                                        } catch (e) {
+                                            alert('Có lỗi xảy ra. Vui lòng thử lại.');
+                                        }
+                                    },
+                                    error: function () {
+                                        alert('Có lỗi khi xử lý yêu cầu. Vui lòng thử lại.');
                                     }
                                 });
                             }

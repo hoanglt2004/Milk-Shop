@@ -70,6 +70,45 @@ input[type="radio"]:checked + .sort-label {
     background-color: #007bff;
     color: white;
 }
+
+/* Toast Notification */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast {
+    background: white;
+    color: #333;
+    padding: 15px 25px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    animation: slideIn 0.3s ease;
+}
+
+.toast.success {
+    border-left: 4px solid #28a745;
+}
+
+.toast.error {
+    border-left: 4px solid #dc3545;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
 </style>
 
 </head>
@@ -347,6 +386,9 @@ input[type="radio"]:checked + .sort-label {
   </main>
   <!--Main layout-->
 
+  <!-- Toast Notification Container -->
+  <div class="toast-container"></div>
+
   <!-- Footer -->
   
 
@@ -517,6 +559,68 @@ input[type="radio"]:checked + .sort-label {
         if (categoryLink) {
             categoryLink.click();
         }
+    }
+
+    function addToCart(productId, button) {
+        // Prevent multiple clicks
+        if (button.disabled) {
+            return;
+        }
+
+        // Disable button and show loading state
+        button.disabled = true;
+        button.classList.add('loading');
+
+        $.ajax({
+            url: "/WebsiteBanSua/addCart",
+            type: "post",
+            data: {
+                pid: productId,
+                quantity: 1
+            },
+            success: function(response) {
+                // Update cart count
+                loadAmountCart();
+                
+                // Show success toast
+                showToast('success', 'Đã thêm sản phẩm vào giỏ hàng!');
+            },
+            error: function(xhr) {
+                // Show error toast
+                showToast('error', 'Có lỗi xảy ra. Vui lòng thử lại!');
+            },
+            complete: function() {
+                // Always reset button state after request completes
+                setTimeout(() => {
+                    button.disabled = false;
+                    button.classList.remove('loading');
+                }, 500);
+            }
+        });
+    }
+
+    function showToast(type, message) {
+        // Remove existing toasts
+        const existingToasts = document.querySelectorAll('.toast');
+        existingToasts.forEach(toast => toast.remove());
+
+        // Create and show new toast
+        const toastContainer = document.querySelector('.toast-container');
+        if (!toastContainer) return;
+
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerHTML = message;
+        
+        toastContainer.appendChild(toast);
+        
+        // Auto remove toast after 3 seconds
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => {
+                toast.remove();
+            }, 300);
+        }, 3000);
     }
 
     // Add styles for active category

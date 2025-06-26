@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.sql.SQLException;
-import java.util.StringBuilder;
 
 
 public class DAO {
@@ -1461,6 +1460,31 @@ public class DAO {
         }
     }
     
+    // Method để lấy chi tiết đơn hàng từ bảng Cart
+    public List<Cart> getOrderDetailsByInvoiceId(int invoiceId) {
+        List<Cart> list = new ArrayList<>();
+        String query = "SELECT c.* FROM Cart c " +
+                      "INNER JOIN Invoice i ON c.accountID = i.accountID " +
+                      "WHERE i.maHD = ? AND c.amount > 0";
+        try {
+            ps = conn.prepareStatement(query);
+            ps.setInt(1, invoiceId);
+            rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Cart(
+                    rs.getInt("accountID"),
+                    rs.getInt("productID"),
+                    rs.getInt("amount"),
+                    rs.getInt("maCart"),
+                    rs.getString("size")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+    
     // Method để lấy chi tiết đơn hàng (giả lập từ Cart history)
     public List<Cart> getOrderDetailsByInvoiceId(int invoiceId, int accountId) {
         // This method has errors (undefined variable 'limit') and seems unused.
@@ -1970,7 +1994,12 @@ public class DAO {
             }
         }
 
-        StringBuilder query = new StringBuilder("SELECT p.*, d.percentOff as discountPercent, (p.price * (100 - ISNULL(d.percentOff, 0)) / 100) as salePrice FROM Product p LEFT JOIN Discount d ON p.id = d.productID AND d.isActive = 1 AND GETDATE() BETWEEN d.startDate AND d.endDate WHERE 1=1");
+        StringBuilder query = new StringBuilder("SELECT p.*, " +
+            "CASE WHEN d.percentOff IS NOT NULL THEN d.percentOff ELSE 0 END as discountPercent, " +
+            "CASE WHEN d.percentOff IS NOT NULL THEN (p.price * (100 - d.percentOff) / 100) ELSE p.price END as salePrice " +
+            "FROM Product p " +
+            "LEFT JOIN Discount d ON p.id = d.productID AND d.isActive = 1 AND GETDATE() BETWEEN d.startDate AND d.endDate " +
+            "WHERE 1=1");
 
         if (cid != null && !cid.isEmpty()) {
             query.append(" AND p.cateID = ?");
@@ -1979,10 +2008,10 @@ public class DAO {
             query.append(" AND p.name LIKE ?");
         }
         if (priceMinStr != null && !priceMinStr.isEmpty()) {
-            query.append(" AND (p.price * (100 - ISNULL(d.percentOff, 0)) / 100) >= ?");
+            query.append(" AND CASE WHEN d.percentOff IS NOT NULL THEN (p.price * (100 - d.percentOff) / 100) ELSE p.price END >= ?");
         }
         if (priceMaxStr != null && !priceMaxStr.isEmpty()) {
-            query.append(" AND (p.price * (100 - ISNULL(d.percentOff, 0)) / 100) <= ?");
+            query.append(" AND CASE WHEN d.percentOff IS NOT NULL THEN (p.price * (100 - d.percentOff) / 100) ELSE p.price END <= ?");
         }
 
         if (sortType != null && !sortType.isEmpty()) {
@@ -2028,19 +2057,35 @@ public class DAO {
 
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
+                int discountPercent = rs.getInt("discountPercent");
+                double salePrice = rs.getDouble("salePrice");
+                double originalPrice = rs.getDouble("price");
+                
+                // Debug logging
+                System.out.println("Product ID: " + rs.getInt("id") + 
+                                 ", Name: " + rs.getString("name") + 
+                                 ", Original Price: " + originalPrice + 
+                                 ", Discount Percent: " + discountPercent + 
+                                 ", Sale Price: " + salePrice);
+                
+                // Ensure salePrice is not 0 when there's no discount
+                if (discountPercent == 0) {
+                    salePrice = originalPrice;
+                }
+                
                 list.add(new Product(
                         rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("image"),
-                        rs.getDouble("price"),
+                        originalPrice,
                         rs.getString("brand"),
                         rs.getString("description"),
                         rs.getInt("cateID"),
                         rs.getString("delivery"),
                         rs.getString("image2"),
                         rs.getString("image3"),
-                        rs.getInt("discountPercent"),
-                        rs.getDouble("salePrice")
+                        discountPercent,
+                        salePrice
                 ));
             }
         } catch (Exception e) {
