@@ -14,6 +14,7 @@ import entity.Product;
 import entity.ProductStock;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -44,19 +45,29 @@ public class ManagerCartControl extends HttpServlet {
         
         HttpSession session = request.getSession();
         Account a = (Account) session.getAttribute("acc");
-        if(a == null) {
-        	response.sendRedirect("login");
-        	return;
-        }
-        int accountID = a.getId();
         
         DAO dao = new DAO();
         WarehouseDAO warehouseDAO = new WarehouseDAO();
         
         List<Category> listC = dao.getAllCategory();
-        List<Cart> listCart = dao.getCartByAccountID(accountID);
         List<Product> listProduct = dao.getAllProduct();
         List<ProductStock> listProductStock = warehouseDAO.getTotalStockPerProduct();
+        
+        List<Cart> listCart;
+        
+        if(a == null) {
+            // Nếu chưa đăng nhập, lấy cart từ session
+            listCart = (List<Cart>) session.getAttribute("cartList");
+            if (listCart == null) {
+                listCart = new ArrayList<>();
+            }
+            request.setAttribute("isGuest", true);
+        } else {
+            // Nếu đã đăng nhập, lấy cart từ database
+            int accountID = a.getId();
+            listCart = dao.getCartByAccountID(accountID);
+            request.setAttribute("isGuest", false);
+        }
         
         request.setAttribute("listCategory", listC);
         request.setAttribute("listCart", listCart);

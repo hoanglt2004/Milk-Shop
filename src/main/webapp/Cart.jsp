@@ -44,125 +44,140 @@
 
     <body onload="loadTotalMoney()">
         <jsp:include page="Menu.jsp"></jsp:include>
-            <div class="shopping-cart">
-                <div class="px-4 px-lg-0">
+        
+        <!-- Guest User Notification -->
+        <c:if test="${isGuest}">
+            <div class="container mt-3">
+                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <i class="fas fa-info-circle mr-2"></i>
+                    <strong>Lưu ý:</strong> Bạn đang xem giỏ hàng ở chế độ khách. 
+                    <a href="login" class="alert-link">Đăng nhập</a> để lưu giỏ hàng và tiếp tục mua sắm.
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+            </div>
+        </c:if>
+        
+        <div class="shopping-cart">
+            <div class="px-4 px-lg-0">
 
-                    <div class="pb-5">
-                        <div class="container">
-                            <div class="row">
-                                <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+                <div class="pb-5">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
 
-                                    <!-- Shopping cart table -->
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                            <c:if test="${error!=null }">
-                 <div class="alert alert-danger" role="alert">
-						 ${error}
-				</div>
-				</c:if>
-				<c:if test="${mess!=null }">
-                <div class="alert alert-success" role="alert">
-				  	${mess}
-				</div>
-				</c:if>
-                                                <tr>
-                                                    <th scope="col" class="border-0 bg-light">
-                                                        <div class="p-2 px-3 text-uppercase">Sản Phẩm</div>
-                                                    </th>
-                                                    <th scope="col" class="border-0 bg-light">
-                                                        <div class="py-2 text-uppercase">Đơn Giá</div>
-                                                    </th>
-                                                     <th scope="col" class="border-0 bg-light">
-                                                        <div class="py-2 text-uppercase">Delivery</div>
-                                                    </th>
-                                                    <th scope="col" class="border-0 bg-light">
-                                                        <div class="py-2 text-uppercase">Số Lượng</div>
-                                                    </th>
-                                                    <th scope="col" class="border-0 bg-light">
-                                                        <div class="py-2 text-uppercase">Tồn Kho</div>
-                                                    </th>
-                                                    <th scope="col" class="border-0 bg-light">
-                                                        <div class="py-2 text-uppercase">Xóa</div>
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            <c:forEach items="${listCart}" var="o">
-                                             <c:forEach items="${listProduct}" var="p">
-                                                <c:if test="${o.productID == p.id}">
-                                                <c:set var="rowClass" value="" />
-                                                <c:forEach items="${listProductStock}" var="ps">
-                                                    <c:if test="${ps.productID == p.id}">
-                                                        <c:choose>
-                                                            <c:when test="${ps.totalRemaining <= 0}">
-                                                                <c:set var="rowClass" value="out-of-stock-row" />
-                                                            </c:when>
-                                                            <c:when test="${ps.totalRemaining < o.amount}">
-                                                                <c:set var="rowClass" value="out-of-stock-row" />
-                                                            </c:when>
-                                                            <c:when test="${ps.totalRemaining <= 5}">
-                                                                <c:set var="rowClass" value="low-stock-row" />
-                                                            </c:when>
-                                                        </c:choose>
-                                                    </c:if>
-                                                </c:forEach>
-                                                <tr class="${rowClass}">
-                                                    <th scope="row">
-                                                        <div class="p-2">
-                                                        
-                                                            <img src="${p.image}" alt="" width="70" class="img-fluid rounded shadow-sm">
-                                                          
-                                                            <div class="ml-3 d-inline-block align-middle">
-                                                                <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block">${p.name}</a></h5><span class="text-muted font-weight-normal font-italic"></span>
-                                                            </div>
-                                                        </div>
-                                                    </th>
-                                                    <td class="align-middle">
-                                                        <strong>
-                                                            <fmt:formatNumber value="${p.price}" pattern="#,###" var="cartPrice"/>
-                                                            ${fn:replace(cartPrice, ',', '.')} VNĐ
-                                                        </strong>
-                                                    </td>
-                                                    <td class="align-middle"><strong>${p.delivery}</strong></td>
-                                                    <td class="align-middle">
-                                                        <a href="subAmountCart?productID=${o.productID}&amount=${o.amount}"><button class="btnSub">-</button></a> 
-                                                        <span class="cart-quantity">${o.amount}</span>
-                                                        <a href="addAmountCart?productID=${o.productID}&amount=${o.amount}"><button class="btnAdd">+</button></a>
-                                                    </td>
-                                                    <td class="align-middle">
-                                                        <c:set var="stockFound" value="false" />
-                                                        <c:forEach items="${listProductStock}" var="ps">
-                                                            <c:if test="${ps.productID == p.id && !stockFound}">
-                                                                <c:set var="stockFound" value="true" />
-                                                                <c:choose>
-                                                                    <c:when test="${ps.totalRemaining <= 0}">
-                                                                        <span class="badge badge-danger">Hết hàng</span>
-                                                                    </c:when>
-                                                                    <c:when test="${ps.totalRemaining <= 5}">
-                                                                        <span class="badge badge-warning">${ps.totalRemaining} (Sắp hết)</span>
-                                                                    </c:when>
-                                                                    <c:when test="${ps.totalRemaining < o.amount}">
-                                                                        <span class="badge badge-danger">${ps.totalRemaining} (Không đủ)</span>
-                                                                    </c:when>
-                                                                    <c:otherwise>
-                                                                        <span class="badge badge-success">${ps.totalRemaining}</span>
-                                                                    </c:otherwise>
-                                                                </c:choose>
-                                                            </c:if>
-                                                        </c:forEach>
-                                                        <c:if test="${!stockFound}">
-                                                            <span class="badge badge-secondary">Chưa nhập kho</span>
-                                                        </c:if>
-                                                    </td>
-                                                    <td class="align-middle"><a href="deleteCart?productID=${o.productID }" class="text-dark">
-                                                            <button type="button" class="btn btn-danger">Delete</button>
-                                                        </a>
-                                                    </td>
-                                                </tr> 
-                                                 </c:if>
-                                               </c:forEach>
+                                <!-- Shopping cart table -->
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                        <c:if test="${error!=null }">
+                     <div class="alert alert-danger" role="alert">
+							 ${error}
+					</div>
+					</c:if>
+					<c:if test="${mess!=null }">
+                    <div class="alert alert-success" role="alert">
+					  	${mess}
+					</div>
+					</c:if>
+                                            <tr>
+                                                <th scope="col" class="border-0 bg-light">
+                                                    <div class="p-2 px-3 text-uppercase">Sản Phẩm</div>
+                                                </th>
+                                                <th scope="col" class="border-0 bg-light">
+                                                    <div class="py-2 text-uppercase">Đơn Giá</div>
+                                                </th>
+                                                 <th scope="col" class="border-0 bg-light">
+                                                    <div class="py-2 text-uppercase">Delivery</div>
+                                                </th>
+                                                <th scope="col" class="border-0 bg-light">
+                                                    <div class="py-2 text-uppercase">Số Lượng</div>
+                                                </th>
+                                                <th scope="col" class="border-0 bg-light">
+                                                    <div class="py-2 text-uppercase">Tồn Kho</div>
+                                                </th>
+                                                <th scope="col" class="border-0 bg-light">
+                                                    <div class="py-2 text-uppercase">Xóa</div>
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                        <c:forEach items="${listCart}" var="o">
+                                         <c:forEach items="${listProduct}" var="p">
+                                            <c:if test="${o.productID == p.id}">
+                                            <c:set var="rowClass" value="" />
+                                            <c:forEach items="${listProductStock}" var="ps">
+                                                <c:if test="${ps.productID == p.id}">
+                                                    <c:choose>
+                                                        <c:when test="${ps.totalRemaining <= 0}">
+                                                            <c:set var="rowClass" value="out-of-stock-row" />
+                                                        </c:when>
+                                                        <c:when test="${ps.totalRemaining < o.amount}">
+                                                            <c:set var="rowClass" value="out-of-stock-row" />
+                                                        </c:when>
+                                                        <c:when test="${ps.totalRemaining <= 5}">
+                                                            <c:set var="rowClass" value="low-stock-row" />
+                                                        </c:when>
+                                                    </c:choose>
+                                                </c:if>
                                             </c:forEach>
+                                            <tr class="${rowClass}">
+                                                <th scope="row">
+                                                    <div class="p-2">
+                                                    
+                                                        <img src="${p.image}" alt="" width="70" class="img-fluid rounded shadow-sm">
+                                                      
+                                                        <div class="ml-3 d-inline-block align-middle">
+                                                            <h5 class="mb-0"> <a href="#" class="text-dark d-inline-block">${p.name}</a></h5><span class="text-muted font-weight-normal font-italic"></span>
+                                                        </div>
+                                                    </div>
+                                                </th>
+                                                <td class="align-middle">
+                                                    <strong>
+                                                        <fmt:formatNumber value="${p.price}" pattern="#,###" var="cartPrice"/>
+                                                        ${fn:replace(cartPrice, ',', '.')} VNĐ
+                                                    </strong>
+                                                </td>
+                                                <td class="align-middle"><strong>${p.delivery}</strong></td>
+                                                <td class="align-middle">
+                                                    <a href="subAmountCart?productID=${o.productID}&amount=${o.amount}"><button class="btnSub">-</button></a> 
+                                                    <span class="cart-quantity">${o.amount}</span>
+                                                    <a href="addAmountCart?productID=${o.productID}&amount=${o.amount}"><button class="btnAdd">+</button></a>
+                                                </td>
+                                                <td class="align-middle">
+                                                    <c:set var="stockFound" value="false" />
+                                                    <c:forEach items="${listProductStock}" var="ps">
+                                                        <c:if test="${ps.productID == p.id && !stockFound}">
+                                                            <c:set var="stockFound" value="true" />
+                                                            <c:choose>
+                                                                <c:when test="${ps.totalRemaining <= 0}">
+                                                                    <span class="badge badge-danger">Hết hàng</span>
+                                                                </c:when>
+                                                                <c:when test="${ps.totalRemaining <= 5}">
+                                                                    <span class="badge badge-warning">${ps.totalRemaining} (Sắp hết)</span>
+                                                                </c:when>
+                                                                <c:when test="${ps.totalRemaining < o.amount}">
+                                                                    <span class="badge badge-danger">${ps.totalRemaining} (Không đủ)</span>
+                                                                </c:when>
+                                                                <c:otherwise>
+                                                                    <span class="badge badge-success">${ps.totalRemaining}</span>
+                                                                </c:otherwise>
+                                                            </c:choose>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                    <c:if test="${!stockFound}">
+                                                        <span class="badge badge-secondary">Chưa nhập kho</span>
+                                                    </c:if>
+                                                </td>
+                                                <td class="align-middle"><a href="deleteCart?productID=${o.productID }" class="text-dark">
+                                                        <button type="button" class="btn btn-danger">Delete</button>
+                                                    </a>
+                                                </td>
+                                            </tr> 
+                                             </c:if>
+                                           </c:forEach>
+                                        </c:forEach>
                                         </tbody>
                                     </table>
                                 </div>
@@ -191,6 +206,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
@@ -229,5 +245,4 @@
                         </script>
     </body>
 
-</html>
 </html>

@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.List;
+import entity.Cart;
 
 
 @WebServlet(name = "AddAmountCartControl", urlPatterns = {"/addAmountCart"})
@@ -36,17 +38,31 @@ public class AddAmountCartControl extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         Account a = (Account) session.getAttribute("acc");
-        if(a == null) {
-        	response.sendRedirect("login");
-        	return;
-        }
-        int accountID = a.getId();
+        
         int productID = Integer.parseInt(request.getParameter("productID"));
         int amount = Integer.parseInt(request.getParameter("amount"));
-        amount+=1;
-        DAO dao = new DAO();
-        dao.editAmountCart(accountID, productID, amount);
-        request.setAttribute("mess", "Da tang so luong!");
+        amount += 1;
+        
+        if(a == null) {
+            // Nếu chưa đăng nhập, cập nhật session cart
+            List<Cart> cartList = (List<Cart>) session.getAttribute("cartList");
+            if (cartList != null) {
+                for (Cart cart : cartList) {
+                    if (cart.getProductID() == productID) {
+                        cart.setAmount(amount);
+                        break;
+                    }
+                }
+                session.setAttribute("cartList", cartList);
+            }
+        } else {
+            // Nếu đã đăng nhập, cập nhật database
+            int accountID = a.getId();
+            DAO dao = new DAO();
+            dao.editAmountCart(accountID, productID, amount);
+        }
+        
+        request.setAttribute("mess", "Đã tăng số lượng!");
         request.getRequestDispatcher("managerCart").forward(request, response);
     }
 

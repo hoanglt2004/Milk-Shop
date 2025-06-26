@@ -596,6 +596,9 @@
                         </div>
                     </div>
 
+                    <!-- Toast Notification Container -->
+                    <div class="toast-container"></div>
+
                     <jsp:include page="Footer.jsp"></jsp:include>
                     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
                     <script>

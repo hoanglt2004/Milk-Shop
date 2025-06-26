@@ -7,8 +7,10 @@ package control;
 
 import dao.DAO;
 import entity.Account;
+import entity.Cart;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -35,17 +37,36 @@ public class SubAmountCartControl extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         HttpSession session = request.getSession();
         Account a = (Account) session.getAttribute("acc");
-        if(a == null) {
-        	response.sendRedirect("login");
-        	return;
-        }
-        int accountID = a.getId();
+        
         int productID = Integer.parseInt(request.getParameter("productID"));
         int amount = Integer.parseInt(request.getParameter("amount"));
-        amount-=1;
-        DAO dao = new DAO();
-        dao.editAmountCart(accountID, productID, amount);
-        request.setAttribute("mess", "Da giam so luong!");
+        amount -= 1;
+        
+        if(a == null) {
+            // Nếu chưa đăng nhập, cập nhật session cart
+            List<Cart> cartList = (List<Cart>) session.getAttribute("cartList");
+            if (cartList != null) {
+                for (Cart cart : cartList) {
+                    if (cart.getProductID() == productID) {
+                        if (amount <= 0) {
+                            // Nếu số lượng <= 0, xóa sản phẩm khỏi giỏ hàng
+                            cartList.remove(cart);
+                        } else {
+                            cart.setAmount(amount);
+                        }
+                        break;
+                    }
+                }
+                session.setAttribute("cartList", cartList);
+            }
+        } else {
+            // Nếu đã đăng nhập, cập nhật database
+            int accountID = a.getId();
+            DAO dao = new DAO();
+            dao.editAmountCart(accountID, productID, amount);
+        }
+        
+        request.setAttribute("mess", "Đã giảm số lượng!");
         request.getRequestDispatcher("managerCart").forward(request, response);
     }
 
@@ -88,4 +109,4 @@ public class SubAmountCartControl extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-}
+} 

@@ -6,13 +6,17 @@
 package control;
 
 import dao.DAO;
+import entity.Account;
+import entity.Cart;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 
 @WebServlet(name = "DeleteCartControl", urlPatterns = {"/deleteCart"})
@@ -30,10 +34,26 @@ public class DeleteCartControl extends HttpServlet {
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
+        
+        HttpSession session = request.getSession();
+        Account a = (Account) session.getAttribute("acc");
         int productID = Integer.parseInt(request.getParameter("productID"));
-        DAO dao = new DAO();
-        dao.deleteCart(productID);
-        request.setAttribute("mess", "Da xoa san pham khoi gio hang!");
+        
+        if(a == null) {
+            // Nếu chưa đăng nhập, xóa khỏi session cart
+            List<Cart> cartList = (List<Cart>) session.getAttribute("cartList");
+            if (cartList != null) {
+                cartList.removeIf(cart -> cart.getProductID() == productID);
+                session.setAttribute("cartList", cartList);
+            }
+        } else {
+            // Nếu đã đăng nhập, xóa khỏi database
+            DAO dao = new DAO();
+            dao.deleteCart(productID);
+        }
+        
+        request.setAttribute("mess", "Đã xóa sản phẩm khỏi giỏ hàng!");
         request.getRequestDispatcher("managerCart").forward(request, response);
     }
 
