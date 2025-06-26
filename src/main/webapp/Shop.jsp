@@ -128,7 +128,7 @@ input[type="radio"]:checked + .sort-label {
               <div class="text-muted small text-uppercase mb-5">
 			<c:forEach items="${listCC}" var="o">
                     <p class="mb-3">
-                        <a href="#!" class="card-link-secondary category-link" data-category="${o.cid}" onclick="loadCategory(${o.cid}); return false;">${o.cname}</a>
+                        <a href="#!" class="card-link-secondary category-link" data-category="${o.cid}">${o.cname}</a>
                     </p>
               </c:forEach>
               </div>
@@ -155,7 +155,7 @@ input[type="radio"]:checked + .sort-label {
 
                 <!-- Hiển thị từ khóa trong ô search -->
                 <div class="form-group">
-                  <input type="text" class="form-control" id="searchInput" name="txt" placeholder="Enter keyword..." value="${searchKeyword}" oninput="applyFilters()">
+                  <input type="text" class="form-control" id="searchInput" name="txt" placeholder="Enter keyword..." value="${searchKeyword}" oninput="searchByName(this);">
                 </div>
 
                 <script>
@@ -165,54 +165,40 @@ input[type="radio"]:checked + .sort-label {
                 function searchByName(param) {
                     clearTimeout(searchTimeout);
                     const searchInput = document.getElementById('searchInput');
-                    const suggestionsDiv = document.getElementById('searchSuggestions');
                     
                     searchTimeout = setTimeout(() => {
                         const txtSearch = searchInput.value;
                         currentSearchText = txtSearch;
                         
                         // Clear category selection when searching
-                        window.currentCategoryId = null;
+                        document.querySelectorAll('.category-link').forEach(link => link.classList.remove('active'));
                         
                         if (txtSearch.length > 0) {
                             $.ajax({
-                                url: "/WebsiteBanSua/searchAjaxShop",
+                                url: "shop",
                                 type: "get",
                                 data: {
-                                    txt: txtSearch
+                                    search: txtSearch
+                                },
+                                beforeSend: function(xhr) {
+                                    // Set header for AJAX request detection in servlet
+                                    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
                                 },
                                 success: function (data) {
                                     var row = document.getElementById("content");
                                     row.innerHTML = data;
                                     
-                                    // Show suggestions based on search results
-                                    const products = $(data).find('.product-name');
-                                    if (products.length > 0) {
-                                        suggestionsDiv.innerHTML = '';
-                                        products.each(function() {
-                                            const suggestion = document.createElement('a');
-                                            suggestion.className = 'dropdown-item';
-                                            suggestion.href = '#';
-                                            suggestion.textContent = $(this).text();
-                                            suggestion.onclick = function(e) {
-                                                e.preventDefault();
-                                                searchInput.value = $(this).text();
-                                                searchByName({value: $(this).text()});
-                                                suggestionsDiv.style.display = 'none';
-                                            };
-                                            suggestionsDiv.appendChild(suggestion);
-                                        });
-                                        suggestionsDiv.style.display = 'block';
-                                    } else {
-                                        suggestionsDiv.style.display = 'none';
-                                    }
+                                    // Update URL
+                                    const currentUrl = new URL(window.location.href);
+                                    currentUrl.searchParams.set('search', txtSearch);
+                                    currentUrl.searchParams.delete('cid');
+                                    window.history.pushState({}, '', currentUrl);
                                 },
                                 error: function (xhr) {
                                     console.error('Search failed:', xhr);
                                 }
                             });
                         } else {
-                            suggestionsDiv.style.display = 'none';
                             // If search is cleared, show all products
                             loadAllProducts();
                         }
@@ -220,30 +206,22 @@ input[type="radio"]:checked + .sort-label {
                 }
 
                 function loadAllProducts() {
+                    // Clear category selection
+                    document.querySelectorAll('.category-link').forEach(link => link.classList.remove('active'));
+                    
                     $.ajax({
-                        url: "/WebsiteBanSua/loadAllProducts",
+                        url: "shop",
                         type: "get",
+                        beforeSend: function(xhr) {
+                            // Set header for AJAX request detection in servlet
+                            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                        },
                         success: function (data) {
                             var row = document.getElementById("content");
                             row.innerHTML = data;
-                        }
-                    });
-                }
-
-                function load(cateid) {
-                    window.currentCategoryId = cateid;
-                    // Clear search input when category is selected
-                    document.getElementById('searchInput').value = '';
-                    currentSearchText = '';
-                    
-                    $.ajax({
-                        url: "/WebsiteBanSua/categoryShop",
-                        type: "get",
-                        data: {
-                            cid: cateid
-                        },
-                        success: function (responseData) {
-                            document.getElementById("content").innerHTML = responseData;
+                            
+                            // Update URL to remove all parameters
+                            window.history.pushState({}, '', window.location.pathname);
                         }
                     });
                 }
@@ -320,26 +298,32 @@ input[type="radio"]:checked + .sort-label {
             <script>
             function sortProducts(type) {
                 var searchText = document.getElementById('searchInput').value;
-                var cid = window.currentCategoryId;
-                let url = '';
-                let data = { txt: searchText, cid: cid };
-                if(type === 'default') {
-                    loadAllProducts();
-                    return;
-                } else if(type === 'az') {
-                    url = '/WebsiteBanSua/sortByNameAZ';
-                } else if(type === 'za') {
-                    url = '/WebsiteBanSua/sortByNameZA';
-                } else if(type === 'new') {
-                    url = '/WebsiteBanSua/sortByNewest';
-                }
+                var cid = document.querySelector('.category-link.active')?.dataset.category || '';
+                
                 $.ajax({
-                    url: url,
-                    type: 'get',
-                    data: data,
+                    url: "shop",
+                    type: "get",
+                    data: {
+                        search: searchText,
+                        cid: cid,
+                        sort: type
+                    },
+                    beforeSend: function(xhr) {
+                        // Set header for AJAX request detection in servlet
+                        xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                    },
                     success: function(data) {
                         var row = document.getElementById('content');
                         row.innerHTML = data;
+                        
+                        // Update URL
+                        const currentUrl = new URL(window.location.href);
+                        if (type !== 'default') {
+                            currentUrl.searchParams.set('sort', type);
+                        } else {
+                            currentUrl.searchParams.delete('sort');
+                        }
+                        window.history.pushState({}, '', currentUrl);
                     }
                 });
             }
@@ -413,7 +397,7 @@ input[type="radio"]:checked + .sort-label {
     }
 
     function performAjaxFilter() {
-        var cid = document.querySelector('.category-link.active')?.dataset.cid || '${selectedCid}' || '';
+        var cid = document.querySelector('.category-link.active')?.dataset.category || '';
         var searchKeyword = document.getElementById('searchInput').value;
         var priceMin = document.getElementById('priceMin').value;
         var priceMax = document.getElementById('priceMax').value;
@@ -464,9 +448,41 @@ input[type="radio"]:checked + .sort-label {
     document.querySelectorAll('.category-link').forEach(link => {
         link.addEventListener('click', function(e) {
             e.preventDefault();
+            const categoryId = this.dataset.category;
+            
+            // Clear search input and other filters
+            document.getElementById('searchInput').value = '';
+            document.querySelectorAll('input[name="priceSort"]').forEach(input => input.checked = false);
+            document.getElementById('priceMin').value = '';
+            document.getElementById('priceMax').value = '';
+            
+            // Highlight active category
             document.querySelectorAll('.category-link').forEach(el => el.classList.remove('active'));
             this.classList.add('active');
-            applyFilters(false);
+            
+            // Load products by category
+            $.ajax({
+                url: "shop",
+                type: "get",
+                data: {
+                    cid: categoryId
+                },
+                beforeSend: function(xhr) {
+                    // Set header for AJAX request detection in servlet
+                    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+                },
+                success: function (responseData) {
+                    document.getElementById("content").innerHTML = responseData;
+                    
+                    // Update URL
+                    const currentUrl = new URL(window.location.href);
+                    currentUrl.searchParams.set('cid', categoryId);
+                    window.history.pushState({}, '', currentUrl);
+                },
+                error: function(xhr) {
+                    console.error('Error loading category:', xhr);
+                }
+            });
         });
     });
 
@@ -496,40 +512,11 @@ input[type="radio"]:checked + .sort-label {
     }         
 
     function loadCategory(categoryId) {
-        // Clear search input and other filters
-        document.getElementById('searchInput').value = '';
-        document.querySelectorAll('input[name="priceSort"]').forEach(input => input.checked = false);
-        document.getElementById('priceMin').value = '';
-        document.getElementById('priceMax').value = '';
-        
-        // Highlight active category
-        document.querySelectorAll('.category-link').forEach(link => {
-            if (link.dataset.category == categoryId) {
-                link.classList.add('active');
-            } else {
-                link.classList.remove('active');
-            }
-        });
-
-        // Load products by category
-        $.ajax({
-            url: "category",
-            type: "get",
-            data: {
-                cid: categoryId
-            },
-            success: function (responseData) {
-                document.getElementById("content").innerHTML = responseData;
-                
-                // Update URL
-                const currentUrl = new URL(window.location.href);
-                currentUrl.searchParams.set('cid', categoryId);
-                window.history.pushState({}, '', currentUrl);
-            },
-            error: function(xhr) {
-                console.error('Error loading category:', xhr);
-            }
-        });
+        // Find and click the category link to trigger the event listener
+        const categoryLink = document.querySelector(`.category-link[data-category="${categoryId}"]`);
+        if (categoryLink) {
+            categoryLink.click();
+        }
     }
 
     // Add styles for active category
