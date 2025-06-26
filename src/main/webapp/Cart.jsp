@@ -135,8 +135,23 @@
                                                 </th>
                                                 <td class="align-middle">
                                                     <strong>
-                                                        <fmt:formatNumber value="${p.price}" pattern="#,###" var="cartPrice"/>
-                                                        ${fn:replace(cartPrice, ',', '.')} VNĐ
+                                                        <c:choose>
+                                                            <c:when test="${p.discountPercent > 0}">
+                                                                <fmt:formatNumber value="${p.salePrice}" pattern="#,###" var="cartPrice"/>
+                                                                <span style="color: #c41e3a;">${fn:replace(cartPrice, ',', '.')} VNĐ</span>
+                                                                <br>
+                                                                <small style="text-decoration: line-through; color: #6c757d;">
+                                                                    <fmt:formatNumber value="${p.price}" pattern="#,###" var="originalPrice"/>
+                                                                    ${fn:replace(originalPrice, ',', '.')} VNĐ
+                                                                </small>
+                                                                <br>
+                                                                <small style="color: #c41e3a; font-weight: bold;">-${p.discountPercent}%</small>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <fmt:formatNumber value="${p.price}" pattern="#,###" var="cartPrice"/>
+                                                                ${fn:replace(cartPrice, ',', '.')} VNĐ
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </strong>
                                                 </td>
                                                 <td class="align-middle"><strong>${p.delivery}</strong></td>

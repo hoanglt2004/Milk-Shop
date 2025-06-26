@@ -63,7 +63,9 @@ public class TotalMoneyCartControl extends HttpServlet {
         for (Cart cart : cartList) {
             for (Product product : listProduct) {
                 if (cart.getProductID() == product.getId()) {
-                    totalMoney += product.getPrice() * cart.getAmount();
+                    // Sử dụng giá khuyến mãi nếu có, ngược lại sử dụng giá gốc
+                    double productPrice = (product.getDiscountPercent() > 0) ? product.getSalePrice() : product.getPrice();
+                    totalMoney += productPrice * cart.getAmount();
                 }
             }
         }
